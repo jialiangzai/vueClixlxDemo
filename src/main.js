@@ -1,11 +1,14 @@
 import Vue from 'vue';
 import MetaInfo from 'vue-meta-info';
 import App from './App.vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import router from './router';
 import store from './store';
 import './registerServiceWorker';
 
 Vue.use(MetaInfo);
+Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 

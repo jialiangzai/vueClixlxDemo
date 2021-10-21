@@ -23,6 +23,7 @@ export default {
 </script>
 
 <style>
+@import './common/css/global.css';
 body{
   margin: 0;
   padding: 0;

@@ -24,10 +24,10 @@
       <div class="searBuyLogin">
         <div class="content-search">
           <input type="text" placeholder="请输入要搜索的课程" />
-          <img src="../../assets/image/组件 1 – 1.png" alt="" />
+          <i class="el-icon-search"></i>
         </div>
         <div class="content-Shopping">
-          <img src="../../assets/image/路径 3801.png" alt="" />
+          <i class="el-icon-shopping-cart-1"></i>
         </div>
         <div class="content-login">登录 / 注册</div>
       </div>
@@ -57,7 +57,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   width: 100vw;
-  height: 120px;
+  height: 100px;
   /* background: skyblue; */
   background:  white;
   box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.16);
@@ -68,15 +68,15 @@ export default {
 .header-content {
   position: relative;
   display: flex;
-  width: 1600px;
+  width: 1300px;
   justify-content: space-around;
 }
 .content-logo {
-  width: 190px;
-  height: 75px;
+  width: 160px;
+  height: 55px;
+  margin: 10px 0;
 }
 .content-logo img {
-  width: 100%;
   height: 100%;
 }
 .content-nav{
@@ -95,7 +95,7 @@ export default {
   color: black;
 }
 .content-nav ul li a{
-  font-size: 24px;
+  font-size: 18px;
   font-family: MicrosoftYaHei;
   color: #808080;
 }
@@ -113,7 +113,7 @@ export default {
   align-items: center;
   padding: 5px 10px;
   width: 460px;
-  height: 54px;
+  height: 40px;
   border-radius: 8px;
   background: #F0F2F4;
 }
@@ -124,20 +124,19 @@ export default {
   border: 0;
   border-radius: 8px;
   color: #808080;
-  font-size: 22px;
+  background: #F0F2F4;
+  font-size: 18px;
   outline: none;
 }
-.content-search img{
-  width: 30px;
-  height: 30px;
+.content-search i{
+  font-size: 24px;
 }
-.content-Shopping img{
-  width: 31px;
-  height: 28px;
+.content-Shopping i{
+  font-size: 24px;
 }
 .content-login{
   height: 31px;
-  font-size: 24px;
+  font-size: 18px;
   color: #808080;
   text-align: center;
 }

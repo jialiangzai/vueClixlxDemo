@@ -2,18 +2,136 @@
   <!-- 首页导航和轮播组件 -->
   <div class="navSwiper">
     <div class="navSwiperContent">
-      {{msg}}
+      <div class="navigation">
+        <ul>
+          <li v-for="(item,index) in categorys" :key="item.id" @mouseenter="mourseHover(index)" @mouseleave="mourseOut(index)">
+            <router-link to="/" :title="item.categoryName">{{item.categoryName}} <i class="el-icon-arrow-right"></i></router-link>
+            <div class="category-detail" v-if="categorysDetail[index]">{{item.categoryName}}</div>
+          </li>
+        </ul>
+      </div>
+      <div class="sliders">
+        <el-carousel height="460px">
+          <el-carousel-item v-for="item in sliders" :key="item.id">
+            <router-link :to="item.pcHref">
+              <img :src="item.imageUrl" :title="item.imageName" class="sliders-item-image">
+            </router-link>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
     </div>
+    <div class="course-type"><!-- 课程分类开始 -->
+      <div class="course-type-item">
+        <router-link to="#">
+          <div class="course-type-item-icon">
+            <i class="el-icon-picture"></i>
+          </div>
+          <div class="course-type-item-text">
+            <div class="course-type-item-title">初级课程</div>
+            <div class="course-type-item-desc">入门快、岗位多</div>
+          </div>
+        </router-link>
+      </div>
+      <div class="course-type-item">
+        <router-link to="#">
+          <div class="course-type-item-icon">
+            <i class="el-icon-picture"></i>
+          </div>
+          <div class="course-type-item-text">
+            <div class="course-type-item-title">初级课程</div>
+            <div class="course-type-item-desc">入门快、岗位多</div>
+          </div>
+        </router-link>
+      </div>
+      <div class="course-type-item">
+        <router-link to="#">
+          <div class="course-type-item-icon">
+            <i class="el-icon-picture"></i>
+          </div>
+          <div class="course-type-item-text">
+            <div class="course-type-item-title">初级课程</div>
+            <div class="course-type-item-desc">入门快、岗位多</div>
+          </div>
+        </router-link>
+      </div>
+      <div class="course-type-item">
+        <router-link to="#">
+          <div class="course-type-item-icon">
+            <i class="el-icon-picture"></i>
+          </div>
+          <div class="course-type-item-text">
+            <div class="course-type-item-title">初级课程</div>
+            <div class="course-type-item-desc">入门快、岗位多</div>
+          </div>
+        </router-link>
+      </div>
+      <div class="course-type-item">
+        <router-link to="#">
+          <div class="course-type-item-icon">
+            <i class="el-icon-picture"></i>
+          </div>
+          <div class="course-type-item-text">
+            <div class="course-type-item-title">初级课程</div>
+            <div class="course-type-item-desc">入门快、岗位多</div>
+          </div>
+        </router-link>
+      </div>
+    </div><!-- 课程分类结束 -->
   </div>
 </template>
 
 <script>
+import axios from "_axios@0.23.0@axios";
+
 export default {
   data() {
     return {
       msg: '首页导航和轮播组件',
+      categorys: [],
+      categorysDetail: [],
+      sliders: [],
     };
   },
+  mounted() {
+    this.getFirstCategory();
+    this.getSliders();
+  },
+  methods:{
+    mourseHover(index){
+      this.$set(this.categorysDetail, index, true);
+    },
+    mourseOut(index){
+      this.$set(this.categorysDetail, index, false);
+    },
+    getFirstCategory(){
+      axios({
+        url: 'api/course/category/getFirstCategorys',
+        method: 'GET',
+        header: {
+          'Content-Type': 'application/json',
+          // "Content-Type":"application/x-www-form-urlencoded"
+        }
+      }).then((res) => {
+        this.categorys = res.data.data.list;
+        this.categorysDetail = new Array(this.categorys.length);
+        for(let i = 0;i < this.categorysDetail.length;i++){
+          this.categorysDetail[i] = false;
+        }
+      });
+    },
+    getSliders(){
+      axios({
+        url: 'api/slider/getSliders',
+        method: 'GET',
+        header: {
+          'Content-Type': 'application/json',
+          // "Content-Type":"application/x-www-form-urlencoded"
+        }
+      }).then((res) => {
+        this.sliders = res.data.data.list;
+      });
+    }
+  }
 };
 </script>
 
@@ -21,13 +139,108 @@ export default {
   .navSwiper{
     padding-top: 1px;
     width: 100vw;
-    height: 900px;
+    height: 700px;
     background: url(../../assets/image/transitionbg.png);
   }
   .navSwiperContent{
-    width: 1600px;
-    height: 560px;
-    border: 1px solid;
-    margin: 70px auto;
+    width: 1300px;
+    height: 460px;
+    margin: 35px auto 0 auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+    display: flex;
+  }
+  .navigation{
+    width: 240px;
+    height: 460px;
+    background: #2B283D;
+    position: relative;
+  }
+  .navigation ul{
+    margin: 35px 0;
+  }
+  .navigation ul li{
+    height: 40px;
+    list-style: none;
+    margin-bottom: 10px;
+  }
+  .navigation ul li a i{
+    line-height: 40px;
+    float: right;
+  }
+  .navigation ul li a{
+    color: #ffffff;
+    text-decoration: none;
+    height: 40px;
+    padding: 0 20px;
+    line-height: 40px;
+    display: block;
+  }
+  .navigation ul li a:hover{
+    background: linear-gradient(to right, #3FE5FF, transparent);
+  }
+  .category-detail{
+    position: absolute;
+    top: 0;
+    left: 240px;
+    background: rgba(255,255,255,.9);
+    z-index: 65535;
+    min-width: 550px;
+    height: 460px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  .sliders{
+    width: 1060px;
+    height: 460px;
+  }
+  .sliders-item-image{
+    width: 100%;
+    height: 100%;
+  }
+  .course-type{
+    display: flex;
+    width: calc(1300px - 2px);
+    margin: 0 auto;
+    border: #808080 solid 1px;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 20px 20px #d2d2d2;
+  }
+  .course-type .course-type-item{
+    width: 260px;
+    height: 100px;
+    flex: 1;
+  }
+  .course-type .course-type-item a{
+    display: flex;
+    justify-content: center;
+  }
+  .course-type-item .course-type-item-icon{
+    font-size: 35px;
+    border-radius: 50%;
+    margin: 25px 10px 25px 0;
+    width: 50px;
+    height: 50px;
+    background: #55EE8B;
+    text-align: center;
+    line-height: 50px;
+    color: #ffffff;
+  }
+  .course-type-item .course-type-item-text{
+    margin: 25px 0;
+  }
+  .course-type-item .course-type-item-text .course-type-item-title{
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: bold;
+  }
+  .course-type-item .course-type-item-text .course-type-item-desc{
+    color: #808080;
+    font-size: 14px;
   }
 </style>
