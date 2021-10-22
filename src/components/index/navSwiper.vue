@@ -4,9 +4,18 @@
     <div class="navSwiperContent">
       <div class="navigation">
         <ul>
-          <li v-for="(item,index) in categorys" :key="item.id" @mouseenter="mourseHover(index)" @mouseleave="mourseOut(index)">
-            <router-link to="/" :title="item.categoryName">{{item.categoryName}} <i class="el-icon-arrow-right"></i></router-link>
-            <div class="category-detail" v-if="categorysDetail[index]">{{item.categoryName}}</div>
+          <li
+            v-for="(item, index) in categorys"
+            :key="item.id"
+            @mouseenter="mourseHover(index)"
+            @mouseleave="mourseOut(index)"
+          >
+            <router-link to="/" :title="item.categoryName"
+              >{{ item.categoryName }} <i class="el-icon-arrow-right"></i
+            ></router-link>
+            <div class="category-detail" v-if="categorysDetail[index]">
+              {{ item.categoryName }}
+            </div>
           </li>
         </ul>
       </div>
@@ -14,197 +23,154 @@
         <el-carousel height="460px">
           <el-carousel-item v-for="item in sliders" :key="item.id">
             <router-link :to="item.pcHref">
-              <img :src="item.imageUrl" :title="item.imageName" class="sliders-item-image">
+              <img
+                :src="item.imageUrl"
+                :title="item.imageName"
+                class="sliders-item-image"
+              />
             </router-link>
           </el-carousel-item>
         </el-carousel>
       </div>
     </div>
-    <div class="course-type"><!-- 课程分类开始 -->
-      <div class="course-type-item">
-        <router-link to="#">
-          <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
-          </div>
-          <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
-          </div>
-        </router-link>
-      </div>
-      <div class="course-type-item">
-        <router-link to="#">
-          <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
-          </div>
-          <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
-          </div>
-        </router-link>
-      </div>
-      <div class="course-type-item">
-        <router-link to="#">
-          <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
-          </div>
-          <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
-          </div>
-        </router-link>
-      </div>
-      <div class="course-type-item">
-        <router-link to="#">
-          <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
-          </div>
-          <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
-          </div>
-        </router-link>
-      </div>
-      <div class="course-type-item">
-        <router-link to="#">
-          <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
-          </div>
-          <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
-          </div>
-        </router-link>
-      </div>
-    </div><!-- 课程分类结束 -->
+    <!-- 课程分类开始 -->
+    <courseType></courseType>
+    <!-- 课程分类结束 -->
   </div>
 </template>
 
 <script>
-import axios from "_axios@0.23.0@axios";
+import courseType from "./courseType.vue";
+import http from "../../common/api/requests";
 
 export default {
   data() {
     return {
-      msg: '首页导航和轮播组件',
+      msg: "首页导航和轮播组件",
       categorys: [],
       categorysDetail: [],
       sliders: [],
     };
   },
-  mounted() {
+  created() {
     this.getFirstCategory();
     this.getSliders();
   },
-  methods:{
-    mourseHover(index){
+  methods: {
+    // 课程分类，鼠标进入移出事件
+    mourseHover(index) {
       this.$set(this.categorysDetail, index, true);
     },
-    mourseOut(index){
+    mourseOut(index) {
       this.$set(this.categorysDetail, index, false);
     },
-    getFirstCategory(){
-      axios({
-        url: 'api/course/category/getFirstCategorys',
-        method: 'GET',
+    // 获取课程一级分类
+    async getFirstCategory() {
+      let res = await http.$axios({
+        url: "api/course/category/getFirstCategorys",
+        method: "GET",
         header: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           // "Content-Type":"application/x-www-form-urlencoded"
-        }
-      }).then((res) => {
-        this.categorys = res.data.data.list;
-        this.categorysDetail = new Array(this.categorys.length);
-        for(let i = 0;i < this.categorysDetail.length;i++){
-          this.categorysDetail[i] = false;
-        }
+        },
       });
+      // console.log('课程分类' , res);
+      this.categorys = res.data.list;
+      this.categorysDetail = new Array(this.categorys.length);
+      for (let i = 0; i < this.categorysDetail.length; i++) {
+        this.categorysDetail[i] = false;
+      }
     },
-    getSliders(){
-      axios({
-        url: 'api/slider/getSliders',
-        method: 'GET',
+    // 获取轮播图
+    async  getSliders() {
+      let res = await http.$axios({
+        url: "api/slider/getSliders",
+        method: "GET",
         header: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           // "Content-Type":"application/x-www-form-urlencoded"
-        }
-      }).then((res) => {
-        this.sliders = res.data.data.list;
+        },
       });
-    }
-  }
+      // console.log('轮播图',res);
+      this.sliders = res.data.list;
+    },
+  },
+  components: {
+    courseType,
+  },
 };
 </script>
 
 <style scoped>
-  .navSwiper{
-    padding-top: 1px;
-    width: 100vw;
-    height: 700px;
-    background: url(../../assets/image/transitionbg.png);
-  }
-  .navSwiperContent{
-    width: 1300px;
-    height: 460px;
-    margin: 35px auto 0 auto;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    overflow: hidden;
-    display: flex;
-  }
-  .navigation{
-    width: 240px;
-    height: 460px;
-    background: #2B283D;
-    position: relative;
-  }
-  .navigation ul{
-    margin: 35px 0;
-  }
-  .navigation ul li{
-    height: 40px;
-    list-style: none;
-    margin-bottom: 10px;
-  }
-  .navigation ul li a i{
-    line-height: 40px;
-    float: right;
-  }
-  .navigation ul li a{
-    color: #ffffff;
-    text-decoration: none;
-    height: 40px;
-    padding: 0 20px;
-    line-height: 40px;
-    display: block;
-  }
-  .navigation ul li a:hover{
-    background: linear-gradient(to right, #3FE5FF, transparent);
-  }
-  .category-detail{
-    position: absolute;
-    top: 0;
-    left: 240px;
-    background: rgba(255,255,255,.9);
-    z-index: 65535;
-    min-width: 550px;
-    height: 460px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-  .sliders{
-    width: 1060px;
-    height: 460px;
-  }
-  .sliders-item-image{
-    width: 100%;
-    height: 100%;
-  }
-  .course-type{
+.navSwiper {
+  padding-top: 1px;
+  width: 100vw;
+  height: 700px;
+  background: url(../../assets/image/transitionbg.png);
+}
+.navSwiperContent {
+  width: 1300px;
+  height: 460px;
+  margin: 35px auto 0 auto;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  display: flex;
+}
+.navigation {
+  width: 240px;
+  height: 460px;
+  background: #2b283d;
+  position: relative;
+}
+.navigation ul {
+  margin: 35px 0;
+}
+.navigation ul li {
+  height: 40px;
+  list-style: none;
+  margin-bottom: 10px;
+}
+.navigation ul li a i {
+  line-height: 40px;
+  float: right;
+}
+.navigation ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  height: 40px;
+  padding: 0 20px;
+  line-height: 40px;
+  display: block;
+}
+.navigation ul li a:hover {
+  background: linear-gradient(to right, #3fe5ff, transparent);
+}
+.category-detail {
+  position: absolute;
+  top: 0;
+  left: 240px;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 65535;
+  min-width: 550px;
+  height: 460px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.sliders {
+  width: 1060px;
+  height: 460px;
+}
+.sliders-item-image {
+  width: 100%;
+  height: 100%;
+}
+/* .course-type{
     display: flex;
     width: calc(1300px - 2px);
-    margin: 0 auto;
-    border: #808080 solid 1px;
-    border-top: none;
+    margin: 0 auto; */
+/* border: #808080 solid 1px; */
+/* border-top: none;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     overflow: hidden;
@@ -238,9 +204,9 @@ export default {
     font-size: 18px;
     line-height: 30px;
     font-weight: bold;
-  }
-  .course-type-item .course-type-item-text .course-type-item-desc{
+  } */
+/* .course-type-item .course-type-item-text .course-type-item-desc{
     color: #808080;
     font-size: 14px;
-  }
+  } */
 </style>
