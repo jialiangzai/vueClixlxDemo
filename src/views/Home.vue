@@ -3,13 +3,14 @@
     <!-- <h2>Home Page</h2> -->
     <indexHeader></indexHeader>
     <navSwiper></navSwiper>
-    
+    <newGoodCourse></newGoodCourse>
   </div>
 </template>
 
 <script>
 import indexHeader from "@/components/index/header.vue";
 import navSwiper from "@/components/index/navSwiper.vue";
+import newGoodCourse from "@/components/index/newGoodCourse.vue";
 import http from "../common/api/requests";
 import { mapMutations } from 'vuex'
 // import axios from 'axios';
@@ -55,6 +56,7 @@ export default {
   components: {
     indexHeader,
     navSwiper,
+    newGoodCourse
   },
 };
 </script>

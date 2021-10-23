@@ -105,7 +105,7 @@ export default {
 .navSwiper {
   padding-top: 1px;
   width: 100vw;
-  height: 700px;
+  height: 640px;
   background: url(../../assets/image/transitionbg.png);
 }
 .navSwiperContent {
