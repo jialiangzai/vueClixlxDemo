@@ -3,6 +3,7 @@
     <!-- <h2>Home Page</h2> -->
     <indexHeader></indexHeader>
     <navSwiper></navSwiper>
+    
   </div>
 </template>
 

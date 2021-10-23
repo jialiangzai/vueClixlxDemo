@@ -1,16 +1,16 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import home from '@/views/Home.vue';
-import about from '@/views/About.vue';
-import contact from '@/views/Contact.vue';
+import Home from '@/views/Home.vue';
+import Course from '@/views/Course.vue';
+import Member from '@/views/Member.vue';
 
 Vue.use(Router);
 
 const routes = [
-  { path: '/', component: home },
-  { path: '/about', component: about },
-  { path: '/contact', component: contact },
+  { path: '/', component: Home },
+  { path: '/course', component: Course },
+  { path: '/member', component: Member },
 ];
 
 export default new Router({

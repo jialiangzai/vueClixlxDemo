@@ -13,10 +13,10 @@
             <router-link to="/" class="aaa">首  页</router-link>
           </li>
           <li>
-            <router-link to="/about">课  程</router-link>
+            <router-link to="/course">课  程</router-link>
           </li>
           <li>
-            <router-link to="/contact">会  员</router-link>
+            <router-link to="/member">会  员</router-link>
           </li>
         </ul>
       </div>
