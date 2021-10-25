@@ -40,13 +40,13 @@
 </template>
 
 <script>
-import courseType from "./courseType.vue";
-import http from "../../common/api/requests";
+import courseType from './courseType.vue';
+import http from '../../common/api/requests';
 
 export default {
   data() {
     return {
-      msg: "首页导航和轮播组件",
+      msg: '首页导航和轮播组件',
       categorys: [],
       categorysDetail: [],
       sliders: [],
@@ -67,10 +67,10 @@ export default {
     // 获取课程一级分类
     async getFirstCategory() {
       let res = await http.$axios({
-        url: "api/course/category/getFirstCategorys",
-        method: "GET",
+        url: 'api/course/category/getFirstCategorys',
+        method: 'GET',
         header: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           // "Content-Type":"application/x-www-form-urlencoded"
         },
       });
@@ -84,10 +84,10 @@ export default {
     // 获取轮播图
     async  getSliders() {
       let res = await http.$axios({
-        url: "api/slider/getSliders",
-        method: "GET",
+        url: 'api/slider/getSliders',
+        method: 'GET',
         header: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           // "Content-Type":"application/x-www-form-urlencoded"
         },
       });

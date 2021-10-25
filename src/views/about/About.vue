@@ -1,88 +1,95 @@
 <template>
   <div class="about">
-    <Header />
+    <Header ></Header>
     <div class="about-banner">
-      <div class="banner-content">
-        <div class="banner-left">
-          <img
-            class="banner-avator"
-            src="../../assets/image/common/avator.png"
-            alt=""
-          />
-          <div class="banner-my">
-            <div class="banner-name">Fly-不一样的我</div>
-            <div class="banner-introduce">
-              <p>女</p>
-              <p>北京</p>
-              <p>web前端工程师</p>
+      <div class="banner-main">
+        <div class="banner-content">
+          <div class="banner-left">
+            <img
+              class="banner-avator"
+              src="../../assets/image/common/avator.png"
+              alt=""
+            />
+            <div class="banner-my">
+              <div class="banner-name">Fly-不一样的我</div>
+              <div class="banner-introduce">
+                <p>女</p>
+                <p>北京</p>
+                <p>web前端工程师</p>
+              </div>
+              <div class="banner-autograph">
+                这位同学很神秘，没有留下个性签名
+              </div>
             </div>
-            <div class="banner-autograph">这位同学很神秘，没有留下个性签名</div>
           </div>
-        </div>
-        <div class="banner-right">
-          <div class="banner-study">学习时长 <span>0h</span></div>
-          <div class="banner-setting">
-            <img src="../../assets/image/about/setting.png" alt="" />
-            <p>个人设置</p>
+          <div class="banner-right">
+            <div class="banner-study">学习时长 <span>0h</span></div>
+            <div class="banner-setting">
+              <img src="../../assets/image/about/setting.png" alt="" />
+              <p>个人设置</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="about-content">
-      <ul class="about-list">
-        <li
-          :class="current === index ? 'active' : ''"
-          v-for="(item, index) in dataList"
-          :key="item.id"
-          @click="goDetail(index)"
-        >
-          <img :src="current === index ? item.selectImg : item.imgUrl" alt="" />
-          <p class="list-title">{{ item.title }}</p>
-        </li>
-      </ul>
-      <div class="about-main">
-        <MyCourse />
+
+    <div class="about-main">
+      <div class="about-container">
+        <div class="about-left">
+          <div class="about-list">
+            <div v-for="(item,index) in aboutList" :key="item.id" @click="geDetail(index)">
+              <router-link :to="item.link">
+                <div class="about-list-item" :class="current === index ? 'active' :''">
+                  <img src="@/assets/image/about/collean.png" alt="" />
+                  <p class="list-title">{{ item.title }}</p>
+                </div>
+              </router-link>
+            </div>
+          </div>
+        </div>
+        <div class="about-right">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Header from '@/components/index/header.vue';
-import MyCourse from './components/MyCourse.vue';
+import Header from "@/components/index/header.vue";
 
 export default {
+  name: "About",
   data() {
     return {
-      dataList: [
+      aboutList: [
         {
           id: 1,
-          imgUrl: '../../assests/image/about/my-course.png',
-          selectImg: '../../assets/image/about/my-course.png',
-          title: '我的课程',
-        }, {
+          imgUrl: "../../assets/image/about/collean.png",
+          selectImg: "../../assets/image/about/collean-select.png",
+          title: "我的课程",
+          link: "/about/my-course",
+        },
+        {
           id: 2,
-          imgUrl: '../../assets/image/about/collean.png',
-          selectImg: '../../assets/image/about/collean-select.png',
-          title: '收藏',
+          imgUrl: "../../assets/image/about/collean.png",
+          selectImg: "../../assets/image/about/collean-select.png",
+          title: "收藏",
+          link: "/about/collean",
         },
         {
           id: 3,
-          imgUrl: '../../assets/image/about/note.png',
-          selectImg: '../../assets/image/about/note-select.png',
-          title: '笔记',
+          imgUrl: "../../assets/image/about/collean.png",
+          selectImg: "../../assets/image/about/collean-select.png",
+          title: "订单",
+          link: "/about/order",
         },
         {
           id: 4,
-          imgUrl: '../../assets/image/about/order.png',
-          selectImg: '../../assets/image/about/order-select.png',
-          title: '订单',
-        },
-        {
-          id: 5,
-          imgUrl: '../../assets/image/about/mess.png',
-          selectImg: '../../assets/image/about/mess-select.png',
-          title: '我的课程',
+          imgUrl: "../../assets/image/about/collean.png",
+          selectImg: "../../assets/image/about/collean-select.png",
+          title: "消息",
+          link: "/about/message",
         },
       ],
       current: 0,
@@ -90,26 +97,27 @@ export default {
   },
   components: {
     Header,
-    MyCourse,
   },
   methods: {
-    goDetail(index) {
+    geDetail(index) {
       this.current = index;
     },
   },
 };
 </script>
 
-<style scoped>
+<style >
 .about {
   height: 1000px;
 }
 .about-banner {
-  width: 100%;
-  height: 185px;
-  position: relative;
   background: url("../../assets/image/about/about-banner.png") no-repeat 0 0;
   box-sizing: border-box;
+}
+.banner-main {
+  position: relative;
+  width: 100%;
+  height: 185px;
 }
 .banner-content {
   width: 1200px;
@@ -191,46 +199,49 @@ export default {
   margin-right: 10px;
 }
 /* 主体开始 */
-.about-content {
+.about-main {
+  width: 100%;
+  height: 800px;
+  position: relative;
+}
+.about-container {
   width: 1200px;
   height: 800px;
+  border: 1px solid red;
   position: absolute;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
-  border: 1px solid red;
-  margin-top: 25px;
   display: flex;
 }
-.about-list {
-  width: 202px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+.about-left {
+  width: 200px;
 }
-.about-list li {
-  width: 202px;
+
+.about-list .about-list-item {
+  width: 100%;
   height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.about-list li img {
-  width: 18px;
-  height: 20px;
-  margin-right: 10px;
+  line-height: 60px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 .about-list .active {
-  background: rgba(52, 131, 255, 0.19);
-  color: rgba(52, 131, 255, 1);
-  border-radius: 10px;
+  background: rgba(52, 131, 255, 0.3);
+  color: #3483ff;
+}
+.about-list .about-list-item img {
+  width: 18px;
+  height: 20px;
 }
 .list-title {
   width: 100px;
+  text-align: center;
 }
-.about-main {
+.about-right {
   flex: 1;
-  border: 1px solid red;
+  
 }
 </style>

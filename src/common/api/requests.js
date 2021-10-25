@@ -10,7 +10,7 @@ export default {
         params: {},
         headers: {}
     },
-    $axios(options = {}) {
+    $axios (options = {}) {
         options.method = options.method || this.common.method;
         options.data = options.data || this.common.data;
         options.params = options.params || this.common.params;
@@ -18,7 +18,7 @@ export default {
 
         // 判断登陆状态
         // if (options.headers.token) {
-		// 	options.headers.token = store.state.user.token
+        // 	options.headers.token = store.state.user.token
         //     if (!options.headers.token) {
         //         router.push('/about')
         //     }
