@@ -6,10 +6,12 @@
 export default {
   metaInfo: {
     title: '鹿线课堂',
-    meta: [{
-      name: 'keyWords',
-      content: 'My Example App',
-    }],
+    meta: [
+      {
+        name: 'keyWords',
+        content: 'My Example App',
+      },
+    ],
   },
 };
 </script>

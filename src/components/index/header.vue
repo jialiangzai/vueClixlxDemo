@@ -10,13 +10,13 @@
       <div class="content-nav">
         <ul>
           <li>
-            <router-link to="/" class="aaa">首  页</router-link>
+            <router-link to="/" class="aaa">首 页</router-link>
           </li>
           <li>
-            <router-link to="/course">课  程</router-link>
+            <router-link to="/course">课 程</router-link>
           </li>
           <li>
-            <router-link to="/member">会  员</router-link>
+            <router-link to="/member">会 员</router-link>
           </li>
         </ul>
       </div>
@@ -29,7 +29,15 @@
         <div class="content-Shopping">
           <i class="el-icon-shopping-cart-1"></i>
         </div>
-        <div class="content-login">登录 / 注册</div>
+        <div class="content-login-success" v-if="isLogin">
+          <div @click="goAbout">我的课程</div>
+          <img
+            class="avator"
+            src="../../assets/image/common/avator.png"
+            alt=""
+          />
+        </div>
+        <div class="content-login" v-else>登录 / 注册</div>
       </div>
     </div>
   </div>
@@ -40,7 +48,15 @@ export default {
   data() {
     return {
       msg: '我是头部',
+      isLogin: true,
     };
+  },
+  methods: {
+    goAbout() {
+      this.$router.push({
+        path: '/about',
+      });
+    },
   },
 };
 </script>
@@ -59,7 +75,7 @@ export default {
   width: 100vw;
   height: 100px;
   /* background: skyblue; */
-  background:  white;
+  background: white;
   box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
   border-radius: 0px;
@@ -79,11 +95,11 @@ export default {
 .content-logo img {
   height: 100%;
 }
-.content-nav{
+.content-nav {
   width: 300px;
   height: 75px;
 }
-.content-nav ul{
+.content-nav ul {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -94,50 +110,67 @@ export default {
   /* height: 100%; */
   color: black;
 }
-.content-nav ul li a{
+.content-nav ul li a {
   font-size: 18px;
   font-family: MicrosoftYaHei;
   color: #808080;
 }
-.aaa{
+.aaa {
   font-weight: bold;
 }
-.searBuyLogin{
+.searBuyLogin {
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 752px;
 }
-.content-search{
+.content-search {
   display: flex;
   align-items: center;
   padding: 5px 10px;
   width: 460px;
   height: 40px;
   border-radius: 8px;
-  background: #F0F2F4;
+  background: #f0f2f4;
 }
-.content-search input{
+.content-search input {
   padding: 0 10px;
   width: 430px;
   height: 40px;
   border: 0;
   border-radius: 8px;
   color: #808080;
-  background: #F0F2F4;
+  background: #f0f2f4;
   font-size: 18px;
   outline: none;
 }
-.content-search i{
+.content-search i {
   font-size: 24px;
 }
-.content-Shopping i{
+.content-Shopping i {
   font-size: 24px;
 }
-.content-login{
+.content-login {
   height: 31px;
   font-size: 18px;
   color: #808080;
   text-align: center;
+}
+.content-login-success {
+  height: 53px;
+  color: #808080;
+  text-align: center;
+  width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 18px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #707070;
+}
+.avator {
+  height: 53px;
+  width: 53px;
 }
 </style>
