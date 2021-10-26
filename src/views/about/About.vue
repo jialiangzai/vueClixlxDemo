@@ -2,27 +2,12 @@
   <div class="about">
     <Header ></Header>
     <div class="about-banner">
-<<<<<<< HEAD
-      <div class="banner-content">
-        <div class="banner-left">
-          <img
-            class="banner-avator"
-            src="/image/common/avator.png"
-            alt=""
-          />
-          <div class="banner-my">
-            <div class="banner-name">Fly-不一样的我</div>
-            <div class="banner-introduce">
-              <p>女</p>
-              <p>北京</p>
-              <p>web前端工程师</p>
-=======
       <div class="banner-main">
         <div class="banner-content">
           <div class="banner-left">
             <img
               class="banner-avator"
-              src="../../assets/image/common/avator.png"
+              src="/image/common/avator.png"
               alt=""
             />
             <div class="banner-my">
@@ -35,24 +20,14 @@
               <div class="banner-autograph">
                 这位同学很神秘，没有留下个性签名
               </div>
->>>>>>> 36cfee5a22d6f32476b25dc309193e680a46debc
             </div>
           </div>
-<<<<<<< HEAD
-        </div>
-        <div class="banner-right">
-          <div class="banner-study">学习时长 <span>0h</span></div>
-          <div class="banner-setting">
-            <img src="/image/about/setting.png" alt="" />
-            <p>个人设置</p>
-=======
           <div class="banner-right">
             <div class="banner-study">学习时长 <span>0h</span></div>
             <div class="banner-setting">
-              <img src="../../assets/image/about/setting.png" alt="" />
+              <img src="/image/about/setting.png" alt="" />
               <p>个人设置</p>
             </div>
->>>>>>> 36cfee5a22d6f32476b25dc309193e680a46debc
           </div>
         </div>
       </div>
@@ -65,7 +40,7 @@
             <div v-for="(item,index) in aboutList" :key="item.id" @click="geDetail(index)">
               <router-link :to="item.link">
                 <div class="about-list-item" :class="current === index ? 'active' :''">
-                  <img src="@/assets/image/about/collean.png" alt="" />
+                  <img src="/image/about/collean.png" alt="" />
                   <p class="list-title">{{ item.title }}</p>
                 </div>
               </router-link>
@@ -90,60 +65,31 @@ export default {
       aboutList: [
         {
           id: 1,
-<<<<<<< HEAD
-          imgUrl: '/image/about/my-course.png',
-          selectImg: '/image/about/my-course.png',
-          title: '我的课程',
-        }, {
-          id: 2,
-          imgUrl: '/image/about/collean.png',
-          selectImg: '/image/about/collean-select.png',
-          title: '收藏',
-        },
-        {
-          id: 3,
-          imgUrl: '/image/about/note.png',
-          selectImg: '/image/about/note-select.png',
-          title: '笔记',
-        },
-        {
-          id: 4,
-          imgUrl: '/image/about/order.png',
-          selectImg: '/image/about/order-select.png',
-          title: '订单',
-        },
-        {
-          id: 5,
-          imgUrl: '/image/about/mess.png',
-          selectImg: '/image/about/mess-select.png',
-          title: '我的课程',
-=======
-          imgUrl: "../../assets/image/about/collean.png",
-          selectImg: "../../assets/image/about/collean-select.png",
+          imgUrl: "/image/about/collean.png",
+          selectImg: "/image/about/collean-select.png",
           title: "我的课程",
           link: "/about/my-course",
         },
         {
           id: 2,
-          imgUrl: "../../assets/image/about/collean.png",
-          selectImg: "../../assets/image/about/collean-select.png",
+          imgUrl: "/image/about/collean.png",
+          selectImg: "/image/about/collean-select.png",
           title: "收藏",
           link: "/about/collean",
         },
         {
           id: 3,
-          imgUrl: "../../assets/image/about/collean.png",
-          selectImg: "../../assets/image/about/collean-select.png",
+          imgUrl: "/image/about/collean.png",
+          selectImg: "/image/about/collean-select.png",
           title: "订单",
           link: "/about/order",
         },
         {
           id: 4,
-          imgUrl: "../../assets/image/about/collean.png",
-          selectImg: "../../assets/image/about/collean-select.png",
+          imgUrl: "/image/about/collean.png",
+          selectImg: "/image/about/collean-select.png",
           title: "消息",
           link: "/about/message",
->>>>>>> 36cfee5a22d6f32476b25dc309193e680a46debc
         },
       ],
       current: 0,
@@ -165,14 +111,7 @@ export default {
   height: 1000px;
 }
 .about-banner {
-<<<<<<< HEAD
-  width: 100%;
-  height: 185px;
-  position: relative;
   background: url("/image/about/about-banner.png") no-repeat 0 0;
-=======
-  background: url("../../assets/image/about/about-banner.png") no-repeat 0 0;
->>>>>>> 36cfee5a22d6f32476b25dc309193e680a46debc
   box-sizing: border-box;
 }
 .banner-main {

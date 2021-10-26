@@ -64,7 +64,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import courseType from './courseType.vue'
 import http from '../../common/api/requests'
 
@@ -124,67 +123,6 @@ export default {
 		courseType,
 	},
 }
-=======
-import courseType from './courseType.vue';
-import http from '../../common/api/requests';
-
-export default {
-  data() {
-    return {
-      msg: '首页导航和轮播组件',
-      categorys: [],
-      categorysDetail: [],
-      sliders: [],
-    };
-  },
-  created() {
-    this.getFirstCategory();
-    this.getSliders();
-  },
-  methods: {
-    // 课程分类，鼠标进入移出事件
-    mourseHover(index) {
-      this.$set(this.categorysDetail, index, true);
-    },
-    mourseOut(index) {
-      this.$set(this.categorysDetail, index, false);
-    },
-    // 获取课程一级分类
-    async getFirstCategory() {
-      let res = await http.$axios({
-        url: 'api/course/category/getFirstCategorys',
-        method: 'GET',
-        header: {
-          'Content-Type': 'application/json',
-          // "Content-Type":"application/x-www-form-urlencoded"
-        },
-      });
-      // console.log('课程分类' , res);
-      this.categorys = res.data.list;
-      this.categorysDetail = new Array(this.categorys.length);
-      for (let i = 0; i < this.categorysDetail.length; i++) {
-        this.categorysDetail[i] = false;
-      }
-    },
-    // 获取轮播图
-    async  getSliders() {
-      let res = await http.$axios({
-        url: 'api/slider/getSliders',
-        method: 'GET',
-        header: {
-          'Content-Type': 'application/json',
-          // "Content-Type":"application/x-www-form-urlencoded"
-        },
-      });
-      // console.log('轮播图',res);
-      this.sliders = res.data.list;
-    },
-  },
-  components: {
-    courseType,
-  },
-};
->>>>>>> 36cfee5a22d6f32476b25dc309193e680a46debc
 </script>
 
 <style scoped>

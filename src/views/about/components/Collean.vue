@@ -16,7 +16,7 @@
           <div class="course-main" style="width:980px;">
             <div class="course-item">
               <div class="item-left">
-                <img src="@/assets/image/about/course-bg.png" alt="" />
+                <img src="/image/about/course-bg.png" alt="" />
                 <p>晋级TS高手搞定复杂项目</p>
               </div>
               <div class="item-right">
@@ -41,7 +41,7 @@
       </div>
       <div v-else class="course-empty">
         <div class="empty">
-          <img src="../../../assets/image/about/course-empt.png" alt="" />
+          <img src="/image/about/course-empt.png" alt="" />
           <p>没有任何课程，可以先<span>去找找课程</span></p>
         </div>
       </div>

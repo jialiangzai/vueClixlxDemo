@@ -21,7 +21,7 @@
                 <p class="time"> 2020-09-21 10:21:30</p>
               </div>
               <div class="delete" v-show="isDelete">
-                <img src="../../../assets/image/about/remove.png" alt="">
+                <img src="/image/about/remove.png" alt="">
               </div>
             </div>
             
@@ -31,7 +31,7 @@
       </div>
       <div v-else class="course-empty">
         
-        <el-empty image="../../../assets/image/about/course-empt.png"></el-empty>
+        <el-empty image="/image/about/course-empt.png"></el-empty>
       </div>
     </div>
   </div>
