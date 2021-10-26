@@ -24,7 +24,7 @@
           </div>
           <div class="banner-right">
             <div class="banner-study">学习时长 <span>0h</span></div>
-            <div class="banner-setting">
+            <div class="banner-setting" @click="goMine">
               <img src="/image/about/setting.png" alt="" />
               <p>个人设置</p>
             </div>
@@ -32,7 +32,6 @@
         </div>
       </div>
     </div>
-
     <div class="about-main">
       <div class="about-container">
         <div class="about-left">
@@ -40,7 +39,7 @@
             <div v-for="(item,index) in aboutList" :key="item.id" @click="geDetail(index)">
               <router-link :to="item.link">
                 <div class="about-list-item" :class="current === index ? 'active' :''">
-                  <img src="/image/about/collean.png" alt="" />
+                  <img :src="current === index ? item.selectImg : item.imgUrl" alt="" />
                   <p class="list-title">{{ item.title }}</p>
                 </div>
               </router-link>
@@ -65,8 +64,8 @@ export default {
       aboutList: [
         {
           id: 1,
-          imgUrl: "/image/about/collean.png",
-          selectImg: "/image/about/collean-select.png",
+          imgUrl: "/image/about/my-course.png",
+          selectImg: "/image/about/my-course-select.png",
           title: "我的课程",
           link: "/about/my-course",
         },
@@ -79,15 +78,15 @@ export default {
         },
         {
           id: 3,
-          imgUrl: "/image/about/collean.png",
-          selectImg: "/image/about/collean-select.png",
+          imgUrl: "/image/about/order.png",
+          selectImg: "/image/about/order-select.png",
           title: "订单",
           link: "/about/order",
         },
         {
           id: 4,
-          imgUrl: "/image/about/collean.png",
-          selectImg: "/image/about/collean-select.png",
+          imgUrl: "/image/about/mess.png",
+          selectImg: "/image/about/mess-select.png",
           title: "消息",
           link: "/about/message",
         },
@@ -102,6 +101,9 @@ export default {
     geDetail(index) {
       this.current = index;
     },
+    goMine(){
+      this.$router.push('/user')
+    }
   },
 };
 </script>
@@ -192,6 +194,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  cursor: pointer;
 }
 .banner-setting img {
   width: 18px;
@@ -207,7 +210,6 @@ export default {
 .about-container {
   width: 1200px;
   height: 800px;
-  border: 1px solid red;
   position: absolute;
   top: 30px;
   left: 50%;

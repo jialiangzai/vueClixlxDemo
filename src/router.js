@@ -9,7 +9,10 @@ import MyCourse from '@/views/about/components/MyCourse.vue';
 import Collean from '@/views/about/components/Collean.vue';
 import Order from '@/views/about/components/Order.vue';
 import Message from '@/views/about/components/Message.vue';
-
+import User from '@/views/user/User.vue';
+import Setbindsns from '@/views/user/components/Setbindsns.vue';
+import Setprofile from '@/views/user/components/Setprofile.vue';
+import Setavator from '@/views/user/components/Setavator.vue';
 
 Vue.use(Router);
 
@@ -17,27 +20,47 @@ const routes = [
   { path: '/', component: Home },
   { path: '/course', component: Course },
   { path: '/member', component: Member },
-  { path: '/about', component: About ,name:'About',
-  redirect:'/about/my-course',
-  children: [
-    {
-      path: 'my-course',
-      component: MyCourse,
-    },
-    {
-      path: 'collean',
-      component: Collean,
-    },
-    {
-      path: 'order',
-      component:Order,
-    },
-    {
-      path: 'message',
-      component: Message,
-    },
-  ]
-}
+  {
+    path: '/about', component: About, name: 'About',
+    redirect: '/about/my-course',
+    children: [
+      {
+        path: 'my-course',
+        component: MyCourse,
+      },
+      {
+        path: 'collean',
+        component: Collean,
+      },
+      {
+        path: 'order',
+        component: Order,
+      },
+      {
+        path: 'message',
+        component: Message,
+      },
+    ]
+  },
+  {
+    path: '/user', component: User,
+    redirect: '/user/setbindsns',
+    children: [
+      {
+        path: 'setbindsns',
+        component: Setbindsns,
+      },
+      {
+        path: 'setprofile',
+        component: Setprofile,
+      },
+      {
+        path: 'setavator',
+        component: Setavator,
+      }
+    ]
+
+  }
 ];
 
 export default new Router({
