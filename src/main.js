@@ -6,9 +6,14 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router';
 import store from './store';
 import './registerServiceWorker';
-
+import { HappyScroll } from 'vue-happy-scroll'
 Vue.use(MetaInfo);
 Vue.use(ElementUI);
+
+//自定义组件名
+Vue.component('happy-scroll', HappyScroll)
+// 引入css
+import 'vue-happy-scroll/docs/happy-scroll.css'
 
 Vue.config.productionTip = false;
 

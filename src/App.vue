@@ -1,12 +1,5 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
-    <!-- <h1>{{ msg }}</h1> -->
-    <!-- <p>
-      <router-link to="/">首页</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/contact">Contact</router-link>
-    </p> -->
     <router-view></router-view>
   </div>
 </template>

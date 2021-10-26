@@ -2,6 +2,7 @@ const path = require('path');
 const PrerenderSPAPlugin = require('prerender-spa-plugin');
 
 module.exports = {
+  lintOnSave: false,
   baseUrl: './',
   devServer: {
     host: '127.0.0.1',
