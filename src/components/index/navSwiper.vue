@@ -36,6 +36,29 @@
                         </div>
                     </div>
                     <div class="detail-class">
+                        <div class="course-card" v-for="i in 4" :key="i" >
+                            <div class="course-image">
+                                <img src="/image/classbg.png" alt="">
+                                <div  class="courseDesc">
+                                    <div>晋级TS高手</div>
+                                    <div>搞定复杂项目</div>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <div class="courseName">晋级TypeScript高手，成为抢手的前端开发人才11111111</div> 
+                                <div class="courseDegree">中级 · 87人报名</div>
+                                <div class="buy">
+                                    <div class="learn">免费学习</div>
+                                    <div class="car">
+                                        <div class="cart-image">
+                                            <img src="/image/cart16.png" alt="">
+                                        </div>
+                                        <span class="addcart">加购物车</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
@@ -77,8 +100,8 @@ export default {
 		}
 	},
 	created() {
-		/* this.getFirstCategory()
-		this.getSliders() */
+		this.getFirstCategory()
+		this.getSliders()
 	},
 	methods: {
 		// 课程分类，鼠标进入移出事件
@@ -234,48 +257,77 @@ export default {
     color: #00ffff;
 }
 /* 分类详情结束 */
-/* .course-type{
+/* 下侧课程开始 */
+.detail-class{
     display: flex;
-    width: calc(1300px - 2px);
-    margin: 0 auto; */
-/* border: #808080 solid 1px; */
-/* border-top: none;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    overflow: hidden;
-    background: #ffffff;
-    box-shadow: 0 20px 20px #d2d2d2;
-  }
-  .course-type .course-type-item{
-    width: 260px;
-    height: 100px;
-    flex: 1;
-  }
-  .course-type .course-type-item a{
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 700px;
+    height: 300px;
+}
+.course-card{
     display: flex;
-    justify-content: center;
-  }
-  .course-type-item .course-type-item-icon{
-    font-size: 35px;
-    border-radius: 50%;
-    margin: 25px 10px 25px 0;
-    width: 50px;
-    height: 50px;
-    background: #55EE8B;
-    text-align: center;
-    line-height: 50px;
-    color: #ffffff;
-  }
-  .course-type-item .course-type-item-text{
-    margin: 25px 0;
-  }
-  .course-type-item .course-type-item-text .course-type-item-title{
-    font-size: 18px;
-    line-height: 30px;
+    margin-bottom: 10px;
+    align-items: center;
+    width: 340px;
+    height: 150px;
+    background: #F3F5F6;
+}
+.course-image{
+	position: relative;
+    width:200px ;
+    height: 100%;
+}
+.course-image img{
+    width: 100%;
+    height: 100%;
+}
+.course-image  .courseDesc{
+    position: absolute;
+	top: 40px;
+	left: 15px;
+	font-size: 20px;
     font-weight: bold;
-  } */
-/* .course-type-item .course-type-item-text .course-type-item-desc{
+	color: #ffffff;
+}
+.courseName{
+    width: 150px;
+    height: 35px;
+    margin: 5px 0 0 5px;
+	font-weight: bold;
+	font-size: 13px;
+	color: #333333;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+.courseDegree{
+    margin: 30px 0 0 5px;
+    font-size: 12px;
     color: #808080;
-    font-size: 14px;
-  } */
+}
+.buy{
+    display: flex;
+    margin: 40px 0 0 5px;
+    justify-content: space-between;
+}
+.buy .learn{
+    color: #3586FF;
+    font-size: 13px;
+}
+.buy .car{
+    display: flex;
+    margin-right: 5px;
+}
+.buy .car img{
+
+}
+.buy .addcart{
+    margin-left: 2px;
+    color: #FF3D17;
+    font-size: 13px;
+
+}
+/* 下侧课程结束 */
 </style>
