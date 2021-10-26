@@ -320,9 +320,7 @@ export default {
     display: flex;
     margin-right: 5px;
 }
-.buy .car img{
 
-}
 .buy .addcart{
     margin-left: 2px;
     color: #FF3D17;
