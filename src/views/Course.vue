@@ -1,8 +1,18 @@
 <template>
-  <h2>Contact Page</h2>
+    <div class="course">
+        <indexHeader></indexHeader>
+        <courseDirection></courseDirection>
+        <coursemain></coursemain>
+    </div>
+    
 </template>
 
 <script>
+import indexHeader from '@/components/index/header.vue';
+import courseDirection from '@/components/course/classDirection.vue';
+import coursemain from '@/components/course/coursemain.vue';
+
+
 export default {
   metaInfo: {
     title: '鹿线课堂',
@@ -12,6 +22,11 @@ export default {
         content: 'My Example App',
       },
     ],
+  },
+  components: {
+    indexHeader,
+    courseDirection,
+    coursemain
   },
 };
 </script>

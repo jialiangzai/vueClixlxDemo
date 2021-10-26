@@ -6,7 +6,7 @@
         <div class="banner-left">
           <img
             class="banner-avator"
-            src="../../assets/image/common/avator.png"
+            src="/image/common/avator.png"
             alt=""
           />
           <div class="banner-my">
@@ -22,7 +22,7 @@
         <div class="banner-right">
           <div class="banner-study">学习时长 <span>0h</span></div>
           <div class="banner-setting">
-            <img src="../../assets/image/about/setting.png" alt="" />
+            <img src="/image/about/setting.png" alt="" />
             <p>个人设置</p>
           </div>
         </div>
@@ -57,31 +57,31 @@ export default {
       dataList: [
         {
           id: 1,
-          imgUrl: '../../assests/image/about/my-course.png',
-          selectImg: '../../assets/image/about/my-course.png',
+          imgUrl: '/image/about/my-course.png',
+          selectImg: '/image/about/my-course.png',
           title: '我的课程',
         }, {
           id: 2,
-          imgUrl: '../../assets/image/about/collean.png',
-          selectImg: '../../assets/image/about/collean-select.png',
+          imgUrl: '/image/about/collean.png',
+          selectImg: '/image/about/collean-select.png',
           title: '收藏',
         },
         {
           id: 3,
-          imgUrl: '../../assets/image/about/note.png',
-          selectImg: '../../assets/image/about/note-select.png',
+          imgUrl: '/image/about/note.png',
+          selectImg: '/image/about/note-select.png',
           title: '笔记',
         },
         {
           id: 4,
-          imgUrl: '../../assets/image/about/order.png',
-          selectImg: '../../assets/image/about/order-select.png',
+          imgUrl: '/image/about/order.png',
+          selectImg: '/image/about/order-select.png',
           title: '订单',
         },
         {
           id: 5,
-          imgUrl: '../../assets/image/about/mess.png',
-          selectImg: '../../assets/image/about/mess-select.png',
+          imgUrl: '/image/about/mess.png',
+          selectImg: '/image/about/mess-select.png',
           title: '我的课程',
         },
       ],
@@ -108,7 +108,7 @@ export default {
   width: 100%;
   height: 185px;
   position: relative;
-  background: url("../../assets/image/about/about-banner.png") no-repeat 0 0;
+  background: url("/image/about/about-banner.png") no-repeat 0 0;
   box-sizing: border-box;
 }
 .banner-content {

@@ -4,7 +4,7 @@
     <div class="header-content">
       <!-- 头部logo -->
       <div class="content-logo">
-        <img src="../../assets/image/logo.png" alt="" />
+        <img src="/image/logo.png" alt="" />
       </div>
       <!-- 头部导航 -->
       <div class="content-nav">
@@ -33,7 +33,7 @@
           <div @click="goAbout">我的课程</div>
           <img
             class="avator"
-            src="../../assets/image/common/avator.png"
+            src="/image/common/avator.png"
             alt=""
           />
         </div>
@@ -72,7 +72,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   height: 100px;
   /* background: skyblue; */
   background: white;
