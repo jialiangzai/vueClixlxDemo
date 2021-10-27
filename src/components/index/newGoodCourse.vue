@@ -16,22 +16,24 @@
         <!-- 新上好课内容开始 -->
         <div class="newCourseContent">
             <ul class="courseUl">
-                <li class="courseItem" v-for="i in 8" :key="i">
-                    <div class="courseInfo">
+                <li class="courseItem" v-for="(item,index) in newCourses" :key="index">
+                    <router-link :to="{path: '/cart', query: {id:index}}">                       
+                        <div class="courseInfo">
                         <div class="courseBg">
-                            <img class="courseImg" src="/image/classbg.png" alt="">
-                            <div  class="courseDesc">
+                            <img class="courseImg" :src="item.courseCover" alt="">
+                            <!-- <div  class="courseDesc">
                                 <div>晋级TS高手</div>
                                 <div>搞定复杂项目</div>
+                            </div> -->
+                        </div>
+                            <div class="courseName">{{item.courseName}}</div>
+                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人报名</div>
+                            <div class="coursePrice">
+                                <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
+                                <div class="price">¥ {{item.salePrice}}</div>
                             </div>
                         </div>
-                        <div class="courseName">晋级TypeScript高手，成为抢手的前端开发人才</div>
-                        <div class="courseDegree">中级 · 87人报名</div>
-                        <div class="coursePrice">
-                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
-                            <div class="price">¥ 3688.00</div>
-                        </div>
-                    </div>
+                    </router-link>
                 </li>
             </ul>
         </div>
@@ -56,42 +58,38 @@
                 <img class="commendLeftimg" src="/image/commendLeft.png" alt="">
             </div>
             <ul class="courseUl">
-                <li class="courseItem" v-for="i in 6" :key="i">
+                <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
                     <div class="courseInfo">
                     <div class="courseBg">
-                        <img class="courseImg" src="/image/classbg.png" alt="">
-                        <div  class="courseDesc">
+                        <img class="courseImg" :src="item.courseCover" alt="">
+                        <!-- <div  class="courseDesc">
                             <div>晋级TS高手</div>
                             <div>搞定复杂项目</div>
-                        </div>
+                        </div> -->
                     </div>
-                        <div class="courseName">晋级TypeScript高手，成为抢手的前端开发人才</div>
-                        <div class="courseDegree">中级 · 87人报名</div>
+                        <div class="courseName">{{item.courseName}}</div>
+                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人报名</div>
                         <div class="coursePrice">
-                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
-                            <div class="price">¥ 3688.00</div>
+                            <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
+                            <div class="price">¥ {{item.salePrice}}</div>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
-    <div class="course-list-container">
+    <!-- <div class="course-list-container"> -->
         <!-- 都在看好书标题开始 -->
-        <h1 class="contentTitle">
-            <div class="hot">
-                <div class="hot-left">HOT</div>
-                <div class="hot-right"></div>
-            </div>
+        <!-- <h1 class="contentTitle">
             <div class="txt">
-                <div class="txt-top">推荐好课</div>
+                <div class="txt-top">都在看好书</div>
                 <div class="txt-bottom"></div>
             </div>
-        </h1>
+        </h1> -->
         <!-- 都在看好书标题结束 -->
-        <div class="book">
+        <!-- <div class="book">
             <ul class="courseUl">
-                <li class="goodBook" v-for="i in 6" :key="i">
+                <li class="goodBook" v-for="i in 4" :key="i">
                     <div class="goodBookInfo">
                         <div class="courseBg">
                             <img class="courseImg" src="/image/classbg.png" alt="">
@@ -106,16 +104,80 @@
                     </div>
                 </li>                                     
             </ul>
-        </div>    
-    </div>
+        </div>   -->  
+    <!-- </div> -->
 </div>
 </template>
 
 <script>
+import {getNewCourse,getHotCourse} from '@/common/api/courseManage.js'
 export default {
 	data() {
-		return {}
+		return {
+            newCourses:[],//新上好课
+            hotCourse:[],//推荐好课
+            courseLevel:'',
+            querynew:{
+                pageNum: 1,
+                pageSize: 10,
+                entity: {}
+            },
+            queryhot:{
+                pageNum: 1,
+                pageSize: 10,
+                entity: {}
+            }
+        }
 	},
+    created(){
+        this.getNewCourse()
+        this.getHotCourse()
+    },
+    methods:{
+        //获取最新课程
+        getNewCourse(){
+            getNewCourse(this.querynew).then(res => {
+                this.newCourses = res.data.pageInfo.list
+                this.newCourses.forEach(item => {
+                    switch(item.courseLevel){
+                    case 1:
+                        item.courseLevel = '初级';
+                        break;
+                    case 2:
+                        item.courseLevel = '中级';
+                        break;
+                    case 3:
+                        item.courseLevel = '高级';
+                        break;
+                    default:
+                        item.courseLevel = ''
+                    }
+                })
+            })
+        },
+        //获取推荐好课
+        getHotCourse(){
+            getHotCourse(this.queryhot).then(res => {
+                this.hotCourse = res.data.pageInfo.list
+                this.hotCourse.forEach(item => {
+                    switch(item.courseLevel){
+                    case 1:
+                        item.courseLevel = '初级';
+                        break;
+                    case 2:
+                        item.courseLevel = '中级';
+                        break;
+                    case 3:
+                        item.courseLevel = '高级';
+                        break;
+                    default:
+                        item.courseLevel = ''
+                    }
+                })
+            })
+        },
+
+    }
 }
 </script>
 
@@ -256,10 +318,16 @@ export default {
 	color: #ffffff;
 }
 .courseName {
+    width: 300px;
+    height: 40px;
 	margin: 10px;
 	font-weight: bold;
 	font-size: 14px;
 	color: #333333;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 .courseDegree {
 	margin-left: 10px;
@@ -269,7 +337,7 @@ export default {
 .coursePrice {
 	display: flex;
 	font-size: 14px;
-	margin: 10px;
+	margin-top: 10px;
 }
 .courseMemberbg {
 	position: relative;

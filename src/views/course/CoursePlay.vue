@@ -1,18 +1,17 @@
 <template>
-    <div class="courseinfo">    
+    <div class="courseplay">
+        <router-view></router-view>
         <indexHeader></indexHeader>
-        <courseInfoTop></courseInfoTop>
-        <courseInfoContainer></courseInfoContainer>
+        <coursePlayMain></coursePlayMain>
         <foot></foot>
     </div>
-    
 </template>
+
 
 <script>
 import indexHeader from '@/components/index/header.vue';
-import courseInfoTop from '@/components/course/courseInfoTop.vue'
 import foot from '@/components/foot/foot.vue';
-import courseInfoContainer from '@/components/course/courseInfoContainer.vue'
+import coursePlayMain from '@/components/course/coursePlayMain.vue'
 export default {
   metaInfo: {
     title: '鹿线课堂',
@@ -25,9 +24,9 @@ export default {
   },
   components: {
     indexHeader,
-    courseInfoTop,
-    courseInfoContainer,
+    coursePlayMain,
     foot
+
   },
 };
 </script>

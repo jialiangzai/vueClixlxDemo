@@ -25,17 +25,23 @@
                         :key="k"
                         @mouseenter="mourseHover(j)"
                         @mouseleave="mourseOut(j)">
-                        <div class="video-itemIcon">
-                            <i class="el-icon-video-camera-solid"></i>
-                        </div>
-                       
-                        <div class="item-name">
-                            <span class="shipin">视频:</span>
-                            <span>{{j.chapterName}}</span>
-                        </div>
 
-                        <button class="btn-learn" v-if="j.isShow">开始学习</button>
-                        <div class="clearfloat"></div>
+                        <router-link :to="{path: '/course-play', query: {id:k}}">                       
+                            <div class="video-itemIcon">
+                                <i class="el-icon-video-camera-solid"></i>
+                            </div>
+                        
+                            <div class="item-name">
+                                <span class="shipin">视频:</span>
+                                <span>{{j.chapterName}}</span>
+                            </div>
+
+                            <button class="btn-learn" v-if="j.isShow">开始学习</button>
+                            <div class="clearfloat"></div>
+                        </router-link>
+
+
+                        
                     </li>
                     
                 </ul>

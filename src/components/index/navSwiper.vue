@@ -7,7 +7,7 @@
           <li
             v-for="(item, index) in categorys"
             :key="item.id"
-            @mouseenter="mourseHover(index)"
+            @mouseenter="mourseHover(item,index)"
             @mouseleave="mourseOut(index)"
           >
             <router-link to="/" :title="item.categoryName"
@@ -19,34 +19,21 @@
                     <div class="detail-list"> 
                         <div class="list-know">知识点:</div>
                         <div class="list-ul">
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
-                            <router-link to="#" class="list-item">Vue .js</router-link>
+                            <router-link to="#" class="list-item" v-for="(item,index) in tagarr" :key="index">{{item.tagName}}</router-link>
                         </div>
                     </div>
                     <div class="detail-class">
-                        <div class="course-card" v-for="i in 4" :key="i" >
+                        <div class="course-card" v-for="(item,index) in arrcourse" :key="index" >
                             <div class="course-image">
-                                <img src="/image/classbg.png" alt="">
-                                <div  class="courseDesc">
+                                <img :src="item.courseCover" alt="">
+                                <!-- <div  class="courseDesc">
                                     <div>晋级TS高手</div>
                                     <div>搞定复杂项目</div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="right">
-                                <div class="courseName">晋级TypeScript高手，成为抢手的前端开发人才11111111</div> 
-                                <div class="courseDegree">中级 · 87人报名</div>
+                                <div class="courseName">{{item.courseName}}</div> 
+                                <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人报名</div>
                                 <div class="buy">
                                     <div class="learn">免费学习</div>
                                     <div class="car">
@@ -87,6 +74,8 @@
 </template>
 
 <script>
+import {queryCourse} from '@/common/api/courseManage.js'
+import {queryCourseTag} from '@/common/api/courseTag.js'
 import courseType from './courseType.vue'
 import http from '../../common/api/requests'
 
@@ -97,6 +86,16 @@ export default {
 			categorys: [],
 			categorysDetail: [],
 			sliders: [],
+            arrcourse:[],//课程信息
+            tagarr:[],//标签数组
+            querycourse:{
+                pageNum: 1,
+                pageSize: 4,
+                entity: {
+                    firstCategory:''
+                }
+            },
+
 		}
 	},
 	created() {
@@ -105,8 +104,11 @@ export default {
 	},
 	methods: {
 		// 课程分类，鼠标进入移出事件
-		mourseHover(index) {
+		mourseHover(item,index) {
 			this.$set(this.categorysDetail, index, true)
+            this.querycourse.entity.firstCategory = item.id
+            this.queryCourseTag()
+            this.queryCourse()
 		},
 		mourseOut(index) {
 			this.$set(this.categorysDetail, index, false)
@@ -127,6 +129,8 @@ export default {
 			for (let i = 0; i < this.categorysDetail.length; i++) {
 				this.categorysDetail[i] = false
 			}
+          
+
 		},
 		// 获取轮播图
 		async getSliders() {
@@ -141,6 +145,33 @@ export default {
 			// console.log('轮播图',res);
 			this.sliders = res.data.list
 		},
+        //查询课程
+        queryCourse(){
+            queryCourse(this.querycourse).then(res => {
+                this.arrcourse = res.data.pageInfo.list
+                this.arrcourse.forEach(item => {
+                    switch(item.courseLevel){
+                    case 1:
+                        item.courseLevel = '初级';
+                        break;
+                    case 2:
+                        item.courseLevel = '中级';
+                        break;
+                    case 3:
+                        item.courseLevel = '高级';
+                        break;
+                    default:
+                        item.courseLevel = ''
+                    }
+                })
+            })
+        },
+        //获取课程标签
+        queryCourseTag(){
+            queryCourseTag(this.querycourse).then(res => {
+                this.tagarr = res.data.pageInfo.list
+            })
+        }
 	},
 	components: {
 		courseType,
@@ -261,21 +292,22 @@ export default {
 .detail-class{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 700px;
-    height: 300px;
+    height: 250px;
+    margin-top: 30px;
 }
 .course-card{
     display: flex;
     margin-bottom: 10px;
     align-items: center;
-    width: 340px;
-    height: 150px;
+    width: 320px;
+    height: 130px;
     background: #F3F5F6;
 }
 .course-image{
 	position: relative;
-    width:200px ;
+    width:180px ;
     height: 100%;
 }
 .course-image img{
@@ -286,9 +318,13 @@ export default {
     position: absolute;
 	top: 40px;
 	left: 15px;
-	font-size: 20px;
+	font-size: 16px;
     font-weight: bold;
 	color: #ffffff;
+}
+.right{
+    width: 100%;
+    height: 130px;
 }
 .courseName{
     width: 150px;
@@ -309,7 +345,7 @@ export default {
 }
 .buy{
     display: flex;
-    margin: 40px 0 0 5px;
+    margin: 20px 0 0 5px;
     justify-content: space-between;
 }
 .buy .learn{
