@@ -1,5 +1,5 @@
 <template>
-  <view>邀请码</view>
+  <div>邀请码</div>
 </template>
 
 <script>

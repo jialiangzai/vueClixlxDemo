@@ -11,12 +11,16 @@
   },
   "dependencies": {
     "axios": "^0.23.0",
+    "cropperjs": "^1.5.12",
     "element-ui": "^2.15.6",
+    "iscroll": "^5.2.0",
     "prerender-spa-plugin": "^3.2.1",
     "register-service-worker": "^1.0.0",
     "vue": "^2.6.14",
+    "vue-cropper": "^0.4.7",
     "vue-meta-info": "^0.1.7",
     "vue-router": "^3.0.1",
+    "vue-video-player": "^5.0.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -31,6 +35,7 @@
     "chai": "^4.1.2",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
+    "vue-happy-scroll": "^2.1.1",
     "vue-template-compiler": "^2.6.14"
   },
   "browserslist": [

@@ -1,5 +1,5 @@
 <template>
-  <view>笔记</view>
+  <div>笔记</div>
 </template>
 
 <script>
