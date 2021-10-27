@@ -79,7 +79,6 @@ export default {
   height: 800px;
   margin: 0 auto;
   display: flex;
-  border: 1px solid red;
   /* background-color: red; */
 }
 .mine-left {
@@ -170,6 +169,5 @@ export default {
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
-  border:1px solid red;
 }
 </style>

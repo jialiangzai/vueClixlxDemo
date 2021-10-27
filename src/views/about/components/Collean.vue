@@ -17,21 +17,33 @@
 
 <script>
 import ColleanItem from './ColleanItem.vue';
+import {getFavoriteList} from '@/common/api/favorite'
 export default {
   data() {
     return {
       activeName: 'first',
       totalList: [],
       freeList: [],
-      vipList: []
+      vipList: [],
+      query: {
+        pageSize:10,
+        pageNum:1
+      }
     };
   },
   components:{
     ColleanItem,
   },
-  onLoad(){
+  created(){
+    console.log(1)
+    this.getList()
   },
   methods: {
+    getList(){
+      getFavoriteList(this.query).then(res => {
+        console.log(res);
+      }).catch(err => console.log(err))
+    },
     handleClick(tab,event){
       console.log(tab,event)
     }
