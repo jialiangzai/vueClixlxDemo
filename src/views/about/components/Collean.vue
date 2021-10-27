@@ -21,13 +21,15 @@ export default {
   data() {
     return {
       activeName: 'first',
-      totalList: [1],
+      totalList: [],
       freeList: [],
       vipList: []
     };
   },
   components:{
     ColleanItem,
+  },
+  onLoad(){
   },
   methods: {
     handleClick(tab,event){
