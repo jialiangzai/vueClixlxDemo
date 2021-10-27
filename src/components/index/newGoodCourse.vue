@@ -187,6 +187,9 @@ export default {
 	height: 280px;
 	margin: 0 20px 20px 0;
 }
+.newCourseContent .courseUl .courseItem:hover{
+    cursor: pointer;
+}
 .newCourseContent .courseUl .courseItem:nth-child(4n+0){
     margin-right: 0 !important;
 }
@@ -215,6 +218,9 @@ export default {
 	width: 310px;
 	height: 280px;
 	margin: 0 20px 20px 0;
+}
+.commendCourseContent .courseUl .courseItem:hover{
+    cursor: pointer;
 }
 .commendCourseContent .courseUl .courseItem:nth-child(3n+0){
     margin-right: 0 !important;
@@ -302,6 +308,9 @@ export default {
 }
 .book .courseUl .goodBook:nth-child(4n+0){
     margin-right: 0 !important;
+}
+.book .courseUl .goodBook:hover{
+    cursor: pointer;
 }
 .goodBookInfo{
     width: 100%;
