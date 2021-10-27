@@ -19,7 +19,7 @@ export function loginByMobile(params){
 }
 
 // 退出登陆
-export function logout(params) {
+export function logout() {
   return http.$axios({
     url: 'api/u/logout',
     method: 'GET'
