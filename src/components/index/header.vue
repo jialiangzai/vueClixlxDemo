@@ -1,6 +1,12 @@
 <template>
   <!-- 首页头部组件 -->
-  <div class="header">
+  <div
+    class="header"
+    @mouseleave="
+      isUserInfo = false;
+      isCar = false;
+    "
+  >
     <div class="index-header">
       <div class="header-content">
         <!-- 头部logo -->
@@ -11,13 +17,19 @@
         <div class="content-nav">
           <ul>
             <li>
-              <router-link to="/" class="aaa">首 页</router-link>
+              <router-link to="/" class="aaa" style="cursor: pointer"
+                >首 页</router-link
+              >
             </li>
             <li>
-              <router-link to="/course">课 程</router-link>
+              <router-link to="/course" style="cursor: pointer"
+                >课 程</router-link
+              >
             </li>
             <li>
-              <router-link to="/member">会 员</router-link>
+              <router-link to="/member" style="cursor: pointer"
+                >会 员</router-link
+              >
             </li>
           </ul>
         </div>
@@ -25,17 +37,26 @@
         <div class="searBuyLogin">
           <div class="content-search">
             <input type="text" placeholder="请输入要搜索的课程" />
-            <i class="el-icon-search"></i>
+            <i class="el-icon-search" style="cursor: pointer"></i>
           </div>
-          <div class="content-Shopping">
-            <el-badge :value="12" class="item">
+          <div class="content-Shopping" style="cursor: pointer">
+            <el-badge :value="carNum" class="item" v-if="carNum">
               <i class="el-icon-shopping-cart-1"></i>
             </el-badge>
+            <i
+              class="el-icon-shopping-cart-1"
+              v-else
+              @mouseenter="isCar = true"
+            ></i>
           </div>
           <div class="content-login-success" v-if="isLogin">
-            <div @click="goAbout">我的课程</div>
-            <div>
-              <img class="avator" src="/image/common/avator.png" alt="" />
+            <div @click="goAbout" style="cursor: pointer">我的课程</div>
+            <div @mouseenter="isUserInfo = true">
+              <img
+                class="avator"
+                :src="userInfo && userInfo.avator ? userInfo.avator : avatorImg"
+                alt=""
+              />
               <!-- 头像信息 -->
             </div>
           </div>
@@ -130,7 +151,7 @@
                   type="primary"
                   class="regiterBtn"
                   @click="submitPhoneForm('phoneForm')"
-                  >立即登陆</el-button
+                  >立即登录</el-button
                 >
               </el-form-item>
             </el-form>
@@ -168,7 +189,7 @@
                   type="primary"
                   class="regiterBtn"
                   @click="submitIdentifyForm('identifyForm')"
-                  >登陆</el-button
+                  >登录</el-button
                 >
               </el-form-item>
             </el-form>
@@ -177,13 +198,19 @@
         </div>
       </div>
     </el-dialog>
-    <!-- 注册成功对话框 -->
-    <div class="user-info">
+    <!-- 注册成功显示 -->
+    <!-- 划过头像显示 -->
+    <div class="user-info" v-show="isUserInfo">
       <div class="user-info-top">
         <div class="u-i-t-top">
-          <img src="/image/common/avator.png" alt="" />
+          <img
+            :src="userInfo && userInfo.avator ? userInfo.avator : avatorImg"
+            alt=""
+          />
           <div class="avator-info">
-            <p>fly-不一样的我</p>
+            <p>
+              {{ userInfo && userInfo.nickName ? userInfo.nickName : username }}
+            </p>
           </div>
         </div>
         <div class="u-i-i-bottom">
@@ -201,6 +228,26 @@
         <div class="logout" @click="goLogout">退出登录</div>
       </div>
     </div>
+
+    <!-- 购物车 -->
+    <div class="shopcar" v-show="isCar">
+      <div class="shopcar-top">
+        <div class="s-t-left">我的购物车</div>
+      </div>
+      <div class="shopcar-center">
+        <img src="/image/header/car.png" alt="" />
+        <p class="car-empy">购物车空空如也</p>
+        <p>快去选购你喜欢的课程吧</p>
+        <p class="course-center">课程中心</p>
+      </div>
+      <div class="shopcar-bottom">
+        <p>我的订单</p>
+        <div class="car">
+          <img src="/image/header/car-select.png" alt="" />
+          <p class="course-center">我的购物车</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -211,20 +258,30 @@ import {
   register,
   loginByMobile,
   logout,
+  getInfo,
+  getShopCarCounter,
 } from "@/common/api/auth";
+import { Loading } from "element-ui";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       msg: "我是头部",
-      isLogin: true,
+      carNum: null,
+      isCar: false,
+      // isLogin: false,
+      isUserInfo: false,
+      avatorImg: "/image/common/avator.png",
+      username: "小鹿线-默认",
+      // userInfo: null,
       loginNav: [
         {
           id: 0,
-          title: "账号登陆",
+          title: "账号登录",
         },
         {
           id: 1,
-          title: "验证码登陆",
+          title: "验证码登录",
         },
       ],
       loginCurrent: 0,
@@ -289,6 +346,12 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+      isLogin: (state) => state.user.isLogin,
+    }),
+  },
   methods: {
     // 去我的课程
     goAbout() {
@@ -309,12 +372,34 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // alert('submit!');
+          var regiterloading = Loading.service({
+            lock: true,
+            text: "Loading",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
           register(this.registerForm)
             .then((res) => {
-              if (res.meta.code === "10006") {
+              console.log(res);
+              if (res.meta.code == "200") {
                 this.$message({
-                  message: "注册成功，赶紧去学习吧！",
+                  message: "注册成功，去登录吧！",
                   type: "success",
+                });
+                this.isregister = false;
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  regiterloading.close();
+                });
+              } else if (res.meta.code == "10005") {
+                this.$message({
+                  message: res.meta.msg,
+                  type: "success",
+                });
+                this.isregister = false;
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  regiterloading.close();
                 });
               }
             })
@@ -323,6 +408,10 @@ export default {
               this.$message({
                 message: "注册失败啦，请重新登陆！",
                 type: "error",
+              });
+              this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                regiterloading.close();
               });
             });
         } else {
@@ -336,22 +425,43 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // alert('submit!');
+          var phoneloading = Loading.service({
+            lock: true,
+            text: "Loading",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
           loginByJson(this.phoneForm)
             .then((res) => {
               if (res.meta.code === "10006") {
                 // 存储token
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  phoneloading.close();
+                });
+                this.open = false;
                 let accessToken = res.data.accessToken;
-                this.isLogin = true;
+                // 获取用户信息
+                this.getUserInofo();
+                this.getCarNum();
+                // 存储到access中
+                sessionStorage.setItem("token", accessToken);
+                sessionStorage.setItem("isLogin", JSON.stringify(true));
+
                 this.$message({
-                  message: "登陆成功，赶紧去学习吧！",
+                  message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
               }
             })
             .catch((err) => {
               console.log(err);
+              this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                phoneloading.close();
+              });
               this.$message({
-                message: "登陆失败啦，请重新登陆！",
+                message: "登录失败啦，请重新登陆！",
                 type: "error",
               });
             });
@@ -366,23 +476,49 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log(this.identifyForm);
+          var identLoading = Loading.service({
+            lock: true,
+            text: "Loading",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
           // alert('submit!');
-          loginByMobile(this.phoneForm)
+          loginByMobile(this.identifyForm)
             .then((res) => {
+              console.log(res);
               if (res.meta.code === "10006") {
                 // 存储token
                 let accessToken = res.data.accessToken;
-                this.isLogin = true;
+                // 存储到access中
+                sessionStorage.setItem("token", accessToken);
+                sessionStorage.setItem("isLogin", JSON.stringify(true));
+                // 获取个人信息
+                this.getUserInfo({
+                  token: accessToken,
+                });
+                // 获取购物车数据
+                this.getCarNum();
+                //  this.saveIsLoginAction(true)
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  identLoading.close();
+                });
+                this.open = false;
                 this.$message({
-                  message: "登陆成功，赶紧去学习吧！",
+                  message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
               }
             })
             .catch((err) => {
               console.log(err);
+              this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                identLoading.close();
+              });
+
               this.$message({
-                message: "登陆失败啦，请重新登陆！",
+                message: "登录失败啦，请重新登陆！",
                 type: "error",
               });
             });
@@ -415,7 +551,7 @@ export default {
                 if (res.meta.code === 200) {
                   console.log("发送成功");
                 }
-                console.log(res);
+                // console.log(res);
               })
               .catch((err) => {
                 console.log(err);
@@ -430,6 +566,27 @@ export default {
           type: "warning",
         });
       }
+    },
+    // 获取个人信息
+    getUserInfo(params) {
+      console.log(sessionStorage.getItem("token"));
+      getInfo(params)
+        .then((res) => {
+          sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+          // this.saveUserInfoActions()
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 获取购物车数据
+    getCarNum() {
+      getShopCarCounter().then((res) => {
+        console.log(res)
+        if (res.meta.code == 200) {
+          this.carNum = res.data.counter;
+        }
+      });
     },
     // 返回登陆页面
     backLogin() {
@@ -447,10 +604,15 @@ export default {
     goLogout() {
       logout()
         .then((res) => {
+          console.log(res);
           this.$message({
             message: "退出登录，欢迎下次登录",
             type: "success",
           });
+          this.isLogin = false;
+          sessionStorage.removeItem("token");
+          sessionStorage.removeItem("userInfo");
+          sessionStorage.removeItem("isLogin");
         })
         .catch((err) => {
           console.log(err);
@@ -576,6 +738,7 @@ export default {
 .avator {
   height: 53px;
   width: 53px;
+  cursor: pointer;
 }
 .dialog-title {
   width: 400px;
@@ -734,5 +897,83 @@ export default {
   font-weight: 400;
   color: #93999f;
   cursor: pointer;
+}
+.shopcar {
+  width: 200px;
+  height: 220px;
+  background: #fff;
+  border: 1px solid red;
+  position: absolute;
+  top: 100px;
+  right: 200px;
+  z-index: 999;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.shopcar-top {
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid rgba(51, 51, 51, 0.2);
+  box-sizing: border-box;
+}
+.s-t-left {
+  font-size: 12px;
+  font-family: Microsoft YaHei;
+  font-weight: bold;
+  color: #333333;
+}
+.shopcar-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 160px;
+  font-size: 10px;
+  box-sizing: border-box;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #a2a2a2;
+  /* opacity: 0.56; */
+  border-bottom: 1px solid rgba(51, 51, 51, 0.2);
+}
+.shopcar-center img {
+  width: 60px;
+  height: 54px;
+  margin-bottom: 5px;
+}
+.car-empy {
+  font-size: 14px;
+  color: #787d82;
+  margin-bottom: 5px;
+}
+.course-center {
+  color: #3481ff;
+  cursor: pointer;
+}
+.shopcar-bottom {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #93999f;
+}
+.shopcar-bottom .car {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.car img {
+  width: 13px;
+  height: 13px;
+  margin-right: 5px;
 }
 </style>

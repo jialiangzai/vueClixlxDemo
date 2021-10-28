@@ -62,3 +62,23 @@ export function resetPassword(params) {
     data: params
   })
 }
+
+// 获取个人信息
+export function getInfo({token}) {
+  return http.$axios({
+    url: 'api/member/getInfo?token='+token,
+    method: 'GET',
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
+    }
+  })
+}
+
+// 获取购物车数据
+
+export function getShopCarCounter(){
+  return http.$axios({
+    url: 'api/shopcar/getShopCarCounter',
+    method: 'GET'
+  })
+}

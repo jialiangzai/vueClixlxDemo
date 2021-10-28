@@ -7,14 +7,14 @@
           <div class="banner-left">
             <img
               class="banner-avator"
-              src="/image/common/avator.png"
+              :src="userInfo && userInfo.avator ? userInfo.avator : avatorImg"
               alt=""
             />
             <div class="banner-my">
-              <div class="banner-name">Fly-不一样的我</div>
+              <div class="banner-name">{{userInfo && userInfo.nickName ? userInfo.nickName : '小鹿线-默认'}}</div>
               <div class="banner-introduce">
-                <p>女</p>
-                <p>北京</p>
+                <p>{{userInfo && userInfo.gender == 1 ? '男':'女'}}</p>
+                <p>{{userInfo && userInfo.city ? userInfo.city : '北京'}}</p>
                 <p>web前端工程师</p>
               </div>
               <div class="banner-autograph">
@@ -56,6 +56,7 @@
 
 <script>
 import Header from "@/components/index/header.vue";
+import {mapState} from 'vuex'
 
 export default {
   name: "About",
@@ -92,7 +93,13 @@ export default {
         },
       ],
       current: 0,
+      avatorImg: '/image/common/avator.png'
     };
+  },
+  computed:{
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    })
   },
   components: {
     Header,
