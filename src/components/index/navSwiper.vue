@@ -19,34 +19,31 @@
                     <div class="detail-list"> 
                         <div class="list-know">知识点:</div>
                         <div class="list-ul">
-                            <router-link to="#" class="list-item" v-for="(item,index) in tagarr" :key="index">{{item.tagName}}</router-link>
+                            <router-link to="/course" class="list-item" v-for="(item,index) in tagarr" :key="index" >{{item.tagName}}</router-link>
                         </div>
                     </div>
                     <div class="detail-class">
                         <div class="course-card" v-for="(item,index) in arrcourse" :key="index" >
-                            <div class="course-image">
-                                <img :src="item.courseCover" alt="">
-                                <!-- <div  class="courseDesc">
-                                    <div>晋级TS高手</div>
-                                    <div>搞定复杂项目</div>
-                                </div> -->
-                            </div>
-                            <div class="right">
-                                <div class="courseName">{{item.courseName}}</div> 
-                                <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人报名</div>
-                                <div class="buy">
-                                    <div class="learn">免费学习</div>
-                                    <div class="car">
-                                        <div class="cart-image">
-                                            <img src="/image/cart16.png" alt="">
-                                        </div>
-                                        <span class="addcart">加购物车</span>
-                                    </div>
-
+                            <router-link :to="{path:'/course-info/' + item.id}">
+                                <div class="course-image">
+                                    <img :src="item.courseCover" alt="">
                                 </div>
-                            </div>
+                                <div class="right">
+                                    <div class="courseName">{{item.courseName}}</div> 
+                                    <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人购买</div>
+                                    <div class="buy">
+                                        <div class="learn">免费学习</div>
+                                        <div class="car">
+                                            <div class="cart-image">
+                                                <img src="/image/cart16.png" alt="">
+                                            </div>
+                                            <span class="addcart">加购物车</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </router-link>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -123,14 +120,11 @@ export default {
 					// "Content-Type":"application/x-www-form-urlencoded"
 				},
 			})
-			// console.log('课程分类' , res);
 			this.categorys = res.data.list
 			this.categorysDetail = new Array(this.categorys.length)
 			for (let i = 0; i < this.categorysDetail.length; i++) {
 				this.categorysDetail[i] = false
 			}
-          
-
 		},
 		// 获取轮播图
 		async getSliders() {
@@ -142,7 +136,6 @@ export default {
 					// "Content-Type":"application/x-www-form-urlencoded"
 				},
 			})
-			// console.log('轮播图',res);
 			this.sliders = res.data.list
 		},
         //查询课程
@@ -172,6 +165,7 @@ export default {
                 this.tagarr = res.data.pageInfo.list
             })
         }
+       
 	},
 	components: {
 		courseType,
@@ -304,6 +298,7 @@ export default {
     width: 320px;
     height: 130px;
     background: #F3F5F6;
+    cursor: pointer;
 }
 .course-image{
 	position: relative;

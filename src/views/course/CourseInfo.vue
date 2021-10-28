@@ -1,16 +1,13 @@
 <template>
-    <div class="courseinfo">    
+    <div class="courseinfo"> 
         <indexHeader></indexHeader>
-        <courseInfoTop></courseInfoTop>
         <courseInfoContainer></courseInfoContainer>
         <foot></foot>
     </div>
-    
 </template>
 
 <script>
 import indexHeader from '@/components/index/header.vue';
-import courseInfoTop from '@/components/course/courseInfoTop.vue'
 import foot from '@/components/foot/foot.vue';
 import courseInfoContainer from '@/components/course/courseInfoContainer.vue'
 export default {
@@ -23,9 +20,11 @@ export default {
       },
     ],
   },
+  created(){
+      //console.log(this.$route.params);
+  },
   components: {
     indexHeader,
-    courseInfoTop,
     courseInfoContainer,
     foot
   },

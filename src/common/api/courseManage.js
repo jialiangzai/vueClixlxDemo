@@ -26,10 +26,10 @@ export function queryCourse(params){
 }
 
 //课程详情
-export function courseInfo(id){
+export function getcourseInfo(courseId){
     return http.$axios({
         url:'api/course/getDetail',
         method:'GET',
-        data:{id}
+        params:{courseId}
     })
 }

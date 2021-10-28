@@ -41,7 +41,9 @@
           </div>
           <div class="content-Shopping" style="cursor: pointer">
             <el-badge :value="carNum" class="item" v-if="carNum">
-              <i class="el-icon-shopping-cart-1"></i>
+                <router-link :to="{path: '/cart'}">                       
+                    <i class="el-icon-shopping-cart-1"></i>
+                </router-link>
             </el-badge>
             <i
               class="el-icon-shopping-cart-1"

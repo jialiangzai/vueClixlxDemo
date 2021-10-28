@@ -1,7 +1,7 @@
 <template>
     <div class="course">
         <indexHeader></indexHeader>
-        <courseDirection></courseDirection>
+        <!-- <courseDirection></courseDirection> -->
         <coursemain></coursemain> 
         <foot></foot>
 
@@ -11,7 +11,6 @@
 
 <script>
 import indexHeader from '@/components/index/header.vue';
-import courseDirection from '@/components/course/classDirection.vue';
 import coursemain from '@/components/course/coursemain.vue';
 import foot from '@/components/foot/foot.vue';
 
@@ -27,7 +26,6 @@ export default {
   },
   components: {
     indexHeader,
-    courseDirection,
     coursemain,
     foot
   },

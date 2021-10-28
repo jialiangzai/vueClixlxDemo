@@ -4,7 +4,8 @@
       <div class="course-type-item">
         <router-link to="#">
           <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
+              <img src="/image/chuji.png" alt="">
+            <!-- <i class="el-icon-picture"></i> -->
           </div>
           <div class="course-type-item-text">
             <div class="course-type-item-title">初级课程</div>
@@ -15,44 +16,48 @@
       <div class="course-type-item">
         <router-link to="#">
           <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
+              <img src="/image/zhongji.png" alt="">
+            <!-- <i class="el-icon-picture"></i> -->
           </div>
           <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
+            <div class="course-type-item-title">中级课程</div>
+            <div class="course-type-item-desc">进阶与实战</div>
           </div>
         </router-link>
       </div>
       <div class="course-type-item">
         <router-link to="#">
           <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
+              <img src="/image/gaoji.png" alt="">
+            <!-- <i class="el-icon-picture"></i> -->
           </div>
           <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
+            <div class="course-type-item-title">高级课程</div>
+            <div class="course-type-item-desc">轻松掌握核心技能</div>
           </div>
         </router-link>
       </div>
       <div class="course-type-item">
         <router-link to="#">
           <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
+            <img src="/image/xiangmu.png" alt="">
+            <!-- <i class="el-icon-picture"></i> -->
           </div>
           <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
+            <div class="course-type-item-title">项目实战</div>
+            <div class="course-type-item-desc">手把手实践</div>
           </div>
         </router-link>
       </div>
       <div class="course-type-item">
         <router-link to="#">
           <div class="course-type-item-icon">
-            <i class="el-icon-picture"></i>
+            <img src="/image/suanfa.png" alt="">
+            <!-- <i class="el-icon-picture"></i> -->
           </div>
           <div class="course-type-item-text">
-            <div class="course-type-item-title">初级课程</div>
-            <div class="course-type-item-desc">入门快、岗位多</div>
+            <div class="course-type-item-title">前端算法</div>
+            <div class="course-type-item-desc">笑傲前端技能</div>
           </div>
         </router-link>
       </div>
@@ -93,6 +98,10 @@
   text-align: center;
   line-height: 50px;
   color: #ffffff;
+}
+.course-type-item-icon img{
+    width: 100%;
+    height: 100%;
 }
 .course-type-item .course-type-item-text {
   margin: 25px 0;

@@ -1,27 +1,64 @@
 <template>
     <div class="courseContainer">
+        <div class="courseInfoTop">
+            <div class="info-container">
+            <ul class="route">
+                <li class="route-item">课程</li>
+                <li class="route-item">·</li>
+                <li class="route-item">{{courseInfoArr.isMember === 0 ? '免费课' : '会员课程'}}</li>
+                <li class="route-item">·</li>
+                <li class="route-item">{{courseInfoArr.courseName}}</li>
+            </ul>
+            <div class="name">{{courseInfoArr.courseName}}</div>
+            <div class="info">
+                <div class="Avat">
+                    <img src="image/Avat62.png" alt="">
+                </div>
+                <ul class="teacherName">
+                    <li class="name-item">{{courseInfoArr.lecturerName}}</li>
+                    <li class="name-item">金牌讲师</li>
+                </ul>
+                <ul class="access">
+                    <li class="access-item">难度</li>
+                    <li class="access-item">{{courseInfoArr.courseLevel}}</li>
+                    <li class="access-item">·</li>
+                    <li class="access-item">时长</li>
+                    <li class="access-item">{{courseInfoArr.totalHour}}个小时</li>
+                    <li class="access-item">·</li>
+                    <li class="access-item">学习人数</li>
+                    <li class="access-item">{{courseInfoArr.purchaseCounter}}人</li>
+                    <li class="access-item">·</li>
+                    <li class="access-item">综合评分</li>
+                    <li class="access-item">10.00</li>
+                </ul>
+            </div>
+            </div>
+            <div class="info-nav">
+                <div class="nav-container">
+                    <ul class="chapter">
+                        <li class="chapter-item active">章节</li>
+                        <li class="chapter-item">下载笔记代码</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="main">
             <div class="introduction">
                 <div class="desc">
-                    简介：全面系统地介绍国有资产管理的基本理论、基本知识、基本方法和我国现行国有资产管理方面的政策与制度，努力反映我国国有资产管理体制改革的最新成果和国内外国有资产
-    管理的实践经验。本书大体上按国有资产管理原理、国有资产基础管理、国有资产经营管理和国有资产综合管理的体系安排，以便客观全面地介绍国有资产管理的理论与实务，同时也
-    便于学生由浅入深、循序渐进地学习。    
+                    {{courseInfoArr.bizCourseDetail.description}}   
                 </div>
                 <div class="btn">
                     <button class="btn-item active">立即购买</button>
                     <button class="btn-item">加入购物车</button>
                 </div>
             </div>
-            <div class="video"
-                v-for="(item,index) in arr "
-                :key='index'
-            >
-                <div class="chapterName">{{item.chapterName}}</div>
+            <div class="video">
+                <div class="chapterName">{{courseInfoArr.chapterName}}</div>
                 <div class="chapterDesc">从零开始完整的讲解了力推且备受万千开发者喜爱的语言</div>
                 <ul class="videos">
                     <li 
                         class="video-item" 
-                        v-for="(j,k) in item.children" 
+                        v-for="(j,k) in courseInfoArr.bizCourseChapters" 
                         :key="k"
                         @mouseenter="mourseHover(j)"
                         @mouseleave="mourseOut(j)">
@@ -39,170 +76,58 @@
                             <button class="btn-learn" v-if="j.isShow">开始学习</button>
                             <div class="clearfloat"></div>
                         </router-link>
-
-
-                        
                     </li>
-                    
                 </ul>
             </div>
-        </div>
+        </div> 
         
     </div>
 </template>
 
 
 <script>
+import {getcourseInfo} from '@/common/api/courseManage.js'
+
 export default{
     data(){
         return{
-             arr: [
-                {
-                    children: [
-                        {
-                            isShow:false,
-                            children: [],//下级章节
-                            chapterName: "xiaojie111",//章节名称
-                            attachmentUrl: "",//视频地址
-                            courseId: "",//课程ID
-                            updateTime: null,//修改时间
-                            createTime: null,//创建时间
-                            chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                            createBy: "",//创建人
-                            updateBy: "",//修改人
-                            sort: 0,//排序
-                            parentId: "",//上级章节
-                            publicType: 0,//公开视频（1：免费；2：试听）
-                            attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                            id: ""//主键
-                        }
-                    ],//下级章节
-                    chapterName: "第1章 开发语言内容各有不同",//章节名称
-                    attachmentUrl: "",//视频地址
-                    courseId: "",//课程ID
-                    updateTime: null,//修改时间
-                    createTime: null,//创建时间
-                    chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                    createBy: "",//创建人
-                    updateBy: "",//修改人
-                    sort: 0,//排序
-                    parentId: "",//上级章节
-                    publicType: 0,//公开视频（1：免费；2：试听）
-                    attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                    id: ""//主键
-                },
-                {
-                    children: [
-                        {
-                            isShow:false,
-                            children: [],//下级章节
-                            chapterName: "xiaojie111",//章节名称
-                            attachmentUrl: "",//视频地址
-                            courseId: "",//课程ID
-                            updateTime: null,//修改时间
-                            createTime: null,//创建时间
-                            chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                            createBy: "",//创建人
-                            updateBy: "",//修改人
-                            sort: 0,//排序
-                            parentId: "",//上级章节
-                            publicType: 0,//公开视频（1：免费；2：试听）
-                            attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                            id: ""//主键
-                        },{
-                            isShow:false,
-                            children: [],//下级章节
-                            chapterName: "xiaojie111",//章节名称
-                            attachmentUrl: "",//视频地址
-                            courseId: "",//课程ID
-                            updateTime: null,//修改时间
-                            createTime: null,//创建时间
-                            chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                            createBy: "",//创建人
-                            updateBy: "",//修改人
-                            sort: 0,//排序
-                            parentId: "",//上级章节
-                            publicType: 0,//公开视频（1：免费；2：试听）
-                            attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                            id: ""//主键
-                        },{
-                            isShow:false,
-                            children: [],//下级章节
-                            chapterName: "xiaojie111",//章节名称
-                            attachmentUrl: "",//视频地址
-                            courseId: "",//课程ID
-                            updateTime: null,//修改时间
-                            createTime: null,//创建时间
-                            chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                            createBy: "",//创建人
-                            updateBy: "",//修改人
-                            sort: 0,//排序
-                            parentId: "",//上级章节
-                            publicType: 0,//公开视频（1：免费；2：试听）
-                            attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                            id: ""//主键
-                        }
-                    ],//下级章节
-                    chapterName: "第2章 开发语言内容各有不同",//章节名称
-                    attachmentUrl: "",//视频地址
-                    courseId: "",//课程ID
-                    updateTime: null,//修改时间
-                    createTime: null,//创建时间
-                    chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                    createBy: "",//创建人
-                    updateBy: "",//修改人
-                    sort: 0,//排序
-                    parentId: "",//上级章节
-                    publicType: 0,//公开视频（1：免费；2：试听）
-                    attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                    id: ""//主键
-                },
-                {
-                    children: [
-                        {
-                            isShow:false,
-                            children: [],//下级章节
-                            chapterName: "xiaojie111",//章节名称
-                            attachmentUrl: "",//视频地址
-                            courseId: "",//课程ID
-                            updateTime: null,//修改时间
-                            createTime: null,//创建时间
-                            chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                            createBy: "",//创建人
-                            updateBy: "",//修改人
-                            sort: 0,//排序
-                            parentId: "",//上级章节
-                            publicType: 0,//公开视频（1：免费；2：试听）
-                            attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                            id: ""//主键
-                        }
-                    ],//下级章节
-                    chapterName: "第3章 开发语言内容各有不同",//章节名称
-                    attachmentUrl: "",//视频地址
-                    courseId: "",//课程ID
-                    updateTime: null,//修改时间
-                    createTime: null,//创建时间
-                    chapterType: 0,//章节类型（1：章；2：小节；3：测验）
-                    createBy: "",//创建人
-                    updateBy: "",//修改人
-                    sort: 0,//排序
-                    parentId: "",//上级章节
-                    publicType: 0,//公开视频（1：免费；2：试听）
-                    attachmentType: 0,//附件类型（1：视频；2：音频；3：PPT；4：文档）
-                    id: ""//主键
-                },
-            ]
+            courseId:this.$route.params.courseId,
+            courseInfoArr:[],
+            
         }
     },
+    created(){
+        this.getcourseInfo()
+    },
     methods:{
+        getcourseInfo(){
+            getcourseInfo(this.courseId).then(res => {
+                if(res.meta.code === '200'){
+                    this.courseInfoArr = res.data.data
+                    console.log(this.courseInfoArr);
+                    switch(this.courseInfoArr.courseLevel){
+                    case 1:
+                        this.courseInfoArr.courseLevel = '初级';
+                        break;
+                    case 2:
+                        this.courseInfoArr.courseLevel = '中级';
+                        break;
+                    case 3:
+                        this.courseInfoArr.courseLevel = '高级';
+                        break;
+                    default:
+                        this.courseInfoArr.courseLevel = '零基础'
+                    }
+                    
+                }
+            })
+        },
         // 课程分类，鼠标进入移出事件
 		mourseHover(j) {
             j.isShow = true
-			// this.$set(this.categorysDetail, index, true)
 		},
 		mourseOut(j) {
             j.isShow = false
-			// this.$set(this.categorysDetail, index, false)
 		},
     }
 }
@@ -217,6 +142,78 @@ export default{
     width: 1300px;
     height: 100%;
 }
+.courseInfoTop{
+    width: 100%;
+    height: 280px;
+    background-image: url('/image/courseInfobg1920.png');
+}
+/* 背景部分开始 */
+.courseInfoTop .info-container{
+    margin: 0 auto;
+    width: 1300px;
+    height: 200px;
+    color: #FFFFFF;
+    z-index: 5;
+}
+.route{
+    margin-left: 50px;
+    padding-top: 20px;
+    display: flex;
+    font-size: 14px;
+}
+.route .route-item{
+    margin-right: 10px;
+}
+.name{
+    margin: 30px 0 10px 50px;
+    font-size: 24px;
+}
+.info{
+    display: flex;
+    margin-left: 50px;
+}
+.teacherName{
+    margin: 8px 0 0 8px;
+}
+.access{
+    margin: 15px 0 0 100px;
+    display: flex;
+}
+.access .access-item{
+    margin-right: 10px;
+}
+/* 背景部分结束 */
+
+/* 导航栏开始 */
+.info-nav{
+    width: 100%;
+    height: 80px;
+    background: #F8FAFC;
+    
+}
+.nav-container{
+    margin: 0 auto;
+    width: 1300px;
+    height: 100%;
+    z-index: 5;
+}
+.chapter{
+    display: flex;
+    font-weight: 600;
+    color: #333333;
+    margin-left: 50px;
+    font-size: 20px;
+}
+.chapter-item{
+    line-height: 80px;
+    margin-right: 50px;
+}
+.active{
+    color: #388FFF;
+    border-bottom:2px solid #388FFF;
+
+}
+/* 导航栏结束 */
 /* 课程介绍开始 */
 .introduction{
     margin-left: 50px;
@@ -243,9 +240,9 @@ export default{
     color: #F11D1D;
     border-radius: 23px;
 }
-.active{
+.btn .active{
+    background: #F11D1D!important;
     color: #FFFFFF;
-    background: #F11D1D;
 }
 /* 课程介绍结束 */
 
@@ -295,6 +292,7 @@ export default{
     color: #FFF;
     background: #388FFF;
     border-radius: 12px;
+    cursor: pointer;
 }
 .clearfloat{
     clear: both;
