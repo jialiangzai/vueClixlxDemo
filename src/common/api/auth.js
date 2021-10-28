@@ -79,6 +79,23 @@ export function getInfo({token}) {
 export function getShopCarCounter(){
   return http.$axios({
     url: 'api/shopcar/getShopCarCounter',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
+    }
+  })
+}
+
+// updatePortrait
+// 修改头像
+export function updatePortrait(params){
+  return http.$axios({
+    url: 'api/member/updatePortrait',
+    method: 'POST',
+    data: params,
+    headers: {
+      'Content-Type':'multipart/form-data;',
+      'Authorization': sessionStorage.getItem('token')
+    }
   })
 }

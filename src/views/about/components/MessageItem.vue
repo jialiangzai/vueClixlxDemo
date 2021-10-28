@@ -1,13 +1,13 @@
 <template>
   <div class="my-course-content">
-      <div v-if="messList.length > 0" style="height: 750px; width: 980px">
+      <div v-if="messList&&messList.length > 0" style="height: 750px; width: 980px">
         <happy-scroll style="width: 980px">
           <div class="course-main" style="width: 980px">
-            <div class="course-item" @mouseenter="goShow" @mouseleave="goRemove" :class="isDelete ? 'item-active': ''">
-              <div class="item-dot"></div>
+            <div class="course-item" @mouseenter="goShow" @mouseleave="goRemove" :class="isDelete ? 'item-active': ''" v-for="item in messList" :key="item.id">
+              <div class="item-dot" v-if="item.title"></div>
               <div class="item-main">
-                <p class="title">【提示】黑猫黑猫黑猫警长黑猫黑猫黑猫警长黑猫黑猫黑猫警长黑猫黑猫黑猫黑猫黑猫警长黑猫黑猫黑猫警长黑猫黑猫黑猫警长黑猫黑猫黑猫黑猫黑猫警长黑猫黑猫黑猫警长黑猫黑猫黑猫警长黑猫黑猫</p>
-                <p class="time"> 2020-09-21 10:21:30</p>
+                <p class="title">{{item.title}}</p>
+                <p class="time"> {{item.createTime}}</p>
               </div>
               <div class="delete" v-show="isDelete">
                 <img src="/image/about/remove.png" alt="">

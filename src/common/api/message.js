@@ -1,29 +1,46 @@
 import http from './requests';
 
 // 查询收藏商品
-export function getFavoriteList(params) {
+export function getByMemberId(params) {
   return http.$axios({
-    url: 'api/favorite/getFavoriteList',
+    url: 'api/message/getByMemberId',
     method: 'POST',
-    data: params
+    data: params,
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
+    }
   })
 }
 
 // 添加收藏
-export function addFavorite({courseId}){
+// /message/get
+
+export function getMess({id}){
   return http.$axios({
-    url: 'api/favorite/addFavorite',
-    method: 'POST',
-    data: {
-      courseId
+    url: 'api/message/get?id='+id,
+    method: 'GET',
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
     }
   })
 }
 
 // 删除收藏
-export function deleteFavorite({id}){
+export function deleteMess({id}){
   return http.$axios({
-    url: 'api/favorite/deleteFavorite?id='+id,
-    method: 'GET'
+    url: 'api/message/delete?ids='+id,
+    method: 'GET',
+    headers: {
+      'Authorization': sessionStorage.getItem('token')
+    }
+  })
+}
+
+// 标记已读
+export function makeRead(params){
+  return http.$axios({
+    url: 'api/message/makeRead',
+    method: 'GET',
+    data: params
   })
 }

@@ -35,8 +35,8 @@ export default {
     ColleanItem,
   },
   created(){
-    console.log(1)
     this.getList()
+    console.log(sessionStorage.getItem('token'));
   },
   methods: {
     getList(){

@@ -7,11 +7,11 @@
           <div class="banner-left">
             <img
               class="banner-avator"
-              :src="userInfo && userInfo.avator ? userInfo.avator : avatorImg"
+              :src="userInfo.avatar"
               alt=""
             />
             <div class="banner-my">
-              <div class="banner-name">{{userInfo && userInfo.nickName ? userInfo.nickName : '小鹿线-默认'}}</div>
+              <div class="banner-name">{{userInfo.nickName}}</div>
               <div class="banner-introduce">
                 <p>{{userInfo && userInfo.gender == 1 ? '男':'女'}}</p>
                 <p>{{userInfo && userInfo.city ? userInfo.city : '北京'}}</p>
@@ -38,8 +38,8 @@
           <div class="about-list">
             <div v-for="(item,index) in aboutList" :key="item.id" @click="geDetail(index)">
               <router-link :to="item.link">
-                <div class="about-list-item" :class="current === index ? 'active' :''">
-                  <img :src="current === index ? item.selectImg : item.imgUrl" alt="" />
+                <div class="about-list-item" :class="current == index ? 'active' :''">
+                  <img :src="current == index ? item.selectImg : item.imgUrl" alt="" />
                   <p class="list-title">{{ item.title }}</p>
                 </div>
               </router-link>
@@ -92,14 +92,14 @@ export default {
           link: "/about/message",
         },
       ],
-      current: 0,
+      current:  0,
       avatorImg: '/image/common/avator.png'
     };
   },
   computed:{
     ...mapState({
       userInfo: state => state.user.userInfo
-    })
+    }),
   },
   components: {
     Header,
@@ -107,6 +107,7 @@ export default {
   methods: {
     geDetail(index) {
       this.current = index;
+      // sessionStorage.setItem('current',JSON.stringify(index))
     },
     goMine(){
       this.$router.push('/user')

@@ -16,6 +16,7 @@
 
 <script>
 import CourseItem from "./CourseItem.vue";
+import {myCourses} from '@/common/api/course'
 
 export default {
   data() {
@@ -40,12 +41,26 @@ export default {
       totalList: [1],
       freeList: [],
       vipList: [],
+      query: {
+        pageSize: 10,
+        pageNum: 1
+      }
     };
   },
   components: {
     CourseItem,
   },
+  created(){
+    this.getList()
+  },
   methods: {
+    getList(){
+      myCourses(this.query).then(res=> {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     handleClick(tab,event){
       console.log(tab,event)
     }

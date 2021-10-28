@@ -54,7 +54,7 @@
             <div @mouseenter="isUserInfo = true">
               <img
                 class="avator"
-                :src="userInfo && userInfo.avator ? userInfo.avator : avatorImg"
+                :src="userInfo.avatar"
                 alt=""
               />
               <!-- 头像信息 -->
@@ -204,12 +204,12 @@
       <div class="user-info-top">
         <div class="u-i-t-top">
           <img
-            :src="userInfo && userInfo.avator ? userInfo.avator : avatorImg"
+            :src=" userInfo.avatar "
             alt=""
           />
           <div class="avator-info">
             <p>
-              {{ userInfo && userInfo.nickName ? userInfo.nickName : username }}
+              {{ userInfo.nickName}}
             </p>
           </div>
         </div>
@@ -262,7 +262,7 @@ import {
   getShopCarCounter,
 } from "@/common/api/auth";
 import { Loading } from "element-ui";
-import { mapState } from "vuex";
+import { mapState,mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -353,6 +353,7 @@ export default {
     }),
   },
   methods: {
+    ...mapActions(['saveUserInfoAction','saveLoginAction']),
     // 去我的课程
     goAbout() {
       this.$router.push({
@@ -442,8 +443,11 @@ export default {
                 this.open = false;
                 let accessToken = res.data.accessToken;
                 // 获取用户信息
-                this.getUserInofo();
+                this.getUserInofo({
+                  token: accessToken
+                });
                 this.getCarNum();
+                this.saveLoginAction()
                 // 存储到access中
                 sessionStorage.setItem("token", accessToken);
                 sessionStorage.setItem("isLogin", JSON.stringify(true));
@@ -496,6 +500,7 @@ export default {
                 this.getUserInfo({
                   token: accessToken,
                 });
+                this.saveLoginAction()
                 // 获取购物车数据
                 this.getCarNum();
                 //  this.saveIsLoginAction(true)
@@ -573,6 +578,7 @@ export default {
       getInfo(params)
         .then((res) => {
           sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+          this.saveUserInfoAction()
           // this.saveUserInfoActions()
         })
         .catch((err) => {
@@ -902,7 +908,6 @@ export default {
   width: 200px;
   height: 220px;
   background: #fff;
-  border: 1px solid red;
   position: absolute;
   top: 100px;
   right: 200px;
