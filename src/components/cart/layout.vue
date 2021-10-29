@@ -5,7 +5,11 @@
                 <div class="cart">购物车</div>
                 <div class="nav">
                     <span class="left">全部课程</span>
-                    <span class="right"><a href="#">查看更多订单</a></span>
+                    <span class="right">
+                        <router-link to="/about/order">
+                            <a href="#">查看更多订单</a>
+                        </router-link>
+                    </span>
                 </div>
                 <ul class="head">
                     <li class="item check">
@@ -18,26 +22,30 @@
                     <li class="item total">金额</li>
                     <li class="item function">操作</li>
                 </ul>
-                <ul class="haveorder" v-for="i in 3" :key="i">
-                    <li class="order-item">
-                        <input type="checkbox" name="one" id="one" class="one" >
-                    </li>
-                    <li class="order-item info" >
-                        <div class="courseimg" >
-                            <img src="/image/classbg.png" alt="">
-                        </div>
-                        <div class="course-name">晋级TS高手搞定复杂项目晋级TS高手搞定复杂项目</div>
-                    </li>
+                <div v-if="orderList.length > 0">
+                    <ul class="haveorder" v-for="(item,index) in orderList" :key="index" >
+                        <li class="order-item">
+                            <input type="checkbox" name="one" id="one" class="one" >
+                        </li>
+                        <li class="order-item info" >
+                            <div class="courseimg" >
+                                <img :src="item.courseCover" alt="">
+                            </div>
+                            <div class="course-name">{{item.courseName}}</div>
+                        </li>
 
-                    <li class="order-item">￥299.00</li>
-                    <li class="order-item num">1</li>
-                    <li class="order-item totoalprice">￥299.00</li>
-                    <li class="order-item delete">
-                        <i class="el-icon-delete"></i>
-                        <span class="deletd-text"><a href="#">删除</a></span>
-                    </li>
-                </ul>
-                <div class="noOrder" v-if="false">
+                        <li class="order-item">￥{{item.discountPrice}}</li>
+                        <li class="order-item num">{{item.counter}}</li>
+                        <li class="order-item totoalprice">￥{{item.discountPrice * item.counter}}</li>
+                        <li class="order-item delete" >
+                            <a href="javascript:;" @click="deleteOrder(item.id)">
+                                <i class="el-icon-delete"></i>
+                                <span class="deletd-text">删除</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="noOrder" v-else>
                     <img src="/image/norder365.png" alt="">
                     <div class="order-alert">哎呦！暂无订单</div>
                 </div>
@@ -54,6 +62,58 @@
     </div>
 </template>
 
+<script>
+import {getShopCarList,deleteShopCar} from '@/common/api/shopcar.js'
+import {createToken} from '@/common/api/token.js'
+
+export default{
+    data(){
+        return{
+            orderList:[],
+            token:''
+        }
+    },
+    created(){
+        this.getShopCarList()
+    },
+    methods:{
+        //获取购物车数据
+        getShopCarList(){
+            createToken().then(res => {
+                this.token = res.data.token
+            })
+            getShopCarList().then(res => {
+                this.orderList = res.data.list
+            })
+        },
+        //删除购物车数据
+        deleteOrder(id){
+            this.$confirm('确定是否删除该订单', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+            .then(() => {
+                deleteShopCar({id:id,token:this.token}).then(response => {
+                    if (response.meta.code === '200') {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功'
+                    })
+                    this.getShopCarList()
+                    }
+                })
+            })
+            .catch(err => { console.error(err) })
+        }
+    }
+}
+
+
+
+
+
+</script>
 
 <style scoped>
 .fixed{

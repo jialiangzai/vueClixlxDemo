@@ -74,7 +74,7 @@
                     <li class="item">|</li>
                     <li class="item" @click="handleNewCourse"><a href="#">最新课程</a></li>
                     <li class="item">|</li>
-                    <li class="item"><a href="#">最多购买</a></li>
+                    <li class="item" @click="mostbuy"><a href="#">最多购买</a></li>
                     <li class="item">|</li>
                     <li class="item">
                         <a href="#">
@@ -102,23 +102,23 @@
                 <div class="newCourseContent">
                     <ul class="courseUl">
                         <li class="courseItem" v-for="(item,index) in arrcourse" :key="index" >
-                            <router-link :to="{path:'/course-info/' + item.id}">
-                                <div class="courseInfo">
-                                    <div class="courseBg">
-                                        <img class="courseImg" :src="item.courseCover" alt="">
-                                        <!-- <div  class="courseDesc">
-                                            <div>晋级TS高手</div>
-                                            <div>搞定复杂项目</div>
-                                        </div> -->
-                                    </div>
-                                    <div class="courseName">{{item.courseName}}</div>
-                                    <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人购买</div>
-                                    <div class="coursePrice">
-                                        <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                                        <div class="price">¥ {{item.salePrice}}</div>
+                            <div class="courseInfo">
+                                <router-link :to="{path:'/course-info/' + item.id}">
+                                        <div class="courseBg">
+                                            <img class="courseImg" :src="item.courseCover" alt="">
+                                        </div>
+                                </router-link>
+                                <div class="courseName">{{item.courseName}}</div>
+                                <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
+                                <div class="coursePrice">
+                                    <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
+                                    <div class="price">¥ {{item.salePrice}}</div>
+                                    <div class="addCart" @click="addCart(item)">
+                                        <i class="el-icon-shopping-cart-1 cart"></i> 
+                                        <span class="cart-text">加入购物车</span>
                                     </div>
                                 </div>
-                            </router-link>
+                            </div>
                         </li>           
                     </ul>
                 </div>
@@ -139,8 +139,10 @@
 
 <script>
 import {getFirstCategorys,getSecondCategorys} from '@/common/api/courseCategory.js'
+import { mapState } from "vuex";
+import {addShopCar} from '@/common/api/shopcar.js'
 import {queryCourse} from '@/common/api/courseManage.js'
-
+import {createToken} from '@/common/api/token.js'
 export default{
     data() {
         return{
@@ -170,6 +172,9 @@ export default{
                     sortBy:''
                 }
             },
+            memberId:'',
+            courseId:'',
+            token:''
         }
     },
     created() {
@@ -177,7 +182,24 @@ export default{
         this.getSecondCategorys()
 		this.queryCourse(this.queryParams)
 	},
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.user.userInfo,
+            isLogin: (state) => state.user.isLogin,
+        }),
+    },
     methods:{
+        //加入购物车
+        addCart(item){
+            createToken().then(res => {
+                this.token = res.data.token
+                this.memberId = this.userInfo.id
+                addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
+                    console.log(res);
+                })
+            })
+            
+        },
         lev0(){
             this.all3 = ''
             this.status1 = 'info'
@@ -240,7 +262,11 @@ export default{
             this.queryParams.entity.sortBy = 'time-desc'
             this.queryCourse(this.queryParams)
         },
-
+        //最多购买
+        mostbuy(){
+            this.queryParams.entity.sortBy = 'purchase-desc'
+            this.queryCourse(this.queryParams)
+        },
         //获取一级分类
         getFirstCategorys(){
             getFirstCategorys().then(res => {
@@ -541,6 +567,7 @@ export default{
 	display: flex;
 	font-size: 14px;
 	margin: 10px;
+    justify-content: space-between;
 }
 .courseMemberbg {
 	position: relative;
@@ -572,6 +599,10 @@ export default{
     width: 100%;
     /* margin: 50px auto !important; */
 
+}
+.addCart{
+    margin-top: 3px;
+    color: #FF3D17;
 }
 /* 分页结束 */
 </style>

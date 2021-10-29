@@ -41,9 +41,9 @@
           </div>
           <div class="content-Shopping" style="cursor: pointer">
             <el-badge :value="carNum" class="item" v-if="carNum">
-                <router-link :to="{path: '/cart'}">                       
-                    <i class="el-icon-shopping-cart-1"></i>
-                </router-link>
+                <router-link to="/cart">
+                    <i class="el-icon-shopping-cart-1"></i> 
+                </router-link>               
             </el-badge>
             <i
               class="el-icon-shopping-cart-1"
@@ -276,7 +276,7 @@ export default {
   data() {
     return {
       msg: "我是头部",
-      carNum: null,
+      carNum: 1,
       isCar: false,
       // isLogin: false,
       isUserInfo: false,

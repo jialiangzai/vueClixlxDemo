@@ -9,6 +9,7 @@
                     :options="playerOptions"
                     v-if="playerOptions.sources[0].src"
                     @timeupdate = "onPlayerTimeupdate($event)"
+                    @ended="onPlayerEnded($event)"
                 ></video-player>
                 <div class="loading" v-if="!playerOptions.sources[0].src">
                     <img src="/image/loading.gif" alt="">
@@ -36,7 +37,7 @@
 <script>
 import {playCourse} from '@/common/api/courseManage.js'
 import { mapState } from "vuex";
-import {recordHistory} from '@/common/api/history.js'
+import {recordHistory,getLastHistoryByChapterId} from '@/common/api/history.js'
 import Iscroll from 'iscroll'
 export default {
 	data() {
@@ -70,6 +71,8 @@ export default {
             chapters:[],
             currentTime:'',//播放时间
             memberid:'',//会员id
+            count:0,
+            
         }
 	},
     computed:{
@@ -84,6 +87,7 @@ export default {
             this.$router.go(-1)
         }
         this.playCourse()
+        
 	},
     computed: {
         ...mapState({
@@ -93,6 +97,7 @@ export default {
     },
     methods:{
         playCourse(){
+            this.memberid = this.userInfo.id
             playCourse(this.courseId,this.chapterId).then(res => {
                 if(res.meta.code === '200'){
                     this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
@@ -101,19 +106,40 @@ export default {
                     this.playerOptions.poster = res.data.courseInfo.courseCover
                 }
             })
+            //获取播放历史记录
+            getLastHistoryByChapterId({
+                memberId:this.memberid,
+                courseId:this.courseId,
+                chapterId:this.chapterId
+            })
         },
          /* 获取视频播放进度 */
         onPlayerTimeupdate (player) {
+            this.count++
             this.currentTime = player.cache_.currentTime
-            this.memberid = this.userInfo.id
-            recordHistory().then(res => {
-                if(res.meta.code = '200'){
-
+            if(this.count == 25){
+                recordHistory(
+                    {
+                        chapterId:this.chapterId,
+                        courseId:this.courseId,
+                        memberId:this.memberid,
+                        lastTime:this.currentTime
+                    }
+                )
+                this.count = 0
+            }
+        },
+        //视频播放结束
+        onPlayerEnded(player) {
+            recordHistory(
+                {
+                    chapterId:this.chapterId,
+                    courseId:this.courseId,
+                    memberId:this.memberid,
+                    lastTime:player.cache_.currentTime
                 }
-            })
-
-        }
-
+            )
+        },
     }
 }
 </script>

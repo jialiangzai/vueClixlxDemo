@@ -49,7 +49,7 @@
                 </div>
                 <div class="btn">
                     <button class="btn-item active">立即购买</button>
-                    <button class="btn-item">加入购物车</button>
+                    <button class="btn-item"  @click="addCart()">加入购物车</button>
                 </div>
             </div>
             <div class="video" v-for="(item,index) in courseChapters" 
@@ -87,6 +87,10 @@
 
 <script>
 import {getcourseInfo} from '@/common/api/courseManage.js'
+import { mapState } from "vuex";
+import {createToken} from '@/common/api/token.js'
+import {addShopCar} from '@/common/api/shopcar.js'
+
 
 export default{
     data(){
@@ -94,14 +98,35 @@ export default{
             courseId:this.$route.params.courseId,
             courseInfoArr:{},
             courseDetail: {},
-            courseChapters:{}
+            courseChapters:{},
+            token:'',
+            memberId:''
 
         }
     },
     created(){
         this.getcourseInfo()
     },
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.user.userInfo,
+            isLogin: (state) => state.user.isLogin,
+        }),
+    },
     methods:{
+        //加入购物车
+        addCart(item){
+            createToken().then(res => {
+                this.token = res.data.token
+                this.memberId = this.userInfo.id
+                addShopCar({courseId:this.courseId,memberId:this.memberId,token:this.token}).then(res => {
+                    this.$message({
+                        message: '恭喜你，加入购物车成功',
+                        type: 'success'
+                    });
+                })
+            })
+        },
         getcourseInfo(){
             getcourseInfo(this.courseId).then(res => {
                 if(res.meta.code === '200'){
@@ -133,7 +158,6 @@ export default{
             j.isShow = false
 		},
         goPlay(courseId,chapterId){
-            // console.log(courseId,chapterId);
             this.$router.push({path:'/course-play/'+courseId+'/'+chapterId})
         }
     }
@@ -246,6 +270,7 @@ export default{
     outline: none;
     color: #F11D1D;
     border-radius: 23px;
+    cursor: pointer;
 }
 .btn .active{
     background: #F11D1D!important;
