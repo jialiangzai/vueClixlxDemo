@@ -33,3 +33,15 @@ export function getcourseInfo(courseId){
         params:{courseId}
     })
 }
+
+//播放课程
+export function playCourse(courseId,chapterId){
+    return http.$axios({
+        url:'api/player/play',
+        method:'GET',
+        params:{courseId,chapterId},
+        headers: {
+            'Authorization': sessionStorage.getItem('token')
+        }
+    })
+}

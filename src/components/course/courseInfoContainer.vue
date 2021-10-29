@@ -45,25 +45,24 @@
         <div class="main">
             <div class="introduction">
                 <div class="desc">
-                    {{courseInfoArr.bizCourseDetail.description}}   
+                    {{courseDetail.description ? courseDetail.description : ""}}  
                 </div>
                 <div class="btn">
                     <button class="btn-item active">立即购买</button>
                     <button class="btn-item">加入购物车</button>
                 </div>
             </div>
-            <div class="video">
-                <div class="chapterName">{{courseInfoArr.chapterName}}</div>
-                <div class="chapterDesc">从零开始完整的讲解了力推且备受万千开发者喜爱的语言</div>
+            <div class="video" v-for="(item,index) in courseChapters" 
+                                :key="index">
+                <div class="chapterName">{{item.chapterName}}</div>
+                <!-- <div class="chapterDesc">从零开始完整的讲解了力推且备受万千开发者喜爱的语言</div> -->
                 <ul class="videos">
                     <li 
                         class="video-item" 
-                        v-for="(j,k) in courseInfoArr.bizCourseChapters" 
+                        v-for="(j,k) in item.children" 
                         :key="k"
                         @mouseenter="mourseHover(j)"
                         @mouseleave="mourseOut(j)">
-
-                        <router-link :to="{path: '/course-play', query: {id:k}}">                       
                             <div class="video-itemIcon">
                                 <i class="el-icon-video-camera-solid"></i>
                             </div>
@@ -73,9 +72,10 @@
                                 <span>{{j.chapterName}}</span>
                             </div>
 
-                            <button class="btn-learn" v-if="j.isShow">开始学习</button>
+                            <button class="btn-learn" v-if="j.isShow" @click="goPlay(courseInfoArr.id,j.id)">
+                                开始学习
+                            </button>
                             <div class="clearfloat"></div>
-                        </router-link>
                     </li>
                 </ul>
             </div>
@@ -92,8 +92,10 @@ export default{
     data(){
         return{
             courseId:this.$route.params.courseId,
-            courseInfoArr:[],
-            
+            courseInfoArr:{},
+            courseDetail: {},
+            courseChapters:{}
+
         }
     },
     created(){
@@ -104,7 +106,8 @@ export default{
             getcourseInfo(this.courseId).then(res => {
                 if(res.meta.code === '200'){
                     this.courseInfoArr = res.data.data
-                    console.log(this.courseInfoArr);
+                    this.courseDetail = res.data.data.bizCourseDetail
+                    this.courseChapters = res.data.data.bizCourseChapters
                     switch(this.courseInfoArr.courseLevel){
                     case 1:
                         this.courseInfoArr.courseLevel = '初级';
@@ -129,6 +132,10 @@ export default{
 		mourseOut(j) {
             j.isShow = false
 		},
+        goPlay(courseId,chapterId){
+            // console.log(courseId,chapterId);
+            this.$router.push({path:'/course-play/'+courseId+'/'+chapterId})
+        }
     }
 }
 </script>

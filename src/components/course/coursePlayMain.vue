@@ -1,67 +1,75 @@
 <template>
 	<div class="main">
-		<div class="name">1-1开发语言必会知识</div>
+		<div class="name">{{chapterInfo.chapterName}}</div>
 		<div class="play">
 			<div class="play-left">
-				<!-- <img class="videos" src="/image/classbg.png" alt="" /> -->
                 <video-player  class="video-player vjs-custom-skin"
                     ref="videoPlayer" 
                     :playsinline="true" 
                     :options="playerOptions"
-                    
-
+                    v-if="playerOptions.sources[0].src"
+                    @timeupdate = "onPlayerTimeupdate($event)"
                 ></video-player>
-               <!--  @play="onPlayerPlay($event)"
-                    @pause="onPlayerPause($event)"
-                    @ended="onPlayerEnded($event)" -->
+                <div class="loading" v-if="!playerOptions.sources[0].src">
+                    <img src="/image/loading.gif" alt="">
+                    loading...
+                </div>
 			</div>
 			<div class="play-right" ref="wrapper">
-				<ul class="list" :style="'height:' + '800px'">
-					<li class="chapter">第1章 走进科学</li>
-					<li class="item" v-for="i in 20" :key="i">
+				<dl class="list" v-for="(item,index) in chapters" :key="index">
+					<dt class="chapter">{{item.chapterName}}</dt>
+					<dd class="item" v-for="i in item.children" :key="i.id">
 						<div class="video-itemIcon">
 							<i class="el-icon-video-camera-solid"></i>
 						</div>
 						<div class="item-name">
 							<span class="shipin">视频:</span>
-							<span>1-1开发语言必会知识（10:44)</span>
+							<span>{{i.chapterName}}</span>
 						</div>
-					</li>
-				</ul>
+					</dd>
+				</dl>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-// import iScroll from '../../static/js/iscroll-probe.js'
+import {playCourse} from '@/common/api/courseManage.js'
+import { mapState } from "vuex";
+import {recordHistory} from '@/common/api/history.js'
 import Iscroll from 'iscroll'
 export default {
 	data() {
 		return {
             playerOptions : {
-            playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
-            autoplay: false, //如果true,浏览器准备好时开始回放。
-            muted: false, // 默认情况下将会消除任何音频。
-            loop: false, // 导致视频一结束就重新开始。
-            preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
-            language: 'zh-CN',
-            aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-            fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-            sources: [{
-                type: "",//这里的种类支持很多种：基本视频格式、直播、流媒体等，具体可以参看git网址项目
-                src: "https://fawn.xuexiluxian.cn/api/profile/video/mp4/01_video.mp4" //url地址
-            }],
-            poster: "../../static/images/test.jpg", //你的封面地址
-            // width: document.documentElement.clientWidth, //播放器宽度
-            notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-            controlBar: {
-                timeDivider: true,
-                durationDisplay: true,
-                remainingTimeDisplay: false,
-                fullscreenToggle: true  //全屏按钮
-            }
-            }
+                playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+                autoplay: false, //如果true,浏览器准备好时开始回放。
+                muted: false, // 默认情况下将会消除任何音频。
+                loop: false, // 导致视频一结束就重新开始。
+                preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+                language: 'zh-CN',
+                aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+                fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+                sources: [{
+                    type: "",//这里的种类支持很多种：基本视频格式、直播、流媒体等，具体可以参看git网址项目
+                    src: "" //url地址
+                }],
+                poster: "", //你的封面地址
+                // width: document.documentElement.clientWidth, //播放器宽度
+                notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+                controlBar: {
+                    timeDivider: true,
+                    durationDisplay: true,
+                    remainingTimeDisplay: false,
+                    fullscreenToggle: true  //全屏按钮
+                }
+            },
+            courseId:this.$route.params.courseId,
+            chapterId:this.$route.params.chapterId,
+            chapterInfo:{},
+            chapters:[],
+            currentTime:'',//播放时间
+            memberid:'',//会员id
         }
 	},
     computed:{
@@ -69,9 +77,44 @@ export default {
             return this.$refs.videoPlayer.player
         }
     },
-	mounted() {
-		 
+	created() {
+        let token = sessionStorage.getItem("token");
+        if(!token){
+            this.$message.error('无法播放视频，请先登录');
+            this.$router.go(-1)
+        }
+        this.playCourse()
 	},
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.user.userInfo,
+            isLogin: (state) => state.user.isLogin,
+        }),
+    },
+    methods:{
+        playCourse(){
+            playCourse(this.courseId,this.chapterId).then(res => {
+                if(res.meta.code === '200'){
+                    this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
+                    this.chapterInfo = res.data.chapterInfo
+                    this.chapters = res.data.courseInfo.bizCourseChapters
+                    this.playerOptions.poster = res.data.courseInfo.courseCover
+                }
+            })
+        },
+         /* 获取视频播放进度 */
+        onPlayerTimeupdate (player) {
+            this.currentTime = player.cache_.currentTime
+            this.memberid = this.userInfo.id
+            recordHistory().then(res => {
+                if(res.meta.code = '200'){
+
+                }
+            })
+
+        }
+
+    }
 }
 </script>
 
@@ -98,7 +141,7 @@ export default {
 /* 视频播放开始 */
 .play-left {
 	width: 1100px;
-	height: 595px;
+	height: 500px;
 	margin: 0 0 0 20px;
 	background: #000;
 }
@@ -154,4 +197,17 @@ export default {
 	float: left;
 }
 /* 播放列表结束 */
+.video-player{
+    height: 300px;
+}
+.loading{
+    color:#ffffff;
+    font-size:20px;
+    margin: 200px auto;
+    width: 100px;
+    text-align: center;
+}
+.loading img{
+    width: 100%;
+}
 </style>

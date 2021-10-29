@@ -24,7 +24,7 @@ const routes = [
   { path: '/', component: Home },
   { path: '/course', component: Course },
   { path:'/course-info/:courseId',component:CourseInfo},
-  { path:'/course-play',component:CoursePlay},
+  { path:'/course-play/:courseId/:chapterId',component:CoursePlay},
   { path: '/member', component: Member },
   {
     path: '/about', component: About, name: 'About',

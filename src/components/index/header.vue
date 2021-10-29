@@ -58,6 +58,13 @@
                 class="avator"
                 :src="userInfo.avatar"
                 alt=""
+                v-if="userInfo.avatar"
+              />
+              <img
+                class="avator"
+                :src="avatorImg"
+                alt=""
+                v-else
               />
               <!-- 头像信息 -->
             </div>
@@ -444,16 +451,15 @@ export default {
                 });
                 this.open = false;
                 let accessToken = res.data.accessToken;
+                // 存储到access中
+                sessionStorage.setItem("token", accessToken);
+                sessionStorage.setItem("isLogin", JSON.stringify(true));
                 // 获取用户信息
-                this.getUserInofo({
+                this.getUserInfo({
                   token: accessToken
                 });
                 this.getCarNum();
                 this.saveLoginAction()
-                // 存储到access中
-                sessionStorage.setItem("token", accessToken);
-                sessionStorage.setItem("isLogin", JSON.stringify(true));
-
                 this.$message({
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
@@ -576,7 +582,7 @@ export default {
     },
     // 获取个人信息
     getUserInfo(params) {
-      console.log(sessionStorage.getItem("token"));
+      console.log(sessionStorage.getItem("token"),"123456");
       getInfo(params)
         .then((res) => {
           sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
