@@ -361,6 +361,9 @@ export default {
       isLogin: (state) => state.user.isLogin,
     }),
   },
+  created(){
+    this.getCarNum()
+  },
   methods: {
     ...mapActions(['saveUserInfoAction','saveLoginAction']),
     // 去我的课程
