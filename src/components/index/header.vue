@@ -834,7 +834,7 @@ export default {
   border: 1px solid rgba(248, 250, 252, 1);
   position: absolute;
   top: 100px;
-  right: 100px;
+  right: 210px;
   z-index: 999;
   display: block;
 }
@@ -918,7 +918,7 @@ export default {
   background: #fff;
   position: absolute;
   top: 100px;
-  right: 200px;
+  right: 390px;
   z-index: 999;
   padding: 0 10px;
   box-sizing: border-box;
