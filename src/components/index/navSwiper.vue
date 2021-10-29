@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="right">
                                     <div class="courseName">{{item.courseName}}</div> 
-                                    <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人购买</div>
+                                    <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                                     <div class="buy">
                                         <div class="learn">免费学习</div>
                                         <div class="car">

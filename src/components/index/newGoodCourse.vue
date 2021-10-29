@@ -30,7 +30,7 @@
                                 </div> -->
                             </div>
                             <div class="courseName">{{item.courseName}}</div>
-                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人购买</div>
+                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                             <div class="coursePrice">
                                 <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
                                 <div class="price">¥ {{item.salePrice}}</div>
@@ -76,7 +76,7 @@
                                 </div> -->
                             </div>
                             <div class="courseName">{{item.courseName}}</div>
-                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人购买</div>
+                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                             <div class="coursePrice">
                                 <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
                                 <div class="price">¥ {{item.salePrice}}</div>
