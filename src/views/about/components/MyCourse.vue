@@ -57,12 +57,42 @@ export default {
     getList(){
       myCourses(this.query).then(res=> {
         console.log(res)
+        res.data.pageInfo.list.map(item => {
+          switch (item.courseLevel) {
+            case 1:
+              item.courseLevel = '初级'
+              break;
+            case 2:
+              item.courseLevel = '中级'
+              break;
+            case 3: 
+              item.courseLevel = '高级'
+              break;
+          }
+        })
+        this.totalList = res.data.pageInfo.list
+
       }).catch(err => {
         console.log(err)
       })
     },
     handleClick(tab,event){
-      console.log(tab,event)
+      // this.getList()
+      if(this.activeName === 'first'){
+        this.totalList = this.totalList
+      }else if(this.activeName === 'second'){
+        this.freeList = this.totalList.filter(item => {
+          if(item.discountPrice === 0){
+            return item
+          }
+        })
+      }else if(this.activeName === 'third'){
+        this.vipList = this.totalList.filter(item => {
+          if(item.isMember === 1){
+            return item
+          }
+        })
+      }
     }
   },
 };

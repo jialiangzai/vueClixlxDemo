@@ -11,42 +11,91 @@
         <ColleanItem :courseList="vipList"></ColleanItem>
       </el-tab-pane>
     </el-tabs>
-   
   </div>
 </template>
 
 <script>
-import ColleanItem from './ColleanItem.vue';
-import {getFavoriteList} from '@/common/api/favorite'
+import ColleanItem from "./ColleanItem.vue";
+import { getFavoriteList } from "@/common/api/favorite";
+import { createToken } from "@/common/api/auth";
 export default {
   data() {
     return {
-      activeName: 'first',
+      activeName: "first",
       totalList: [],
       freeList: [],
       vipList: [],
       query: {
-        pageSize:10,
-        pageNum:1
-      }
+        pageSize: 10,
+        pageNum: 1,
+        token: null,
+        entity: {
+          isFress: null,
+          isMember: null,
+        },
+      },
     };
   },
-  components:{
+  components: {
     ColleanItem,
   },
-  created(){
-    this.getList()
-    console.log(sessionStorage.getItem('token'));
+  created() {
+    this.query.isFress = null;
+    this.query.isMember = null;
+    this.getList();
+    console.log(sessionStorage.getItem("token"));
   },
   methods: {
-    getList(){
-      getFavoriteList(this.query).then(res => {
-        console.log(res);
-      }).catch(err => console.log(err))
+    getList() {
+      createToken().then((res) => {
+        if (res.data.token) {
+          this.query.token = res.data.token;
+          getFavoriteList(this.query)
+            .then((res) => {
+              console.log(res);
+              this.totalList = res.data.pageInfo.list;
+            })
+            .catch((err) => console.log(err));
+        }
+      });
     },
-    handleClick(tab,event){
-      console.log(tab,event)
-    }
+    handleClick(tab, event) {
+      if (this.activeName === "second") {
+        this.query.entity.isFress = 1;
+        // this.getList();
+        createToken().then((res) => {
+        if (res.data.token) {
+          this.query.token = res.data.token;
+          getFavoriteList(this.query)
+            .then((res) => {
+              console.log(res);
+              this.freeList = res.data.pageInfo.list;
+            })
+            .catch((err) => console.log(err));
+        }
+      });
+      
+      } else if (this.activeName === "third") {
+        this.query.entity.isMember = 1;
+        createToken().then((res) => {
+        if (res.data.token) {
+          this.query.token = res.data.token;
+          getFavoriteList(this.query)
+            .then((res) => {
+              console.log(res);
+              this.vipList = res.data.pageInfo.list;
+            })
+            .catch((err) => console.log(err));
+        }
+      });
+      
+        
+      } else {
+        this.query.isFress = null;
+        this.query.isMember = null;
+        this.getList();
+      }
+    },
   },
 };
 </script>
@@ -56,5 +105,4 @@ export default {
   margin-left: 20px;
   height: 800px;
 }
-
 </style>

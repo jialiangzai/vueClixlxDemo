@@ -1,12 +1,9 @@
-import http from './requests'
+import http from './requests';
 
-export function myCourses(params){ 
+export function myCourses(params){
   return http.$axios({
-    url: '/course/myCourses',
+    url: 'api/course/myCourses',
     method: 'POST',
-    data: params,
-    headers: {
-      'Authorization': sessionStorage.getItem('token')
-    }
+    data: params
   })
 }

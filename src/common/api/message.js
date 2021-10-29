@@ -15,23 +15,25 @@ export function getByMemberId(params) {
 // 添加收藏
 // /message/get
 
-export function getMess({id}){
+export function getMess({id,token}){
   return http.$axios({
     url: 'api/message/get?id='+id,
     method: 'GET',
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': sessionStorage.getItem('token'),
+      'token': token
     }
   })
 }
 
 // 删除收藏
-export function deleteMess({id}){
+export function deleteMess({id,token}){
   return http.$axios({
     url: 'api/message/delete?ids='+id,
     method: 'GET',
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': sessionStorage.getItem('token'),
+      'token': token
     }
   })
 }

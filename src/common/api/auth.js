@@ -99,3 +99,12 @@ export function updatePortrait(params){
     }
   })
 }
+
+// 获取 token /token/createToken
+
+export function createToken(){
+  return http.$axios({
+    url: 'api/token/createToken',
+    method: 'POST'
+  })
+}

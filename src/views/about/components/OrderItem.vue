@@ -10,28 +10,34 @@
                 src="/image/about/order-select.png"
                 alt=""
               />
-              <p class="order-num">订单编号： 123354546565</p>
-              <p class="order-time">2021-10-21 10:23:23</p>
+              <p class="order-num">订单编号：{{ item.orderNumber }}</p>
+              <p class="order-time">{{ dateFormat('YYYY-mm-dd HH:MM',item.createTime) }}</p>
             </div>
-            <div class="item-bottom">
+            <div
+              class="item-bottom"
+              v-for="course in item.historyOrderCourseVos"
+              :key="course.courseId"
+            >
               <div class="i-b-left">
                 <div class="i-b-l-left">
-                  <img src="/image/about/course-bg.png" alt="" />
-                  <p>晋级TS高手搞定复杂项目</p>
+                  <img :src="course.courseCover" alt="" />
+                  <!-- <p>晋级TS高手搞定复杂项目</p> -->
                 </div>
-                <div class="i-b-l-right">
+                <div class="i-b-l-right" style="width: 400px">
                   <p class="i-b-l-r-title">
-                    晋级TS高手搞定复杂项目晋级TS高手搞定复杂项目
+                    {{ course.courseName }}
                   </p>
-                  <p class="i-b-l-r-tip">晋级TS高手搞定复杂项目</p>
-                  <p class="i-b-l-r-price">价格 <span>￥349.00</span></p>
+                  <p class="i-b-l-r-tip">{{ course.description }}</p>
+                  <p class="i-b-l-r-price">
+                    价格 <span>￥{{ course.discountPrice }}</span>
+                  </p>
                 </div>
               </div>
               <div class="i-b-center">
                 <div class="i-b-c-price">
-                  <p class="i-b-c-p-single">￥349.00</p>
-                  <p class="i-b-c-p-total">￥349.00</p>
-                  <p class="i-b-c-p-pay">￥<span>349.00</span></p>
+                  <p class="i-b-c-p-single">价格 ￥{{ course.discountPrice }}</p>
+                  <p class="i-b-c-p-total">合计 ￥{{ item.payPrice }}</p>
+                  <p class="i-b-c-p-pay">实付 ￥<span>{{ item.payPrice }}</span></p>
                 </div>
               </div>
               <div class="i-b-right">
@@ -73,16 +79,41 @@
 <script>
 export default {
   props: {
-    orderList:{
+    orderList: {
       type: Array,
-      default:[]
-    }
-  }
-}
+      default: [],
+    },
+  },
+  methods: {
+    dateFormat(fmt, date) {
+      let crtTime = new Date(date)
+      let ret;
+      const opt = {
+        "Y+": crtTime.getFullYear().toString(), // 年
+        "m+": (crtTime.getMonth() + 1).toString(), // 月
+        "d+": crtTime.getDate().toString(), // 日
+        "H+": crtTime.getHours().toString(), // 时
+        "M+": crtTime.getMinutes().toString(), // 分
+        "S+": crtTime.getSeconds().toString(), // 秒
+        // 有其他格式化字符需求可以继续添加，必须转化成字符串
+      };
+      for (let k in opt) {
+        ret = new RegExp("(" + k + ")").exec(fmt);
+        if (ret) {
+          fmt = fmt.replace(
+            ret[1],
+            ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, "0")
+          );
+        }
+      }
+      return fmt;
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .order-container {
+.order-container {
   margin: 10px 0;
   width: 940px;
   height: 700px;
@@ -190,7 +221,7 @@ export default {
 }
 .i-b-c-price {
   width: 220px;
-  height: 100px;
+  /* height: 100px; */
   border-right: 1px solid rgba(112, 112, 112, 0.2);
   display: flex;
   flex-direction: column;

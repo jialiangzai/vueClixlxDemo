@@ -1,30 +1,31 @@
 <template>
   <div class="my-course-content">
-      <div v-if="courseList.length > 0" style="height:750px;width:980px;">
+      <div v-if="courseList && courseList.length > 0" style="height:750px;width:980px;">
         <happy-scroll  style="width:980px;" color="red" size="5">
           <div class="course-main" style="width:980px;">
-            <div class="course-item">
+            <div class="course-item" v-for="item in courseList" :key="item.id">
               <div class="item-left">
-                <img src="/image/about/course-bg.png" alt="" />
-                <p>晋级TS高手搞定复杂项目</p>
+                <img :src="item.courseCover" alt="" />
+                <!-- <p>晋级TS高手搞定复杂项目</p> -->
               </div>
               <div class="item-right">
                 <div class="i-r-left">
                   <div class="i-r-l-title">
-                    <p class="tip">免费课</p>
-                    <p class="title">晋级TS高手搞定复杂项目</p>
+                    <p class="tip" v-if="item.discountPrice === 0">免费课</p>
+                    <p class="tip vip" v-if="item.isMember === 1">会员课程</p>
+                    <p class="title">{{item.courseName}}</p>
                   </div>
                   <div class="i-r-l-center">
-                    <p class="study-time">已学0%</p>
-                    <p>用时1小时30分</p>
-                    <p>学习至高手搞定复杂项目从</p>
+                    <p class="study-time">总时长: {{item.totalHour}}</p>
+                    <p>讲师：{{item.lecturerName}}</p>
+                    <p>课程级别： {{item.courseLevel}}</p>
                   </div>
                   <div class="i-r-l-note">笔记 0</div>
                 </div>
                 <div class="i-r-right">
                   <div class="i-r-bottom">
-                    <div>我的项目</div>
-                    <div>继续学习</div>
+                    <button :disabled="true">我的项目</button>
+                    <button class="student" @click="goStu(item.id)">继续学习</button>
                   </div>
                 </div>
               </div>
@@ -47,6 +48,13 @@ export default {
     courseList: {
       type: Array,
       default: []
+    }
+  },
+  methods:{
+    goStu(id){
+      this.$router.push({
+        path: '/course-info/'+id
+      })
     }
   }
 }
@@ -105,7 +113,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 .item-left p {
   width: 150px;
@@ -148,6 +156,13 @@ export default {
   margin-right: 20px;
   height: 20px;
   line-height: 20px;
+}
+.vip {
+  background: linear-gradient(
+    to right,
+    rgba(255, 61, 61, 1) 0%,
+    rgba(255, 122, 21, 1) 100%
+  );
 }
 .title {
   font-size: 18px;
@@ -192,20 +207,26 @@ export default {
   justify-content: space-around;
   align-items: center;
 }
-.i-r-bottom div {
+.i-r-bottom button {
   width: 120px;
   height: 40px;
   text-align: center;
   line-height: 40px;
-  background: linear-gradient(
-    to right,
-    rgba(125, 177, 255, 1) 0%,
-    rgba(39, 132, 255, 1) 100%
-  );
+  background: #eee;
   border-radius: 20px;
   font-size: 14px;
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #ffffff;
+
+border: none;
+outline: none
+}
+.i-r-bottom  .student {
+  background: linear-gradient(
+    to right,
+    rgba(125, 177, 255, 1) 0%,
+    rgba(39, 132, 255, 1) 100%
+  );
 }
 </style>

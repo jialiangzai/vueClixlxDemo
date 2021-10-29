@@ -1,52 +1,84 @@
 <template>
   <div class="my-course-content">
-      <div v-if="messList&&messList.length > 0" style="height: 750px; width: 980px">
-        <happy-scroll style="width: 980px">
-          <div class="course-main" style="width: 980px">
-            <div class="course-item" @mouseenter="goShow" @mouseleave="goRemove" :class="isDelete ? 'item-active': ''" v-for="item in messList" :key="item.id">
-              <div class="item-dot" v-if="item.title"></div>
-              <div class="item-main">
-                <p class="title">{{item.title}}</p>
-                <p class="time"> {{item.createTime}}</p>
-              </div>
-              <div class="delete" v-show="isDelete">
-                <img src="/image/about/remove.png" alt="">
-              </div>
+    <div
+      v-if="messList && messList.length > 0"
+      style="height: 750px; width: 980px"
+    >
+      <happy-scroll style="width: 980px">
+        <div class="course-main" style="width: 980px">
+          <div
+            class="course-item"
+            @mouseenter="goShow"
+            @mouseleave="goRemove"
+            :class="isDelete ? 'item-active' : ''"
+            v-for="item in messList"
+            :key="item.id"
+          >
+            <div class="item-dot" v-if="item.title"></div>
+            <div class="item-main">
+              <p class="title">{{ item.title }}</p>
+              <p class="time">{{ item.createTime }}</p>
+            </div>
+            <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
+              <img src="/image/about/remove.png" alt="" />
             </div>
           </div>
-        </happy-scroll>
-      </div>
-      <div v-else class="course-empty">
-        <el-empty image="/image/about/mess-empty.png" description="暂无消息"></el-empty>
-      </div>
+        </div>
+      </happy-scroll>
     </div>
+    <div v-else class="course-empty">
+      <el-empty
+        image="/image/about/mess-empty.png"
+        description="暂无消息"
+      ></el-empty>
+    </div>
+  </div>
 </template>
 
 <script>
+import { createToken } from "@/common/api/auth";
+import { deleteMess } from "@/common/api/message";
 export default {
   props: {
     messList: {
       type: Array,
-      default: []
-    }
+      default: [],
+    },
   },
-  data(){
+  data() {
     return {
-      isDelete: false
-    }
+      isDelete: false,
+    };
   },
-  onLoad(){
-    console.log(this.messList)
+  onLoad() {
+    console.log(this.messList);
   },
   methods: {
-    goShow(){
-      this.isDelete = true
+    goShow() {
+      this.isDelete = true;
     },
-    goRemove(){
-      this.isDelete = false
-    }
-  }
-}
+    goRemove() {
+      this.isDelete = false;
+    },
+    goDelete(id) {
+      createToken().then((res) => {
+        if (res.data.token) {
+          deleteMess({
+            ids: id,
+            token: res.data.token,
+          }).then((res) => {
+            if (res.meta.code == "200") {
+              this.$message({
+                message: "删除消息成功",
+                type: "success",
+              });
+            }
+          });
+        }
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -60,7 +92,6 @@ export default {
   position: relative;
   margin-top: 50px;
 }
-
 
 .course-item {
   width: 100%;
@@ -76,7 +107,7 @@ export default {
   border-radius: 50%;
   background: red;
   position: absolute;
-  left:5px;
+  left: 5px;
   top: 20px;
 }
 .item-main {
@@ -86,11 +117,11 @@ export default {
   height: 40px;
   margin-left: 10px;
 }
-.item-main .title{
+.item-main .title {
   width: 400px;
- white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 14px;
   font-family: Microsoft YaHei;
   font-weight: 400;
@@ -105,7 +136,7 @@ text-overflow:ellipsis;
   color: #666666;
 }
 .item-active {
-background: #F8F8F8;
+  background: #f8f8f8;
 }
 .delete {
   width: 20px;
