@@ -24,25 +24,25 @@
                     </div>
                     <div class="detail-class">
                         <div class="course-card" v-for="(item,index) in arrcourse" :key="index" >
-                            <router-link :to="{path:'/course-info/' + item.id}">
-                                <div class="course-image">
+                            <div class="course-image" @click="goCourseInfo">
+                                <!-- <router-link :to="{path:'/course-info/' + item.id}"> -->
                                     <img :src="item.courseCover" alt="">
-                                </div>
-                                <div class="right">
-                                    <div class="courseName">{{item.courseName}}</div> 
-                                    <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
-                                    <div class="buy">
-                                        <div class="learn">免费学习</div>
-                                        <div class="car">
-                                            <div class="cart-image">
-                                                <img src="/image/cart16.png" alt="">
-                                            </div>
-                                            <span class="addcart">加购物车</span>
+                                <!-- </router-link> -->
+                            </div>
+                            <div class="right">
+                                <div class="courseName">{{item.courseName}}</div> 
+                                <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
+                                <div class="buy">
+                                    <div class="learn">免费学习</div>
+                                    <div class="car" @click="addCart(item)">
+                                        <div class="cart-image">
+                                            <img src="/image/cart16.png" alt="">
                                         </div>
-
+                                        <span class="addcart">加购物车</span>
                                     </div>
+
                                 </div>
-                            </router-link>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,6 +75,9 @@ import {queryCourse} from '@/common/api/courseManage.js'
 import {queryCourseTag} from '@/common/api/courseTag.js'
 import courseType from './courseType.vue'
 import http from '../../common/api/requests'
+import {addShopCar} from '@/common/api/shopcar.js'
+import {createToken} from '@/common/api/token.js'
+import { mapState } from "vuex";
 
 export default {
 	data() {
@@ -92,6 +95,8 @@ export default {
                     firstCategory:''
                 }
             },
+            token:''
+
 
 		}
 	},
@@ -99,7 +104,30 @@ export default {
 		this.getFirstCategory()
 		this.getSliders()
 	},
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.user.userInfo,
+            isLogin: (state) => state.user.isLogin,
+        }),
+    },
 	methods: {
+       /*  goCourseInfo(){
+            this.$router.push('/course-info/' + this.arrcourse.id)
+        }, */
+        //加入购物车
+        addCart(item){
+            createToken().then(res => {
+                this.token = res.data.token
+                this.memberId = this.userInfo.id
+                addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
+                    this.$message({
+                        message: '恭喜你，加入购物车成功',
+                        type: 'success'
+                    });
+                })
+            })
+            
+        },
 		// 课程分类，鼠标进入移出事件
 		mourseHover(item,index) {
 			this.$set(this.categorysDetail, index, true)
@@ -295,32 +323,23 @@ export default {
     display: flex;
     margin-bottom: 10px;
     align-items: center;
-    width: 320px;
-    height: 130px;
+    width: 340px;
+    height: 150px;
     background: #F3F5F6;
-    cursor: pointer;
+    border-radius: 10px;
 }
 .course-image{
 	position: relative;
-    width:180px ;
+    width:200px ;
     height: 100%;
+    cursor: pointer;
 }
 .course-image img{
     width: 100%;
     height: 100%;
 }
-.course-image  .courseDesc{
-    position: absolute;
-	top: 40px;
-	left: 15px;
-	font-size: 16px;
-    font-weight: bold;
-	color: #ffffff;
-}
-.right{
-    width: 100%;
-    height: 130px;
-}
+
+
 .courseName{
     width: 150px;
     height: 35px;
@@ -340,7 +359,7 @@ export default {
 }
 .buy{
     display: flex;
-    margin: 20px 0 0 5px;
+    margin: 40px 0 0 5px;
     justify-content: space-between;
 }
 .buy .learn{
@@ -356,7 +375,7 @@ export default {
     margin-left: 2px;
     color: #FF3D17;
     font-size: 13px;
-
+    cursor: pointer;
 }
 /* 下侧课程结束 */
 </style>

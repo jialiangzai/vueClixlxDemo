@@ -20,23 +20,23 @@
         <div class="newCourseContent">
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in newCourses" :key="index" >
-                    <router-link :to="{path:'/course-info/' + item.id}">
-                        <div class="courseInfo">
+                    <div class="courseInfo">
+                        <router-link :to="{path:'/course-info/' + item.id}">    
                             <div class="courseBg">
                                 <img class="courseImg" :src="item.courseCover" alt="">
-                                <!-- <div  class="courseDesc">
-                                    <div>晋级TS高手</div>
-                                    <div>搞定复杂项目</div>
-                                </div> -->
                             </div>
-                            <div class="courseName">{{item.courseName}}</div>
-                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
-                            <div class="coursePrice">
-                                <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                                <div class="price">¥ {{item.salePrice}}</div>
+                        </router-link>
+                        <div class="courseName">{{item.courseName}}</div>
+                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
+                        <div class="coursePrice">
+                            <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
+                            <div class="price">¥ {{item.salePrice}}</div>
+                            <div class="addCart" @click="addCart(item)">
+                                <i class="el-icon-shopping-cart-1 cart"></i> 
+                                <span class="cart-text">加入购物车</span>
                             </div>
                         </div>
-                    </router-link>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -66,23 +66,23 @@
             </div>
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
-                    <router-link :to="{path:'/course-info/' + item.id}">
-                        <div class="courseInfo">
+                    <div class="courseInfo">
+                        <router-link :to="{path:'/course-info/' + item.id}">    
                             <div class="courseBg">
                                 <img class="courseImg" :src="item.courseCover" alt="">
-                                <!-- <div  class="courseDesc">
-                                    <div>晋级TS高手</div>
-                                    <div>搞定复杂项目</div>
-                                </div> -->
                             </div>
-                            <div class="courseName">{{item.courseName}}</div>
-                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
-                            <div class="coursePrice">
-                                <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                                <div class="price">¥ {{item.salePrice}}</div>
+                        </router-link>
+                        <div class="courseName">{{item.courseName}}</div>
+                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
+                        <div class="coursePrice">
+                            <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
+                            <div class="price">¥ {{item.salePrice}}</div>
+                            <div class="addCart" @click="addCart(item)">
+                                <i class="el-icon-shopping-cart-1 cart"></i> 
+                                <span class="cart-text">加入购物车</span>
                             </div>
                         </div>
-                    </router-link>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -120,6 +120,10 @@
 
 <script>
 import {getNewCourse,getHotCourse} from '@/common/api/courseManage.js'
+import {addShopCar} from '@/common/api/shopcar.js'
+import {createToken} from '@/common/api/token.js'
+import { mapState } from "vuex";
+
 export default {
 	data() {
 		return {
@@ -135,14 +139,36 @@ export default {
                 pageNum: 1,
                 pageSize: 6,
                 entity: {}
-            }
+            },
+            token:''
+
         }
 	},
     created(){
         this.getNewCourse()
         this.getHotCourse()
     },
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.user.userInfo,
+            isLogin: (state) => state.user.isLogin,
+        }),
+    },
     methods:{
+        //加入购物车
+        addCart(item){
+            createToken().then(res => {
+                this.token = res.data.token
+                this.memberId = this.userInfo.id
+                addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
+                    this.$message({
+                        message: '恭喜你，加入购物车成功',
+                        type: 'success'
+                    });
+                })
+            })
+            
+        },
         //获取最新课程
         getNewCourse(){
             getNewCourse(this.querynew).then(res => {
@@ -367,6 +393,7 @@ export default {
 }
 .coursePrice {
 	display: flex;
+    justify-content: space-between;
 	font-size: 14px;
 	margin-top: 10px;
 }
@@ -421,4 +448,8 @@ export default {
 }
 
 /* 都在看好书结束 */
+.addCart{
+    margin-top: 3px;
+    color: #FF3D17;
+}
 </style>

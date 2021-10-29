@@ -37,7 +37,6 @@
                 <div class="nav-container">
                     <ul class="chapter">
                         <li class="chapter-item active">章节</li>
-                        <li class="chapter-item">下载笔记代码</li>
                     </ul>
                 </div>
             </div>
@@ -79,6 +78,17 @@
                     </li>
                 </ul>
             </div>
+            <div class="video" >
+                <div class="chapterName">下载资料</div>
+                <div class="source" v-for="(x,y) in downsource" :key="y">
+                    <span class="chapterName">{{x.attachmentName}}</span>
+                    <span>
+                        <a href="#">{{x.attachmentUrl}}</a>
+                    </span>
+                    <button class="download">下载资料</button>
+                </div>
+                
+            </div>
         </div> 
         
     </div>
@@ -99,6 +109,7 @@ export default{
             courseInfoArr:{},
             courseDetail: {},
             courseChapters:{},
+            downsource:[],
             token:'',
             memberId:''
 
@@ -130,9 +141,11 @@ export default{
         getcourseInfo(){
             getcourseInfo(this.courseId).then(res => {
                 if(res.meta.code === '200'){
+                    console.log(res.data.data);
                     this.courseInfoArr = res.data.data
                     this.courseDetail = res.data.data.bizCourseDetail
                     this.courseChapters = res.data.data.bizCourseChapters
+                    this.downsource = res.data.data.bizCourseAttachments
                     switch(this.courseInfoArr.courseLevel){
                     case 1:
                         this.courseInfoArr.courseLevel = '初级';
@@ -330,4 +343,27 @@ export default{
     clear: both;
 }
 /* 视频目录结束 */
+.source{
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+.source:hover{
+    cursor: pointer;
+    background: rgba(133, 196, 206,.2);
+    border-radius: 10px;
+    color: #388FFF!important;
+}
+.chapterName{
+    padding: 0 30px;
+}
+.download{
+    width: 100px;
+    height: 30px;
+    background: #388FFF;
+    border:none;
+    border-radius: 10px;
+    color: #FFF;
+    font-size: 14px;
+}
 </style>

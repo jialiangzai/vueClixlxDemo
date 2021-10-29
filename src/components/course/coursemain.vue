@@ -141,8 +141,8 @@
 import {getFirstCategorys,getSecondCategorys} from '@/common/api/courseCategory.js'
 import { mapState } from "vuex";
 import {addShopCar} from '@/common/api/shopcar.js'
-import {queryCourse} from '@/common/api/courseManage.js'
 import {createToken} from '@/common/api/token.js'
+import {queryCourse} from '@/common/api/courseManage.js'
 export default{
     data() {
         return{
@@ -195,7 +195,10 @@ export default{
                 this.token = res.data.token
                 this.memberId = this.userInfo.id
                 addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
-                    console.log(res);
+                    this.$message({
+                        message: '恭喜你，加入购物车成功',
+                        type: 'success'
+                    });
                 })
             })
             

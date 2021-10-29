@@ -54,7 +54,9 @@
                     <li class="foot-item">已选课程<span class="unique">1</span></li>
                     <li class="foot-item">合计<span class="unique">299.00</span></li>
                     <li > 
-                        <button class="btn">结 算</button>
+                        <router-link to="/confirmOrder">
+                            <button class="btn">结 算</button>
+                        </router-link>
                     </li>
                 </ul>
             </div>
@@ -306,5 +308,6 @@ export default{
     font-size: 22px;
     border-radius: 5px;
     background: #FF4400;
+    cursor: pointer;
 }
 </style>
