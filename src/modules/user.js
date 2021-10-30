@@ -17,6 +17,9 @@ export default {
 		},
 		saveLogin(state,payload) {
 			state.isLogin = JSON.parse(sessionStorage.getItem('isLogin'))
+		},
+		saveAvator(state,payload){
+			state.userInfo.avatar = payload
 		}
 	},
 	actions:{
@@ -25,6 +28,9 @@ export default {
 		},
 		saveLoginAction({commit},payload){
 			commit('saveLogin',payload)
+		},
+		saveAvatorAction({commit},payload){
+			commit('saveAvator',payload)
 		}
 	}
 }

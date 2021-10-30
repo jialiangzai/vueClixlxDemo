@@ -45,6 +45,7 @@
             :autoCropHeight="options.autoCropHeight"
             :fixedBox="options.fixedBox"
             @realTime="realTime"
+            style="{touch-action: 'none'}"
           />
         </el-col>
         <el-col :span="12" :style="{ height: '350px' }">
@@ -80,6 +81,7 @@
         </el-col>
       </el-row>
     </div>
+    <img :src="imgUrl" alt="" class="img">
   </div>
 </template>
 
@@ -87,7 +89,7 @@
 import { VueCropper } from "vue-cropper";
 import { updatePortrait, getInfo } from "@/common/api/auth";
 import { mapState, mapActions } from "vuex";
-// import { uploadAvatar } from "@/api/system/user";
+import {uploadFileWithBlob,uploadFile} from '@/common/api/common'
 
 export default {
   components: { VueCropper },
@@ -104,6 +106,7 @@ export default {
       // visible: true,
       // 弹出层标题
       title: "修改头像",
+      imgUrl: '',
       options: {
         img: "/image/common/avator.png", //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
@@ -112,6 +115,7 @@ export default {
         fixedBox: true, // 固定截图框大小 不允许改变
       },
       previews: {},
+      files: null
     };
   },
   computed: {
@@ -120,7 +124,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(["saveUserInfoAction"]),
+    ...mapActions(["saveAvatorAction"]),
     // 覆盖默认的上传行为
     requestUpload() {},
     // 向左旋转
@@ -138,6 +142,7 @@ export default {
     },
     // 上传预处理
     beforeUpload(file) {
+      this.files = file
       if (file.type.indexOf("image/") == -1) {
         this.msgError("文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。");
       } else {
@@ -151,20 +156,22 @@ export default {
     // 上传图片
     uploadImg() {
       this.$refs.cropper.getCropBlob((data) => {
-        // let formData = new FormData();
+        console.log(data)
+        console.log(this.files)
+        let formData = new FormData();
         // console.log(data);
-        // var fileReader = new FileReader();
-        // fileReader.readAsDataURL(data);
-        // fileReader.onload = function (res) {
-        //   console.log(res); //这里输出的数据放到url里能生成图片
-        // };
         // console.log(" data:image/jpeg;base64,+" + data);
-        formData.append("avatar", data);
-        formData.append("id", this.userInfo.id);
+        formData.append("file", data);
+        // formData.append("id", this.userInfo.id);
         // console.log(formData)
-        for (var value of formData.values()) {
-          console.log(value);
-        }
+       uploadFile(formData).then(res=> {
+          console.log(res)
+          this.imgUrl = res.data.url
+
+        }).catch(err=>{
+          console.log(err)
+        })
+  
         // updatePortrait(formData).then(response => {
         //   console.log(res)
         //   this.open = false;
@@ -236,7 +243,7 @@ html {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  box-shadow: 0 0 4px #ccc;
+  box-shadow: 0 0 4px rgb(126, 120, 120);
   overflow: hidden;
 }
 
@@ -268,5 +275,10 @@ html {
   text-align: center;
   color: #fff;
   background: rgba(0, 102, 255, 1);
+}
+.img {
+  width: 200px;
+  height: 20px;
+  border:1px solid red;
 }
 </style>

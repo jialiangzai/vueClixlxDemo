@@ -5,7 +5,8 @@
       <div class="mine-left">
         <div class="m-l-top">
           <div class="top-main">
-            <img :src=" userInfo.avatar" alt="" />
+            <img :src=" userInfo.avatar" alt="" v-if="userInfo.avatar" />
+            <img :src="avatorImg" alt="" v-else>
             <p class="avator-name">{{userInfo.nickName}}</p>
             <p class="avator-id">ID: {{userInfo.id }}</p>
           </div>
@@ -43,7 +44,7 @@ import {mapState} from 'vuex'
 export default {
   data() {
     return {
-      avator: '/image/common/avator.png',
+      avatorImg: '/image/common/avator.png',
       nickName: '小鹿线-测试',
       id: 1,
       navList: [
