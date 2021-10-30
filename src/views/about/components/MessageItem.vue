@@ -4,11 +4,9 @@
       <div class="course-main" style="width: 980px">
         <div
           class="course-item"
-          :class="isDelete ? 'item-active' : ''"
           v-for="item in messList"
-          @mouseenter="goShow"
-          @mouseleave="goRemove"
           :key="item.id"
+  
         >
           <div class="item-dot" v-if="item.title"></div>
           <div class="item-main">
@@ -39,27 +37,18 @@ export default {
       type: Array,
       default: [],
       cur: 0,
+      isDelete: false,
     },
   },
   data() {
     return {
-      isDelete: false,
+      // isDelete: false,
     };
   },
   onLoad() {
     console.log(this.messList);
   },
   methods: {
-    goShow(index) {
-      
-        this.isDelete = true;
-    },
-    goRemove() {
-      
-        this.isDelete = false;
-      
-      
-    },
     goDelete(id) {
       createToken().then((res) => {
         if (res.data.token) {
@@ -100,6 +89,7 @@ export default {
   align-items: center;
   margin-top: 10px;
   position: relative;
+  cursor: pointer;
 }
 .item-dot {
   width: 5px;

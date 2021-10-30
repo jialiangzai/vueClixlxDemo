@@ -1,8 +1,7 @@
 <template>
   <div class="my-course-content">
-      <div v-if="courseList && courseList.length > 0" style="height:750px;width:980px;">
-        <happy-scroll  style="width:980px;" color="red" size="5">
-          <div class="course-main" style="width:980px;">
+      <div v-if="courseList && courseList.length > 0" style="width:980px;">
+          <div class="course-main" style="width:980px;" v-if="courseList && courseList.length > 0">
             <div class="course-item" v-for="item in courseList" :key="item.id">
               <div class="item-left">
                 <img :src="item.courseCover" alt="" />
@@ -31,7 +30,6 @@
               </div>
             </div>
           </div>
-        </happy-scroll>
       </div>
       <div v-else class="course-empty">
         <div class="empty">
@@ -63,7 +61,8 @@ export default {
 <style  scoped>
   .my-course-content {
   width: 100%;
-  height: 800px;
+  margin-bottom: 50px;
+  /* height: 800px; */
 }
 .course-empty {
   height: 500px;
@@ -163,6 +162,7 @@ export default {
     rgba(255, 61, 61, 1) 0%,
     rgba(255, 122, 21, 1) 100%
   );
+  color: #fff;
 }
 .title {
   font-size: 18px;
