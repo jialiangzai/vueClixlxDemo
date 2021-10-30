@@ -80,6 +80,7 @@ export default {
 <style scoped>
 .order-tabs {
   margin-left: 20px;
+  margin-bottom: 120px;
   /* height: 800px; */
 }
 </style>

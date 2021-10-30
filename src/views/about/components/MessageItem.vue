@@ -1,30 +1,25 @@
 <template>
   <div class="my-course-content">
-    <div
-      v-if="messList && messList.length > 0"
-      style="height: 750px; width: 980px"
-    >
-      <happy-scroll style="width: 980px">
-        <div class="course-main" style="width: 980px">
-          <div
-            class="course-item"
-            @mouseenter="goShow"
-            @mouseleave="goRemove"
-            :class="isDelete ? 'item-active' : ''"
-            v-for="item in messList"
-            :key="item.id"
-          >
-            <div class="item-dot" v-if="item.title"></div>
-            <div class="item-main">
-              <p class="title">{{ item.title }}</p>
-              <p class="time">{{ item.createTime }}</p>
-            </div>
-            <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
-              <img src="/image/about/remove.png" alt="" />
-            </div>
+    <div v-if="messList && messList.length > 0" style="width: 980px">
+      <div class="course-main" style="width: 980px">
+        <div
+          class="course-item"
+          :class="isDelete ? 'item-active' : ''"
+          v-for="item in messList"
+          @mouseenter="goShow"
+          @mouseleave="goRemove"
+          :key="item.id"
+        >
+          <div class="item-dot" v-if="item.title"></div>
+          <div class="item-main">
+            <p class="title">{{ item.title }}</p>
+            <p class="time">{{ item.createTime }}</p>
+          </div>
+          <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
+            <img src="/image/about/remove.png" alt="" />
           </div>
         </div>
-      </happy-scroll>
+      </div>
     </div>
     <div v-else class="course-empty">
       <el-empty
@@ -43,6 +38,7 @@ export default {
     messList: {
       type: Array,
       default: [],
+      cur: 0,
     },
   },
   data() {
@@ -54,11 +50,15 @@ export default {
     console.log(this.messList);
   },
   methods: {
-    goShow() {
-      this.isDelete = true;
+    goShow(index) {
+      
+        this.isDelete = true;
     },
     goRemove() {
-      this.isDelete = false;
+      
+        this.isDelete = false;
+      
+      
     },
     goDelete(id) {
       createToken().then((res) => {
@@ -84,7 +84,7 @@ export default {
 <style scoped>
 .my-course-content {
   width: 100%;
-  height: 800px;
+  height: 400px;
 }
 .course-empty {
   height: 500px;
@@ -118,7 +118,7 @@ export default {
   margin-left: 10px;
 }
 .item-main .title {
-  width: 400px;
+  width: 900px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

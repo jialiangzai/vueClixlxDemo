@@ -2,9 +2,9 @@
   <div class="my-course-content">
     <div
       v-if="courseList && courseList.length > 0"
-      style="height: 750px; width: 980px"
+      style="width: 980px"
     >
-      <happy-scroll style="width: 980px">
+      <happy-scroll style="width: 980px;height: 750px;">
         <div class="course-main" style="width: 980px">
           <div class="course-item" v-for="item in courseList" :key="item">
             <div class="item-left">

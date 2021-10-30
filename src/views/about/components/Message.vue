@@ -1,7 +1,7 @@
 <template>
   <div class="my-course">
     <el-tabs v-model="activeName" @tab-click="handleClick" class="course-tabs">
-      <el-tab-pane label="全部消息" name="first" style="height: 800px">
+      <el-tab-pane label="全部消息" name="first" style="height:500px;">
         <MessageItem :messList="totalList"></MessageItem>
         <el-pagination
           v-show="totalListPage > 0"
@@ -12,7 +12,7 @@
         >
         </el-pagination>
       </el-tab-pane>
-      <el-tab-pane label="已读消息" name="second" style="height: 800px">
+      <el-tab-pane label="已读消息" name="second" style="height:500px;">
         <MessageItem :messList="readList"></MessageItem>
         <el-pagination
           v-show="readListPage > 0"
@@ -22,7 +22,7 @@
           @pagination="getList"
         ></el-pagination>
       </el-tab-pane>
-      <el-tab-pane label="未读消息" name="third" style="height: 800px">
+      <el-tab-pane label="未读消息" name="third" style="height:500px;">
         <MessageItem :messList="unread"></MessageItem>
          <el-pagination
           v-show="unreadPage > 0"
@@ -102,6 +102,6 @@ export default {
 <style scoped>
 .course-tabs {
   margin-left: 20px;
-  height: 800px;
+  /* height: 800px; */
 }
 </style>

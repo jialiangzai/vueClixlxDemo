@@ -1,7 +1,7 @@
 <template>
   <div class="order-item-ins">
     <div v-if="orderList.length > 0" class="order-container">
-      <happy-scroll style="width: 940px">
+      <happy-scroll style="width: 940px;">
         <div style="width: 940px">
           <div class="order-item" v-for="item in orderList" :key="item.id">
             <div class="item-top">
@@ -122,7 +122,7 @@ export default {
 .order-item {
   width: 100%;
   height: 240px;
-  border: 1px solid #93999f;
+  border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.07);
   border-radius: 8px;
   padding: 20px;
