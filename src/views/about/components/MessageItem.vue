@@ -6,16 +6,15 @@
           class="course-item"
           v-for="item in messList"
           :key="item.id"
-  
         >
           <div class="item-dot" v-if="item.title"></div>
           <div class="item-main">
             <p class="title">{{ item.title }}</p>
             <p class="time">{{ item.createTime }}</p>
           </div>
-          <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
+          <!-- <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
             <img src="/image/about/remove.png" alt="" />
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -29,15 +28,13 @@
 </template>
 
 <script>
-import { createToken } from "@/common/api/auth";
-import { deleteMess } from "@/common/api/message";
 export default {
   props: {
     messList: {
       type: Array,
       default: [],
       cur: 0,
-      isDelete: false,
+      // isDelete: false,
     },
   },
   data() {
@@ -49,23 +46,6 @@ export default {
     console.log(this.messList);
   },
   methods: {
-    goDelete(id) {
-      createToken().then((res) => {
-        if (res.data.token) {
-          deleteMess({
-            ids: id,
-            token: res.data.token,
-          }).then((res) => {
-            if (res.meta.code == "200") {
-              this.$message({
-                message: "删除消息成功",
-                type: "success",
-              });
-            }
-          });
-        }
-      });
-    },
   },
 };
 </script>
@@ -73,7 +53,8 @@ export default {
 <style scoped>
 .my-course-content {
   width: 100%;
-  height: 400px;
+  /* height: 400px; */
+  margin-bottom: 30px;
 }
 .course-empty {
   height: 500px;
