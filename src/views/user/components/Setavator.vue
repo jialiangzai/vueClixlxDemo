@@ -172,7 +172,7 @@ export default {
         formData.append("file", data);
         // formData.append("id", this.userInfo.id);
         // console.log(formData)
-<<<<<<< HEAD
+
         uploadFileWithBlob(formData).then((res) => {
           // console.log(res)
           this.imgUrl = res.data.url;
@@ -197,7 +197,6 @@ export default {
             });
         });
 
-=======
         /* uploadFileWithBlob(formData).then(res=> {
           console.log(res)
           this.imgUrl = res.data.url
@@ -205,7 +204,6 @@ export default {
           console.log(err)
         }) */
   
->>>>>>> d77b0f1 (功能已实现)
         // updatePortrait(formData).then(response => {
         //   console.log(res)
         //   this.open = false;

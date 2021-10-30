@@ -99,6 +99,7 @@ export default {
         playCourse(){
             this.memberid = this.userInfo.id
             playCourse(this.courseId,this.chapterId).then(res => {
+                console.log(res,'pppppppppp');
                 if(res.meta.code === '200'){
                     this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
                     this.chapterInfo = res.data.chapterInfo
