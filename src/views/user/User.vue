@@ -8,7 +8,7 @@
             <img :src=" userInfo.avatar" alt="" v-if="userInfo.avatar" />
             <img :src="avatorImg" alt="" v-else>
             <p class="avator-name">{{userInfo.nickName}}</p>
-            <p class="avator-id">ID: {{userInfo.id }}</p>
+            <p class="avator-id">ID: {{userInfo.sysCode }}</p>
           </div>
         </div>
         <div class="m-l-t-center">

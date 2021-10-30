@@ -38,14 +38,18 @@
         <el-col :span="12" :style="{ height: '350px' }">
           <vue-cropper
             ref="cropper"
-            :img="options.img"
+            :img="userInfo.avatar ? userInfo.avatar :options.img"
             :info="true"
             :autoCrop="options.autoCrop"
             :autoCropWidth="options.autoCropWidth"
             :autoCropHeight="options.autoCropHeight"
             :fixedBox="options.fixedBox"
             @realTime="realTime"
-            style="{touch-action: 'none'}"
+            style="
+               {
+                touch-action: 'none';
+              }
+            "
           />
         </el-col>
         <el-col :span="12" :style="{ height: '350px' }">
@@ -81,7 +85,6 @@
         </el-col>
       </el-row>
     </div>
-    <img :src="imgUrl" alt="" class="img">
   </div>
 </template>
 
@@ -89,7 +92,9 @@
 import { VueCropper } from "vue-cropper";
 import { updatePortrait, getInfo } from "@/common/api/auth";
 import { mapState, mapActions } from "vuex";
-import {uploadFileWithBlob,uploadFile} from '@/common/api/common'
+import { uploadFileWithBlob, uploadFile } from "@/common/api/common";
+import { updateUserInfo } from "@/common/api/user";
+import { createToken } from "@/common/api/token";
 
 export default {
   components: { VueCropper },
@@ -106,16 +111,16 @@ export default {
       // visible: true,
       // 弹出层标题
       title: "修改头像",
-      imgUrl: '',
+      imgUrl: "",
       options: {
-        img: "/image/common/avator.png", //裁剪图片的地址
+        img:"/image/common/avator.png", //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度
         fixedBox: true, // 固定截图框大小 不允许改变
       },
       previews: {},
-      files: null
+      files: null,
     };
   },
   computed: {
@@ -124,7 +129,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(["saveAvatorAction"]),
+    ...mapActions(["saveAvatorAction", "saveUserInfoAction"]),
     // 覆盖默认的上传行为
     requestUpload() {},
     // 向左旋转
@@ -142,7 +147,7 @@ export default {
     },
     // 上传预处理
     beforeUpload(file) {
-      this.files = file
+      this.files = file;
       if (file.type.indexOf("image/") == -1) {
         this.msgError("文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。");
       } else {
@@ -156,22 +161,38 @@ export default {
     // 上传图片
     uploadImg() {
       this.$refs.cropper.getCropBlob((data) => {
-        console.log(data)
-        console.log(this.files)
+        //console.log(data);
+        //console.log(this.files);
         let formData = new FormData();
         // console.log(data);
         // console.log(" data:image/jpeg;base64,+" + data);
         formData.append("file", data);
         // formData.append("id", this.userInfo.id);
         // console.log(formData)
-       uploadFile(formData).then(res=> {
-          console.log(res)
-          this.imgUrl = res.data.url
+        uploadFileWithBlob(formData).then((res) => {
+          // console.log(res)
+          this.imgUrl = res.data.url;
+          createToken()
+            .then((res) => {
+              //console.log(res);
+              const token = res.data.token;
+              console.log(this.imgUrl)
+              updateUserInfo({
+                avatar: this.imgUrl,
+                id: this.userInfo.id,
+                token: res.data.token,
+              }).then((res) => {
+                console.log(res);
+                this.getUerInfo({
+                  token,
+                });
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
 
-        }).catch(err=>{
-          console.log(err)
-        })
-  
         // updatePortrait(formData).then(response => {
         //   console.log(res)
         //   this.open = false;
@@ -181,9 +202,10 @@ export default {
         // });
       });
     },
-    getUerInfo() {
+    getUerInfo(params) {
       getInfo(params)
         .then((res) => {
+          console.log(res)
           sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
           this.saveUserInfoAction();
           // this.saveUserInfoActions()
@@ -279,6 +301,6 @@ html {
 .img {
   width: 200px;
   height: 20px;
-  border:1px solid red;
+  border: 1px solid red;
 }
 </style>
