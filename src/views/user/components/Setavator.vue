@@ -38,7 +38,7 @@
         <el-col :span="12" :style="{ height: '350px' }">
           <vue-cropper
             ref="cropper"
-            :img="userInfo.avatar ? userInfo.avatar :options.img"
+            :img="options.img"
             :info="true"
             :autoCrop="options.autoCrop"
             :autoCropWidth="options.autoCropWidth"
@@ -113,7 +113,7 @@ export default {
       title: "修改头像",
       imgUrl: "",
       options: {
-        img:"/image/common/avator.png", //裁剪图片的地址
+        img:this.$store.getters.avatar, //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度
@@ -127,6 +127,9 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
+    avatar(){
+      return this.options.img = this.userInfo.avatar
+    }
   },
   methods: {
     ...mapActions(["saveAvatorAction", "saveUserInfoAction"]),

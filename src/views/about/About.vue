@@ -13,7 +13,7 @@
             />
             <img
               class="banner-avator"
-              :src="avatorImg"
+              :src="userInfo.avatar"
               alt=""
               v-else
             />

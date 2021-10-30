@@ -10,7 +10,9 @@ export default {
 		},
 		isLogin: JSON.parse(sessionStorage.getItem('isLogin')) || false
 	},
-	getters:{},
+	getters:{
+		avatar:state => state.userInfo.avatar
+	},
 	mutations:{
 		saveUserInfo(state,payload){
 			state.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
