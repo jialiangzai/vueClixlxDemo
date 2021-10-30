@@ -45,3 +45,16 @@ export function playCourse(courseId,chapterId){
         }
     })
 }
+
+//下载资料
+export function downloadAttachment(courseId,attachmentId){
+    return http.$axios({
+        url:'api/course/downloadAttachment',
+        method:'GET',
+        params:{courseId,attachmentId},
+        responseType: "blob",
+        headers: {
+            'Authorization': sessionStorage.getItem('token')
+        }
+    })
+}

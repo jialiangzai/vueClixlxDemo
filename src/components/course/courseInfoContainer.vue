@@ -82,10 +82,10 @@
                 <div class="chapterName">下载资料</div>
                 <div class="source" v-for="(x,y) in downsource" :key="y">
                     <span class="chapterName">{{x.attachmentName}}</span>
-                    <span>
+                    <!-- <span>
                         <a href="#">{{x.attachmentUrl}}</a>
-                    </span>
-                    <button class="download">下载资料</button>
+                    </span> -->
+                    <button class="download" @click="downloadSource(x)">下载资料</button>
                 </div>
                 
             </div>
@@ -96,7 +96,7 @@
 
 
 <script>
-import {getcourseInfo} from '@/common/api/courseManage.js'
+import {getcourseInfo,downloadAttachment} from '@/common/api/courseManage.js'
 import { mapState } from "vuex";
 import {createToken} from '@/common/api/token.js'
 import {addShopCar} from '@/common/api/shopcar.js'
@@ -105,6 +105,7 @@ import {addShopCar} from '@/common/api/shopcar.js'
 export default{
     data(){
         return{
+            BASE_URL: process.env.VUE_APP_BASE_API,
             courseId:this.$route.params.courseId,
             courseInfoArr:{},
             courseDetail: {},
@@ -125,6 +126,29 @@ export default{
         }),
     },
     methods:{
+        //下载资料
+        downloadSource(item){
+            downloadAttachment(item.courseId,item.id).then((res) => {
+                const blob = new Blob([res])
+                //let json = JSON.parse(blob);
+                console.log(blob);
+                let fileName = item.attachmentName
+                let fileUrl = item.attachmentUrl
+                const extName = fileUrl.substring(fileUrl.lastIndexOf("."))
+                fileName = fileName + extName;
+                console.log(extName);
+                const link = document.createElement('a')
+                link.download = fileName
+                link.style.display = 'none'
+                link.href = URL.createObjectURL(blob)
+                document.body.appendChild(link)
+                link.click()
+                URL.revokeObjectURL(link.href)
+                document.body.removeChild(link)
+            })
+            //window.open('/api/course/downloadAttachment?courseId=' + item.courseId + 'attachmentId=' +item.id , '下载资料')
+
+        },
         //加入购物车
         addCart(item){
             createToken().then(res => {
@@ -141,7 +165,6 @@ export default{
         getcourseInfo(){
             getcourseInfo(this.courseId).then(res => {
                 if(res.meta.code === '200'){
-                    console.log(res.data.data);
                     this.courseInfoArr = res.data.data
                     this.courseDetail = res.data.data.bizCourseDetail
                     this.courseChapters = res.data.data.bizCourseChapters
@@ -365,5 +388,6 @@ export default{
     border-radius: 10px;
     color: #FFF;
     font-size: 14px;
+    cursor: pointer;
 }
 </style>

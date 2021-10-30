@@ -24,10 +24,8 @@
                     </div>
                     <div class="detail-class">
                         <div class="course-card" v-for="(item,index) in arrcourse" :key="index" >
-                            <div class="course-image" @click="goCourseInfo">
-                                <!-- <router-link :to="{path:'/course-info/' + item.id}"> -->
-                                    <img :src="item.courseCover" alt="">
-                                <!-- </router-link> -->
+                            <div class="course-image" @click="goCourseInfo(item)">
+                                <img :src="item.courseCover" alt="">
                             </div>
                             <div class="right">
                                 <div class="courseName">{{item.courseName}}</div> 
@@ -111,9 +109,9 @@ export default {
         }),
     },
 	methods: {
-       /*  goCourseInfo(){
-            this.$router.push('/course-info/' + this.arrcourse.id)
-        }, */
+        goCourseInfo(item){
+            this.$router.push('/course-info/' + item.id)
+        },
         //加入购物车
         addCart(item){
             createToken().then(res => {
