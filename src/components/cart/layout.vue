@@ -13,8 +13,7 @@
                 </div>
                 <ul class="head">
                     <li class="item check">
-                         <input type="checkbox" name="all" id="all" class="all" >
-                         <span class="text">全选</span>
+                        <el-checkbox v-model="allChecked" @change="selectAll">全选</el-checkbox>
                     </li>
                     <li class="item classInfo">课程信息</li>
                     <li class="item price">单价</li>
@@ -25,7 +24,7 @@
                 <div v-if="orderList.length > 0">
                     <ul class="haveorder" v-for="(item,index) in orderList" :key="index" >
                         <li class="order-item">
-                            <input type="checkbox" name="one" id="one" class="one" >
+                            <el-checkbox v-model="item.checked" @change="selectSingleProduct($event, item)"></el-checkbox>
                         </li>
                         <li class="order-item info" >
                             <div class="courseimg" >
@@ -51,11 +50,11 @@
                 </div>
                 <el-divider class="line"></el-divider>
                 <ul class="foot">
-                    <li class="foot-item">已选课程<span class="unique">1</span></li>
-                    <li class="foot-item">合计<span class="unique">299.00</span></li>
+                    <li class="foot-item">已选课程<span class="unique">{{getCount}}</span></li>
+                    <li class="foot-item">合计<span class="unique">{{price}}</span></li>
                     <li > 
                         <router-link to="/confirmOrder">
-                            <button class="btn">结 算</button>
+                            <button class="btn" @click="getSelecteds">去结算</button>
                         </router-link>
                     </li>
                 </ul>
@@ -67,25 +66,79 @@
 <script>
 import {getShopCarList,deleteShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
-
+import {mapMutations} from 'vuex'
 export default{
     data(){
         return{
             orderList:[],
-            token:''
+            allChecked:false,
+            selectedProducts:[],
+            token:'',
+            count:0,
+            price:0,
         }
     },
     created(){
         this.getShopCarList()
     },
+    watch:{
+        selectedProducts:{
+            handler(newval,oldval){
+                this.price = 0
+                    newval.forEach(item => {
+                        this.price += item.discountPrice * item.counter
+                    })
+            },
+            immediate: true
+        },
+    },
+    computed:{
+        getCount(){
+            return this.selectedProducts.length
+        },
+    },
     methods:{
+        ...mapMutations(['getSelected']),
+        // 去结算
+        getSelecteds(){
+            this.getSelected(this.selectedProducts)
+            // this.$store.mutations('getSelected',)
+        },
+        //全选
+        selectAll(e){
+            if(e){
+                this.orderList.forEach(item => {
+                    item['checked'] = true
+                })
+            }else{
+                this.orderList.forEach(item => {
+                    item['checked'] = false
+                })
+            }
+        },
+        //数量 、价格变化
+        selectSingleProduct(e, item){
+            if(e){
+                this.selectedProducts.push(item);
+            }else{
+                for(let i = 0;i < this.selectedProducts.length;i++){
+                    if(item.id === this.selectedProducts[i].id){
+                        this.selectedProducts.splice(i,1);
+                    }
+                }
+            }
+        },
         //获取购物车数据
         getShopCarList(){
             createToken().then(res => {
                 this.token = res.data.token
             })
             getShopCarList().then(res => {
-                this.orderList = res.data.list
+                let list = res.data.list
+                list.forEach(item => {
+                    item['checked'] = false
+                })
+                this.orderList = list;
             })
         },
         //删除购物车数据
@@ -110,11 +163,6 @@ export default{
         }
     }
 }
-
-
-
-
-
 </script>
 
 <style scoped>

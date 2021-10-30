@@ -48,3 +48,15 @@ export function deleteShopCar({id,token}){
     }
   })
 }
+
+export function deleteShopCars({ids,token}){
+    return http.$axios({
+      url: 'api/shopcar/deleteShopCars',
+      method: 'GET',
+      params:{ids},
+      headers:{
+          'Authorization': sessionStorage.getItem('token'),
+          'token':token
+      }
+    })
+  }

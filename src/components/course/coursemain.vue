@@ -195,10 +195,12 @@ export default{
                 this.token = res.data.token
                 this.memberId = this.userInfo.id
                 addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
-                    this.$message({
-                        message: '恭喜你，加入购物车成功',
-                        type: 'success'
-                    });
+                    if(res.meta.code === '200'){
+                        this.$message({
+                            message: '恭喜你，加入购物车成功',
+                            type: 'success'
+                        });
+                    }
                 })
             })
             
