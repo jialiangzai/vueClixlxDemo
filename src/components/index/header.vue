@@ -591,12 +591,14 @@ export default {
     },
     // 获取购物车数据
     getCarNum() {
-      getShopCarCounter().then((res) => {
+      if(sessionStorage.getItem('token')){
+        getShopCarCounter().then((res) => {
         console.log(res);
         if (res.meta.code == 200) {
           this.carNum = res.data.counter;
         }
       });
+      }
     },
     // 返回登陆页面
     backLogin() {
