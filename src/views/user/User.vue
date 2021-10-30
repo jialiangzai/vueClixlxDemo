@@ -5,9 +5,9 @@
       <div class="mine-left">
         <div class="m-l-top">
           <div class="top-main">
-            <img src="/image/common/avator.png" alt="" />
-            <p class="avator-name">木木1234555</p>
-            <p class="avator-id">ID: 335565768</p>
+            <img :src=" userInfo.avatar" alt="" />
+            <p class="avator-name">{{userInfo.nickName}}</p>
+            <p class="avator-id">ID: {{userInfo.id }}</p>
           </div>
         </div>
         <div class="m-l-t-center">
@@ -39,9 +39,13 @@
 
 <script>
 import Header from "@/components/index/header.vue";
+import {mapState} from 'vuex'
 export default {
   data() {
     return {
+      avator: '/image/common/avator.png',
+      nickName: '小鹿线-测试',
+      id: 1,
       navList: [
         {
           id: 1,
@@ -61,6 +65,11 @@ export default {
       ],
       navCurrent: 0,
     };
+  },
+  computed:{
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    })
   },
   components: {
     Header,

@@ -1,29 +1,30 @@
 // 保存用户状态的数据
 export default {
 	state:{
-		loginSatus:false, //登录状态
-		token:null, //token
-		userInfo:{} //用户信息
+		userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {
+			avatar: '/image/common/avator.png',
+			nickName: '小鹿线-默认',
+			gender: 1,
+			city: '北京',
+			id:1,
+		},
+		isLogin: JSON.parse(sessionStorage.getItem('isLogin')) || false
 	},
 	getters:{},
 	mutations:{
-		// 设置本地存储
-		user_login(state,user){
-			state.loginSatus = true;
-			state.token = user.token;
-			state.userInfo = user;
-			// 持久化存储 --》 本地存储
-			localStorage.setItem('xlxUserInfo',JSON.stringify(user))
+		saveUserInfo(state,payload){
+			state.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
 		},
-		// 读取本地存储
-		init_user(state){
-			let userInfo = JSON.parse(localStorage.getItem('xlxUserInfo'))
-			if( userInfo ){
-				state.loginSatus = true;
-				state.token = userInfo.token;
-				state.userInfo = userInfo;
-			}
+		saveLogin(state,payload) {
+			state.isLogin = JSON.parse(sessionStorage.getItem('isLogin'))
 		}
 	},
-	actions:{}
+	actions:{
+		saveUserInfoAction({commit},payload){
+			commit('saveUserInfo',payload)
+		},
+		saveLoginAction({commit},payload){
+			commit('saveLogin',payload)
+		}
+	}
 }

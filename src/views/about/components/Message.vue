@@ -3,41 +3,98 @@
     <el-tabs v-model="activeName" @tab-click="handleClick" class="course-tabs">
       <el-tab-pane label="全部消息" name="first" style="height: 800px">
         <MessageItem :messList="totalList"></MessageItem>
+        <el-pagination
+          v-show="totalListPage > 0"
+          :total="totalListPage"
+          :page.sync="query.pageNum"
+          :limit.sync="query.pageSize"
+          @pagination="getList"
+        >
+        </el-pagination>
       </el-tab-pane>
       <el-tab-pane label="已读消息" name="second" style="height: 800px">
         <MessageItem :messList="readList"></MessageItem>
+        <el-pagination
+          v-show="readListPage > 0"
+          :total="readListPage"
+          :page.sync="query.pageNum"
+          :limit.sync="query.pageSize"
+          @pagination="getList"
+        ></el-pagination>
       </el-tab-pane>
       <el-tab-pane label="未读消息" name="third" style="height: 800px">
         <MessageItem :messList="unread"></MessageItem>
+         <el-pagination
+          v-show="unreadPage > 0"
+          :total="unreadPage"
+          :page.sync="query.pageNum"
+          :limit.sync="query.pageSize"
+          @pagination="getList"
+        ></el-pagination>
+        
       </el-tab-pane>
     </el-tabs>
-   
-    
   </div>
 </template>
 
 <script>
-import MessageItem from './MessageItem.vue';
+import MessageItem from "./MessageItem.vue";
+import { getByMemberId } from "@/common/api/message";
 export default {
   data() {
     return {
-      activeName: 'first',
+      activeName: "first",
       totalList: [1],
+      totalListPage: 0,
       readList: [],
-      unread: []
+      readListPage: 0,
+      unread: [],
+      unreadPage: 0,
+      query: {
+        pageSize: 10,
+        pageNum: 1,
+        entity: {
+          status:null
+        }
+      },
     };
   },
   components: {
-    MessageItem
+    MessageItem,
+  },
+  created() {
+    this.getList();
   },
   methods: {
-    handleClick(tab,event){
+    getList() {
+      getByMemberId(this.query).then((res) => {
+        console.log(res);
+        this.totalListPage = res.data.pageInfo.total;
+        this.totalList = res.data.pageInfo.list
+      });
+    },
+    handleClick(tab, event) {
       // console.log(tab,event)
-      if(this.activeName === 'second') {
-        this.readList = [1]
+
+      if (this.activeName === "second") {
+        this.readList = [1];
+        this.query.entity.status = 2
+        getByMemberId(this.query).then((res) => {
+        console.log(res);
+        this.readListPage = res.data.pageInfo.total;
+        this.readList = res.data.pageInfo.list
+      });
+      }else if (this.activeName == 'third') {
+        this.query.entity.status = 1
+        getByMemberId(this.query).then((res) => {
+        this.unreadPage= res.data.pageInfo.total;
+        this.unread = res.data.pageInfo.list
+      });
+      }else {
+        this.query.entity.status = null
+        this.getList()
       }
-    }
-    
+    },
   },
 };
 </script>

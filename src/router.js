@@ -16,6 +16,9 @@ import Setbindsns from '@/views/user/components/Setbindsns.vue';
 import Setprofile from '@/views/user/components/Setprofile.vue';
 import Setavator from '@/views/user/components/Setavator.vue';
 import Cart from '@/views/cart/Cart.vue';
+import ConfirmOrder from '@/views/cart/ConfirmOrder.vue';
+import Payment from '@/views/cart/Payment.vue';
+
 
 
 Vue.use(Router);
@@ -23,8 +26,8 @@ Vue.use(Router);
 const routes = [
   { path: '/', component: Home },
   { path: '/course', component: Course },
-  { path:'/course-info',component:CourseInfo},
-  { path:'/course-play',component:CoursePlay},
+  { path:'/course-info/:courseId',component:CourseInfo},
+  { path:'/course-play/:courseId/:chapterId',component:CoursePlay},
   { path: '/member', component: Member },
   {
     path: '/about', component: About, name: 'About',
@@ -67,10 +70,14 @@ const routes = [
     ]
 
   },
-  {path: '/cart', component: Cart}
+  {path: '/cart', component: Cart},
+  {path: '/confirmOrder', component: ConfirmOrder},
+  {path: '/payment', component: Payment},
+
+
 ];
 
 export default new Router({
   routes,
-  mode: 'history',
+  mode: 'hash',
 });

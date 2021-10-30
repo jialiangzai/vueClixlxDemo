@@ -4,54 +4,54 @@
       <p>设置头像</p>
     </div>
     <div class="setavator-container">
-      <el-row style="margin:10px;">
-      <el-col :span="2">
-        <el-button
-          icon="el-icon-plus"
-          size="small"
-          @click="changeScale(1)"
-        ></el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-button
-          icon="el-icon-minus"
-          size="small"
-          @click="changeScale(-1)"
-        ></el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-button
-          icon="el-icon-refresh-left"
-          size="small"
-          @click="rotateLeft()"
-        ></el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-button
-          icon="el-icon-refresh-right"
-          size="small"
-          @click="rotateRight()"
-        ></el-button>
-      </el-col>
-    </el-row>
+      <el-row style="margin: 10px">
+        <el-col :span="2">
+          <el-button
+            icon="el-icon-plus"
+            size="small"
+            @click="changeScale(1)"
+          ></el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button
+            icon="el-icon-minus"
+            size="small"
+            @click="changeScale(-1)"
+          ></el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button
+            icon="el-icon-refresh-left"
+            size="small"
+            @click="rotateLeft()"
+          ></el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button
+            icon="el-icon-refresh-right"
+            size="small"
+            @click="rotateRight()"
+          ></el-button>
+        </el-col>
+      </el-row>
       <el-row>
-      <el-col :span="12" :style="{ height: '350px' }">
-        <vue-cropper
-          ref="cropper"
-          :img="options.img"
-          :info="true"
-          :autoCrop="options.autoCrop"
-          :autoCropWidth="options.autoCropWidth"
-          :autoCropHeight="options.autoCropHeight"
-          :fixedBox="options.fixedBox"
-          @realTime="realTime"
-        />
-      </el-col>
-      <el-col :span="12" :style="{ height: '350px' }">
-        <div class="avatar-upload-preview">
-          <img :src="previews.url" :style="previews.img" />
-        </div>
-        <div class="upload">
+        <el-col :span="12" :style="{ height: '350px' }">
+          <vue-cropper
+            ref="cropper"
+            :img="options.img"
+            :info="true"
+            :autoCrop="options.autoCrop"
+            :autoCropWidth="options.autoCropWidth"
+            :autoCropHeight="options.autoCropHeight"
+            :fixedBox="options.fixedBox"
+            @realTime="realTime"
+          />
+        </el-col>
+        <el-col :span="12" :style="{ height: '350px' }">
+          <div class="avatar-upload-preview">
+            <img :src="previews.url" :style="previews.img" />
+          </div>
+          <div class="upload">
             <el-upload
               action="#"
               :http-request="requestUpload"
@@ -61,31 +61,32 @@
               选择头像
             </el-upload>
           </div>
-      </el-col>
-    </el-row>
-    <br />
-    <el-row>
-      <el-col>
-        <p class="setavator-tip">
-          推荐640x640像素，JPG/PNG,5M以内。头像修改后，部分页面次日生效。
-        </p>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="9">
+        </el-col>
+      </el-row>
+      <br />
+      <el-row>
+        <el-col>
+          <p class="setavator-tip">
+            推荐640x640像素，JPG/PNG,5M以内。头像修改后，部分页面次日生效。
+          </p>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="9">
           <el-button class="cancel" @click="cancel">取消</el-button>
-      </el-col>
-      <el-col :span="9">
-        <el-button class="cancel" @click="uploadImg()">确认</el-button>
-      </el-col>
-    </el-row>
+        </el-col>
+        <el-col :span="9">
+          <el-button class="cancel" @click="uploadImg()">确认</el-button>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
 <script>
-import store from "@/store";
 import { VueCropper } from "vue-cropper";
+import { updatePortrait, getInfo } from "@/common/api/auth";
+import { mapState, mapActions } from "vuex";
 // import { uploadAvatar } from "@/api/system/user";
 
 export default {
@@ -113,7 +114,13 @@ export default {
       previews: {},
     };
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+    }),
+  },
   methods: {
+    ...mapActions(["saveUserInfoAction"]),
     // 覆盖默认的上传行为
     requestUpload() {},
     // 向左旋转
@@ -144,19 +151,39 @@ export default {
     // 上传图片
     uploadImg() {
       this.$refs.cropper.getCropBlob((data) => {
-        let formData = new FormData();
-        formData.append("avatarfile", data);
-
-        console.log(data);
-
-        // uploadAvatar(formData).then(response => {
+        // let formData = new FormData();
+        // console.log(data);
+        // var fileReader = new FileReader();
+        // fileReader.readAsDataURL(data);
+        // fileReader.onload = function (res) {
+        //   console.log(res); //这里输出的数据放到url里能生成图片
+        // };
+        // console.log(" data:image/jpeg;base64,+" + data);
+        formData.append("avatar", data);
+        formData.append("id", this.userInfo.id);
+        // console.log(formData)
+        for (var value of formData.values()) {
+          console.log(value);
+        }
+        // updatePortrait(formData).then(response => {
+        //   console.log(res)
         //   this.open = false;
-        //   this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl;
-        //   store.commit('SET_AVATAR', this.options.img);
         //   this.msgSuccess("修改成功");
+        //   this.getUerInfo()
         //   this.visible = false;
         // });
       });
+    },
+    getUerInfo() {
+      getInfo(params)
+        .then((res) => {
+          sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+          this.saveUserInfoAction();
+          // this.saveUserInfoActions()
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     // 实时预览
     realTime(data) {
@@ -194,7 +221,7 @@ html {
   color: #333333;
 }
 
-.setavator-container{
+.setavator-container {
   width: 900px;
   height: 500px;
   position: absolute;
@@ -213,7 +240,6 @@ html {
   overflow: hidden;
 }
 
-
 .setavator-tip {
   width: 100%;
   height: 42px;
@@ -225,7 +251,7 @@ html {
 
 .upload {
   position: absolute;
-  bottom:0;
+  bottom: 0;
   left: 65%;
   width: 103px;
   height: 40px;

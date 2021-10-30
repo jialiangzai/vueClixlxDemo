@@ -2,7 +2,7 @@
     <div class="foot">
         <div class="footer-main">
             <div class="footer-xlx">
-                <img class="xlx" src="/image/logo.png" alt="" />
+                <img class="xlx" src="/image/logo02.png" alt="" />
             </div>
             <div class="footer-factory">
                 <img class="factory" src="/image/组件 33 – 1.png" alt="">
@@ -23,15 +23,15 @@
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img src="/image/classbg.png" alt="">
+                    <img src="/image/guanfangwx.jpg" alt="">
                 </div>
                 <div class="wx-dsc">官方账号</div>
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img src="/image/classbg.png" alt="">
+                    <img src="/image/laoshiwx.png" alt="">
                 </div>
-                <div class="wx-dsc">官方账号</div>
+                <div class="wx-dsc">指导老师</div>
             </div>
             
         </div>

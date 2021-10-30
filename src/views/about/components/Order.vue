@@ -19,56 +19,58 @@
 
 <script>
 import OrderItem from "./OrderItem.vue";
+import { getByMemberId } from "@/common/api/order";
 export default {
   data() {
     return {
-      totalList: [
-        {
-          id: 1,
-          isPay: 1,
-          status: 1,
-        },
-        {
-          id: 2,
-          isPay: 2,
-          status: 1,
-        },
-        {
-          id: 3,
-          isPay: 2,
-          status: 4,
-        },
-        {
-          id: 4,
-          isPay: 2,
-          status: 3,
-        },
-      ],
+      totalList: [],
       completedList: [],
       incompleteList: [],
       invalidList: [],
       activeName: "first",
+      query: {
+        pageSize: 10,
+        pageNum: 1,
+        entity: {
+          orderStatus: null,
+        },
+      },
     };
   },
   components: {
     OrderItem,
   },
+  created() {
+    this.query = {
+      entity: {
+        orderStatus: null,
+      },
+    };
+    this.getList();
+  },
   methods: {
+    getList() {
+      getByMemberId(this.query).then((res) => {
+        this.totalList = res.data.pageInfo.list;
+      });
+      // console.log(list)
+    },
     handleClick(tab, event) {
       if (this.activeName === "second") {
-        this.completedList = [
-          {
-            id: 1,
-            isPay: 1,
-            status: 1,
-          },
-          {
-            id: 2,
-            isPay: 2,
-            status: 1,
-          },
-        ];
-        console.log(tab, event);
+        this.query.entity.orderStatus = "finish";
+        getByMemberId(this.query).then((res) => {
+          this.completedList = res.data.pageInfo.list;
+        });
+      } else if (this.activeName === "third") {
+        this.query.entity.orderStatus = "overtime";
+        getByMemberId(this.query).then((res) => {
+          this.incompleteList = res.data.pageInfo.list;
+        });
+      }else if(this.activeName === "fourth") {
+        this.query.entity.orderStatus = "closed";
+        getByMemberId(this.query).then((res) => {
+          this.invalidList= res.data.pageInfo.list;
+        });
       }
     },
   },

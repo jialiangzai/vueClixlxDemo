@@ -26,10 +26,22 @@ export function queryCourse(params){
 }
 
 //课程详情
-export function courseInfo(id){
+export function getcourseInfo(courseId){
     return http.$axios({
         url:'api/course/getDetail',
         method:'GET',
-        data:{id}
+        params:{courseId}
+    })
+}
+
+//播放课程
+export function playCourse(courseId,chapterId){
+    return http.$axios({
+        url:'api/player/play',
+        method:'GET',
+        params:{courseId,chapterId},
+        headers: {
+            'Authorization': sessionStorage.getItem('token')
+        }
     })
 }

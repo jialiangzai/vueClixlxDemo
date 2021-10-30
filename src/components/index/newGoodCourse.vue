@@ -3,37 +3,40 @@
     <div class="course-list-container">
         <!-- 新上好课标题开始 -->
         <h1 class="contentTitle">
-            <div class="hot">
-                <div class="hot-left">HOT</div>
-                <div class="hot-right"></div>
+            <div class="contentTitle-left">
+                <div class="hot">
+                    <div class="hot-left">HOT</div>
+                    <div class="hot-right"></div>
+                </div>
+                <div class="txt">
+                    <div class="txt-top">新上好课</div>
+                    <div class="txt-bottom"></div>
+                </div>
             </div>
-            <div class="txt">
-                <div class="txt-top">新上好课</div>
-                <div class="txt-bottom"></div>
-            </div>
+            <div class="more"  @click="goCourse()">更 多</div>
         </h1>
         <!-- 新上好课标题结束 -->
         <!-- 新上好课内容开始 -->
         <div class="newCourseContent">
             <ul class="courseUl">
-                <li class="courseItem" v-for="(item,index) in newCourses" :key="index">
-                    <router-link :to="{path: '/cart', query: {id:index}}">                       
-                        <div class="courseInfo">
-                        <div class="courseBg">
-                            <img class="courseImg" :src="item.courseCover" alt="">
-                            <!-- <div  class="courseDesc">
-                                <div>晋级TS高手</div>
-                                <div>搞定复杂项目</div>
-                            </div> -->
-                        </div>
-                            <div class="courseName">{{item.courseName}}</div>
-                            <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人报名</div>
-                            <div class="coursePrice">
-                                <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                                <div class="price">¥ {{item.salePrice}}</div>
+                <li class="courseItem" v-for="(item,index) in newCourses" :key="index" >
+                    <div class="courseInfo">
+                        <router-link :to="{path:'/course-info/' + item.id}">    
+                            <div class="courseBg">
+                                <img class="courseImg" :src="item.courseCover" alt="">
+                            </div>
+                        </router-link>
+                        <div class="courseName">{{item.courseName}}</div>
+                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
+                        <div class="coursePrice">
+                            <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
+                            <div class="price">¥ {{item.salePrice}}</div>
+                            <div class="addCart" @click="addCart(item)">
+                                <i class="el-icon-shopping-cart-1 cart"></i> 
+                                <span class="cart-text">加入购物车</span>
                             </div>
                         </div>
-                    </router-link>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -43,14 +46,18 @@
     <div class="course-list-container">
         <!-- 推荐好课标题开始 -->
         <h1 class="contentTitle">
-            <div class="hot">
-                <div class="hot-left">HOT</div>
-                <div class="hot-right"></div>
+            <div class="contentTitle-left">
+                <div class="hot">
+                    <div class="hot-left">HOT</div>
+                    <div class="hot-right"></div>
+                </div>
+                <div class="txt">
+                    <div class="txt-top">推荐好课</div>
+                    <div class="txt-bottom"></div>
+                </div>
             </div>
-            <div class="txt">
-                <div class="txt-top">推荐好课</div>
-                <div class="txt-bottom"></div>
-            </div>
+            <div class="more" @click="goCourse()">更 多</div>
+
         </h1>
         <!-- 推荐好课标题结束 -->
         <div class="commendCourseContent">
@@ -60,18 +67,20 @@
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
                     <div class="courseInfo">
-                    <div class="courseBg">
-                        <img class="courseImg" :src="item.courseCover" alt="">
-                        <!-- <div  class="courseDesc">
-                            <div>晋级TS高手</div>
-                            <div>搞定复杂项目</div>
-                        </div> -->
-                    </div>
+                        <router-link :to="{path:'/course-info/' + item.id}">    
+                            <div class="courseBg">
+                                <img class="courseImg" :src="item.courseCover" alt="">
+                            </div>
+                        </router-link>
                         <div class="courseName">{{item.courseName}}</div>
-                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter}}人报名</div>
+                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                         <div class="coursePrice">
                             <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
                             <div class="price">¥ {{item.salePrice}}</div>
+                            <div class="addCart" @click="addCart(item)">
+                                <i class="el-icon-shopping-cart-1 cart"></i> 
+                                <span class="cart-text">加入购物车</span>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -111,6 +120,10 @@
 
 <script>
 import {getNewCourse,getHotCourse} from '@/common/api/courseManage.js'
+import {addShopCar} from '@/common/api/shopcar.js'
+import {createToken} from '@/common/api/token.js'
+import { mapState } from "vuex";
+
 export default {
 	data() {
 		return {
@@ -119,63 +132,94 @@ export default {
             courseLevel:'',
             querynew:{
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 8,
                 entity: {}
             },
             queryhot:{
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 6,
                 entity: {}
-            }
+            },
+            token:''
+
         }
 	},
     created(){
         this.getNewCourse()
         this.getHotCourse()
     },
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.user.userInfo,
+            isLogin: (state) => state.user.isLogin,
+        }),
+    },
     methods:{
+        //加入购物车
+        addCart(item){
+            createToken().then(res => {
+                this.token = res.data.token
+                this.memberId = this.userInfo.id
+                addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
+                    this.$message({
+                        message: '恭喜你，加入购物车成功',
+                        type: 'success'
+                    });
+                })
+            })
+            
+        },
         //获取最新课程
         getNewCourse(){
             getNewCourse(this.querynew).then(res => {
-                this.newCourses = res.data.pageInfo.list
-                this.newCourses.forEach(item => {
-                    switch(item.courseLevel){
-                    case 1:
-                        item.courseLevel = '初级';
-                        break;
-                    case 2:
-                        item.courseLevel = '中级';
-                        break;
-                    case 3:
-                        item.courseLevel = '高级';
-                        break;
-                    default:
-                        item.courseLevel = ''
-                    }
-                })
+                if(res.meta.code = '200'){
+                    this.newCourses = res.data.pageInfo.list
+                    this.newCourses.forEach(item => {
+                        switch(item.courseLevel){
+                        case 1:
+                            item.courseLevel = '初级';
+                            break;
+                        case 2:
+                            item.courseLevel = '中级';
+                            break;
+                        case 3:
+                            item.courseLevel = '高级';
+                            break;
+                        default:
+                            item.courseLevel = ''
+                        }
+                    })
+                }
             })
         },
         //获取推荐好课
         getHotCourse(){
             getHotCourse(this.queryhot).then(res => {
-                this.hotCourse = res.data.pageInfo.list
-                this.hotCourse.forEach(item => {
-                    switch(item.courseLevel){
-                    case 1:
-                        item.courseLevel = '初级';
-                        break;
-                    case 2:
-                        item.courseLevel = '中级';
-                        break;
-                    case 3:
-                        item.courseLevel = '高级';
-                        break;
-                    default:
-                        item.courseLevel = ''
-                    }
-                })
+                if(res.meta.code = '200'){
+                    this.hotCourse = res.data.pageInfo.list
+                    this.hotCourse.forEach(item => {
+                        switch(item.courseLevel){
+                        case 1:
+                            item.courseLevel = '初级';
+                            break;
+                        case 2:
+                            item.courseLevel = '中级';
+                            break;
+                        case 3:
+                            item.courseLevel = '高级';
+                            break;
+                        default:
+                            item.courseLevel = ''
+                        }
+                    })
+                }
             })
         },
+        //跳转到课程页面
+        goCourse(){
+            this.$router.push('/course')
+        },
+        
 
     }
 }
@@ -190,6 +234,13 @@ export default {
 .course-list-container {
 	margin-top: 15px;
 }
+.contentTitle{
+    display: flex;
+    justify-content: space-between;
+}
+.contentTitle-left{
+    display: flex;
+}
 .course-list-container h1 {
 	display: flex;
 }
@@ -197,6 +248,12 @@ export default {
 .course-list-container h1 .hot {
 	display: flex;
 	height: 38px;
+}
+.more{
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    color: #808080;
 }
 .course-list-container h1 .hot .hot-left {
 	height: 38px;
@@ -336,6 +393,7 @@ export default {
 }
 .coursePrice {
 	display: flex;
+    justify-content: space-between;
 	font-size: 14px;
 	margin-top: 10px;
 }
@@ -390,4 +448,8 @@ export default {
 }
 
 /* 都在看好书结束 */
+.addCart{
+    margin-top: 3px;
+    color: #FF3D17;
+}
 </style>

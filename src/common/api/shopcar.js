@@ -4,16 +4,25 @@ import http from './requests';
 export function getShopCarList(){
   return http.$axios({
     url: 'api/shopcar/getShopCarList',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+        'Authorization': sessionStorage.getItem('token')
+    }
   })
 }
 
 // 添加商品到购物车
-export function addShopCar(params){
+export function addShopCar({courseId,memberId,token}){
   return http.$axios({
     url: 'api/shopcar/addShopCar',
     method: 'POST',
-    data: params
+    data:{
+        courseId,memberId
+    },
+    headers:{
+        'Authorization': sessionStorage.getItem('token'),
+        'token':token
+    }
   })
 }
 
@@ -28,9 +37,14 @@ export function updateShopCar(params){
 
 // 删除购物车数据
 
-export function deleteShopCar({id}){
+export function deleteShopCar({id,token}){
   return http.$axios({
-    url: 'api/shopcar/deleteShopCar?id='+id,
+    url: 'api/shopcar/deleteShopCar',
     method: 'GET',
+    params:{id},
+    headers:{
+        'Authorization': sessionStorage.getItem('token'),
+        'token':token
+    }
   })
 }

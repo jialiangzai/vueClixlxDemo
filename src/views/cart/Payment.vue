@@ -1,17 +1,17 @@
 <template>
     <div class="course">
         <indexHeader></indexHeader>
-        <!-- <courseDirection></courseDirection> -->
-        <coursemain></coursemain> 
-        <foot></foot>
+        <payment></payment>
 
     </div>
     
 </template>
 
+
 <script>
 import indexHeader from '@/components/index/header.vue';
-import coursemain from '@/components/course/coursemain.vue';
+import payment from '@/components/cart/payment.vue';
+
 import foot from '@/components/foot/foot.vue';
 
 export default {
@@ -26,7 +26,7 @@ export default {
   },
   components: {
     indexHeader,
-    coursemain,
+    payment,
     foot
   },
 };

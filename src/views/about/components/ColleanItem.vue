@@ -1,51 +1,76 @@
 <template>
-   <div class="my-course-content">
-      <div v-if="courseList.length > 0" style="height: 750px; width: 980px">
-        <happy-scroll style="width: 980px">
-          <div class="course-main" style="width: 980px">
-            <div class="course-item">
-              <div class="item-left">
-                <img src="/image/about/course-bg.png" alt="" />
-                <p>晋级TS高手搞定复杂项目</p>
-              </div>
-              <div class="item-right">
-                <div class="i-r-left">
-                  <div class="i-r-l-title">
-                    <p class="tip">免费课</p>
-                    <p class="title">晋级TS高手搞定复杂项目</p>
-                  </div>
-                  <div class="i-r-l-center">
-                    <p>学习至高手搞定复杂项目从</p>
-                  </div>
+  <div class="my-course-content">
+    <div
+      v-if="courseList && courseList.length > 0"
+      style="height: 750px; width: 980px"
+    >
+      <happy-scroll style="width: 980px">
+        <div class="course-main" style="width: 980px">
+          <div class="course-item" v-for="item in courseList" :key="item">
+            <div class="item-left">
+              <img :src="item.courseCover" alt="" />
+              <!-- <p>晋级TS高手搞定复杂项目</p> -->
+            </div>
+            <div class="item-right">
+              <div class="i-r-left">
+                <div class="i-r-l-title">
+                  <p class="tip" v-if="item.discountPrice === 0">免费课</p>
+                  <p class="tip vip" v-if="item.isMember === 1">会员课程</p>
+                  <p class="title">{{ item.courseName }}</p>
                 </div>
-                <div class="i-r-right">
-                  <div class="i-r-bottom">
-                    <div>取消收藏</div>
-                  </div>
+                <div class="i-r-l-center">
+                  <!-- <p class="study-time">总时长: {{ item.totalHour }}</p> -->
+                  <p>{{ item.description }}</p>
+                  <!-- <p>课程级别： {{ item.courseLevel }}</p> -->
+                </div>
+              </div>
+              <div class="i-r-right">
+                <div class="i-r-bottom">
+                  <div @click="goRemove(item.id)">取消收藏</div>
                 </div>
               </div>
             </div>
           </div>
-        </happy-scroll>
-      </div>
-      <div v-else class="course-empty">
-        <div class="empty">
-          <img src="/image/about/course-empt.png" alt="" />
-          <p>没有任何课程，可以先<span>去找找课程</span></p>
         </div>
+      </happy-scroll>
+    </div>
+    <div v-else class="course-empty">
+      <div class="empty">
+        <img src="/image/about/course-empt.png" alt="" />
+        <p>没有任何课程，可以先<span>去找找课程</span></p>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
+import { deleteFavorite } from "@/common/api/favorite";
+import { createToken } from "@/common/api/auth";
 export default {
   props: {
     courseList: {
       type: Array,
-      default: []
-    }
-  }
-}
+      default: [],
+    },
+  },
+  methods: {
+    goRemove(id) {
+      createToken().then((res) => {
+        if (res.data.token) {
+          deleteFavorite({
+            id: id,
+            token: res.data.token,
+          }).then((res) => {
+            this.$message({
+              message: "取消收藏成功",
+              type: "success",
+            });
+          });
+        }
+      });
+    },
+  },
+};
 </script>
 <style scoped>
 .my-course-content {
@@ -100,7 +125,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 .item-left p {
   width: 150px;
@@ -143,6 +168,13 @@ export default {
   margin-right: 20px;
   height: 20px;
   line-height: 20px;
+}
+.vip {
+  background: linear-gradient(
+    to right,
+    rgba(255, 61, 61, 1) 0%,
+    rgba(255, 122, 21, 1) 100%
+  );
 }
 .title {
   font-size: 18px;
