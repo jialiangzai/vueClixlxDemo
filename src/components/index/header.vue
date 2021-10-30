@@ -41,9 +41,9 @@
           </div>
           <div class="content-Shopping" style="cursor: pointer">
             <el-badge :value="carNum" class="item" v-if="carNum">
-                <router-link to="/cart">
-                    <i class="el-icon-shopping-cart-1"></i> 
-                </router-link>               
+              <router-link to="/cart">
+                <i class="el-icon-shopping-cart-1"></i>
+              </router-link>
             </el-badge>
             <i
               class="el-icon-shopping-cart-1"
@@ -60,12 +60,7 @@
                 alt=""
                 v-if="userInfo.avatar"
               />
-              <img
-                class="avator"
-                :src="avatorImg"
-                alt=""
-                v-else
-              />
+              <img class="avator" :src="avatorImg" alt="" v-else />
               <!-- 头像信息 -->
             </div>
           </div>
@@ -212,13 +207,11 @@
     <div class="user-info" v-show="isUserInfo">
       <div class="user-info-top">
         <div class="u-i-t-top">
-          <img
-            :src=" userInfo.avatar "
-            alt=""
-          />
+          <img :src="userInfo.avatar" alt="" v-if="userInfo.avatar" />
+          <img class="avator" :src="avatorImg" alt="" v-else />
           <div class="avator-info">
             <p>
-              {{ userInfo.nickName}}
+              {{ userInfo.nickName }}
             </p>
           </div>
         </div>
@@ -271,7 +264,7 @@ import {
   getShopCarCounter,
 } from "@/common/api/auth";
 import { Loading } from "element-ui";
-import { mapState,mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -361,11 +354,11 @@ export default {
       isLogin: (state) => state.user.isLogin,
     }),
   },
-  created(){
-    this.getCarNum()
+  created() {
+    this.getCarNum();
   },
   methods: {
-    ...mapActions(['saveUserInfoAction','saveLoginAction']),
+    ...mapActions(["saveUserInfoAction", "saveLoginAction"]),
     // 去我的课程
     goAbout() {
       this.$router.push({
@@ -459,10 +452,10 @@ export default {
                 sessionStorage.setItem("isLogin", JSON.stringify(true));
                 // 获取用户信息
                 this.getUserInfo({
-                  token: accessToken
+                  token: accessToken,
                 });
                 this.getCarNum();
-                this.saveLoginAction()
+                this.saveLoginAction();
                 this.$message({
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
@@ -511,7 +504,7 @@ export default {
                 this.getUserInfo({
                   token: accessToken,
                 });
-                this.saveLoginAction()
+                this.saveLoginAction();
                 // 获取购物车数据
                 this.getCarNum();
                 //  this.saveIsLoginAction(true)
@@ -585,11 +578,11 @@ export default {
     },
     // 获取个人信息
     getUserInfo(params) {
-      console.log(sessionStorage.getItem("token"),"123456");
+      console.log(sessionStorage.getItem("token"), "123456");
       getInfo(params)
         .then((res) => {
           sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-          this.saveUserInfoAction()
+          this.saveUserInfoAction();
           // this.saveUserInfoActions()
         })
         .catch((err) => {
@@ -599,7 +592,7 @@ export default {
     // 获取购物车数据
     getCarNum() {
       getShopCarCounter().then((res) => {
-        console.log(res)
+        console.log(res);
         if (res.meta.code == 200) {
           this.carNum = res.data.counter;
         }

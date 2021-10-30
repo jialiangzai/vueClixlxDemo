@@ -9,6 +9,13 @@
               class="banner-avator"
               :src="userInfo.avatar"
               alt=""
+              v-if="userInfo.avatar"
+            />
+            <img
+              class="banner-avator"
+              :src="avatorImg"
+              alt=""
+              v-else
             />
             <div class="banner-my">
               <div class="banner-name">{{userInfo.nickName}}</div>

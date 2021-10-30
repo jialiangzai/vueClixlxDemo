@@ -1,16 +1,16 @@
 <template>
   <div class="order">
     <el-tabs v-model="activeName" @tab-click="handleClick" class="order-tabs">
-      <el-tab-pane label="全部订单" name="first" style="height: 800px">
+      <el-tab-pane label="全部订单" name="first">
         <OrderItem :orderList="totalList"></OrderItem>
       </el-tab-pane>
-      <el-tab-pane label="已完成" name="second" style="height: 800px">
+      <el-tab-pane label="已完成" name="second">
         <OrderItem :orderList="completedList"></OrderItem>
       </el-tab-pane>
-      <el-tab-pane label="未完成" name="third" style="height: 800px">
+      <el-tab-pane label="未完成" name="third" >
         <OrderItem :orderList="incompleteList"></OrderItem>
       </el-tab-pane>
-      <el-tab-pane label="已失效" name="fourth" style="height: 800px">
+      <el-tab-pane label="订单关闭" name="fourth">
         <OrderItem :orderList="invalidList"></OrderItem>
       </el-tab-pane>
     </el-tabs>
@@ -80,7 +80,7 @@ export default {
 <style scoped>
 .order-tabs {
   margin-left: 20px;
-  height: 800px;
+  /* height: 800px; */
 }
 </style>
 

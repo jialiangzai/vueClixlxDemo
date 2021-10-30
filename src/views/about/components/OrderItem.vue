@@ -116,7 +116,7 @@ export default {
 .order-container {
   margin: 10px 0;
   width: 940px;
-  height: 700px;
+  height: 100%;
   overflow: hidden;
 }
 .order-item {
