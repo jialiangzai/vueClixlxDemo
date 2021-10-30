@@ -59,17 +59,40 @@ export default {
       if (this.activeName === "second") {
         this.query.entity.orderStatus = "finish";
         getByMemberId(this.query).then((res) => {
-          this.completedList = res.data.pageInfo.list;
+          if(res.meta.code == "200"){
+            this.completedList = res.data.pageInfo.list;
+          }else {
+            this.$message({
+              message: "获取订单失败，请联系管理员",
+              type: "error",
+            });
+          }
+          
         });
       } else if (this.activeName === "third") {
         this.query.entity.orderStatus = "overtime";
         getByMemberId(this.query).then((res) => {
-          this.incompleteList = res.data.pageInfo.list;
+          if(res.meta.code == "200"){
+            this.incompleteList = res.data.pageInfo.list;
+          }else {
+            this.$message({
+              message: "获取订单失败，请联系管理员",
+              type: "error",
+            });
+          }
+          
         });
       }else if(this.activeName === "fourth") {
         this.query.entity.orderStatus = "closed";
         getByMemberId(this.query).then((res) => {
-          this.invalidList= res.data.pageInfo.list;
+          if(res.meta.code == "200"){
+            this.invalidList= res.data.pageInfo.list;
+          }else {
+            this.$message({
+              message: "获取订单失败，请联系管理员",
+              type: "error",
+            });
+          }
         });
       }
     },

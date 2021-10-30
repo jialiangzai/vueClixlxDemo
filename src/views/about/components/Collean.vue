@@ -53,7 +53,16 @@ export default {
           getFavoriteList(this.query)
             .then((res) => {
               console.log(res);
-              this.totalList = res.data.pageInfo.list;
+              if (res.meta.code == "200") {
+                  console.log(res);
+                  this.totalList = res.data.pageInfo.list;
+                } else {
+                  this.$message({
+                    message: "获取收藏列表失败，请联系管理员",
+                    type: "error",
+                  });
+                }
+
             })
             .catch((err) => console.log(err));
         }
@@ -64,32 +73,44 @@ export default {
         this.query.entity.isFress = 1;
         // this.getList();
         createToken().then((res) => {
-        if (res.data.token) {
-          this.query.token = res.data.token;
-          getFavoriteList(this.query)
-            .then((res) => {
-              console.log(res);
-              this.freeList = res.data.pageInfo.list;
-            })
-            .catch((err) => console.log(err));
-        }
-      });
-      
+          if (res.data.token) {
+            this.query.token = res.data.token;
+            getFavoriteList(this.query)
+              .then((res) => {
+                if (res.meta.code == "200") {
+                  console.log(res);
+                  this.freeList = res.data.pageInfo.list;
+                } else {
+                  this.$message({
+                    message: "获取收藏列表失败，请联系管理员",
+                    type: "error",
+                  });
+                }
+              })
+              .catch((err) => console.log(err));
+          }
+        });
       } else if (this.activeName === "third") {
         this.query.entity.isMember = 1;
         createToken().then((res) => {
-        if (res.data.token) {
-          this.query.token = res.data.token;
-          getFavoriteList(this.query)
-            .then((res) => {
-              console.log(res);
-              this.vipList = res.data.pageInfo.list;
-            })
-            .catch((err) => console.log(err));
-        }
-      });
-      
-        
+          if (res.data.token) {
+            this.query.token = res.data.token;
+            getFavoriteList(this.query)
+              .then((res) => {
+                console.log(res);
+                if (res.meta.code == "200") {
+                  console.log(res);
+                  this.vipList = res.data.pageInfo.list;
+                } else {
+                  this.$message({
+                    message: "获取收藏列表失败，请联系管理员",
+                    type: "error",
+                  });
+                }
+              })
+              .catch((err) => console.log(err));
+          }
+        });
       } else {
         this.query.isFress = null;
         this.query.isMember = null;

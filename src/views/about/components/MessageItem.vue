@@ -6,8 +6,9 @@
           class="course-item"
           v-for="item in messList"
           :key="item.id"
+          @click="goRead(item)"
         >
-          <div class="item-dot" v-if="item.title"></div>
+          <div class="item-dot" v-if="item.status === 1"></div>
           <div class="item-main">
             <p class="title">{{ item.title }}</p>
             <p class="time">{{ item.createTime }}</p>
@@ -28,6 +29,8 @@
 </template>
 
 <script>
+import {makeRead} from '@/common/api/message'
+import {createToken} from '@/common/api/token'
 export default {
   props: {
     messList: {
@@ -43,9 +46,36 @@ export default {
     };
   },
   onLoad() {
-    console.log(this.messList);
+    // console.log(this.messList);
   },
   methods: {
+    goRead(item){
+      // 2是已读
+      if(item.status === 2) {
+        return;
+      }else if(item.status === 1) {
+        // 1是未读
+        // ids
+        createToken().then(res => {
+          makeRead({
+            ids: item.id,
+            token: res.data.token
+          }).then(res=> {
+            if(res.meta.code === '200'){
+              this.$message({
+                message: "已读消息成功",
+                type: "success",
+              });
+            }else {
+              this.$message({
+                message: "已读消息失败",
+                type: "error",
+              });
+            }
+          })
+        })
+      }
+    }
   },
 };
 </script>

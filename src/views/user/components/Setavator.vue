@@ -113,7 +113,7 @@ export default {
       title: "修改头像",
       imgUrl: "",
       options: {
-        img:this.$store.getters.avatar, //裁剪图片的地址
+        img: this.$store.getters.avatar, //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度
@@ -127,9 +127,9 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
-    avatar(){
-      return this.options.img = this.userInfo.avatar
-    }
+    avatar() {
+      return (this.options.img = this.userInfo.avatar);
+    },
   },
   methods: {
     ...mapActions(["saveAvatorAction", "saveUserInfoAction"]),
@@ -180,45 +180,44 @@ export default {
             .then((res) => {
               //console.log(res);
               const token = res.data.token;
-              console.log(this.imgUrl)
+              console.log(this.imgUrl);
               updateUserInfo({
                 avatar: this.imgUrl,
                 id: this.userInfo.id,
                 token: res.data.token,
               }).then((res) => {
                 console.log(res);
-                this.getUerInfo({
-                  token,
-                });
+                if (res.meta.code == "200") {
+                  this.getUerInfo({
+                    token,
+                  });
+                } else {
+                  this.$message({
+                    message: "上传头像失败，请重新上传",
+                    type: "error",
+                  });
+                }
               });
             })
             .catch((err) => {
               console.log(err);
             });
         });
-
-        /* uploadFileWithBlob(formData).then(res=> {
-          console.log(res)
-          this.imgUrl = res.data.url
-        }).catch(err=>{
-          console.log(err)
-        }) */
-  
-        // updatePortrait(formData).then(response => {
-        //   console.log(res)
-        //   this.open = false;
-        //   this.msgSuccess("修改成功");
-        //   this.getUerInfo()
-        //   this.visible = false;
-        // });
       });
     },
     getUerInfo(params) {
       getInfo(params)
         .then((res) => {
-          console.log(res)
-          sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-          this.saveUserInfoAction();
+          console.log(res);
+          if (res.meta.code == "200") {
+            sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+            this.saveUserInfoAction();
+          } else {
+            this.$message({
+              message: "获取用户信息失败，请联系管理员",
+              type: "error",
+            });
+          }
           // this.saveUserInfoActions()
         })
         .catch((err) => {

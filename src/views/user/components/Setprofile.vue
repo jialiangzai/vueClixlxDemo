@@ -399,6 +399,11 @@ export default {
                 message: "更新信息成功",
                 type: "success",
               });
+            }else {
+              this.$message({
+                message: "更新信息失败",
+                type: "error",
+              });
             }
           });
         }

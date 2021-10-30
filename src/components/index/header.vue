@@ -269,7 +269,7 @@ export default {
   data() {
     return {
       msg: "我是头部",
-      carNum: 1,
+      carNum: 0,
       isCar: false,
       // isLogin: false,
       isUserInfo: false,
@@ -400,7 +400,17 @@ export default {
               } else if (res.meta.code == "10005") {
                 this.$message({
                   message: res.meta.msg,
-                  type: "success",
+                  type: "info",
+                });
+                this.isregister = false;
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  regiterloading.close();
+                });
+              } else {
+                this.$message({
+                  message: res.meta.msg,
+                  type: "error",
                 });
                 this.isregister = false;
                 this.$nextTick(() => {
@@ -460,6 +470,11 @@ export default {
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
+              } else {
+                this.$message({
+                  message: "登陆失败，请联系管理员",
+                  type: "error",
+                });
               }
             })
             .catch((err) => {
@@ -517,6 +532,11 @@ export default {
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
+              } else {
+                this.$message({
+                  message: "登陆失败，请联系管理员",
+                  type: "error",
+                });
               }
             })
             .catch((err) => {
@@ -559,6 +579,11 @@ export default {
               .then((res) => {
                 if (res.meta.code === 200) {
                   console.log("发送成功");
+                } else {
+                  this.$message({
+                    message: "验证码发送失败啦",
+                    type: "error",
+                  });
                 }
                 // console.log(res);
               })
@@ -581,9 +606,16 @@ export default {
       console.log(sessionStorage.getItem("token"), "123456");
       getInfo(params)
         .then((res) => {
-          sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-          this.saveUserInfoAction();
           // this.saveUserInfoActions()
+          if (res.meta.code == "200") {
+            sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+            this.saveUserInfoAction();
+          } else {
+            this.$message({
+              message: "获取用户信息失败啦，请联系管理员",
+              type: "error",
+            });
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -591,13 +623,18 @@ export default {
     },
     // 获取购物车数据
     getCarNum() {
-      if(sessionStorage.getItem('token')){
+      if (sessionStorage.getItem("token")) {
         getShopCarCounter().then((res) => {
-        console.log(res);
-        if (res.meta.code == 200) {
-          this.carNum = res.data.counter;
-        }
-      });
+          console.log(res);
+          if (res.meta.code == 200) {
+            this.carNum = res.data.counter;
+          } else {
+            this.$message({
+              message: "获取购物车数量失败啦，请联系管理员",
+              type: "error",
+            });
+          }
+        });
       }
     },
     // 返回登陆页面
