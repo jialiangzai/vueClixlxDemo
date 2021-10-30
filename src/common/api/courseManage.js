@@ -58,3 +58,15 @@ export function downloadAttachment(courseId,attachmentId){
         }
     })
 }
+
+//检查是否有权限
+export function checkAuth(courseId){
+    return http.$axios({
+        url:'api/course/checkAuth',
+        method:'GET',
+        params:{courseId},
+        headers: {
+            'Authorization': sessionStorage.getItem('token')
+        }
+    })
+}

@@ -96,7 +96,7 @@
 
 
 <script>
-import {getcourseInfo,downloadAttachment} from '@/common/api/courseManage.js'
+import {getcourseInfo,downloadAttachment,checkAuth} from '@/common/api/courseManage.js'
 import { mapState } from "vuex";
 import {createToken} from '@/common/api/token.js'
 import {addShopCar} from '@/common/api/shopcar.js'
@@ -128,26 +128,30 @@ export default{
     methods:{
         //下载资料
         downloadSource(item){
-            downloadAttachment(item.courseId,item.id).then((res) => {
-                const blob = new Blob([res])
-                //let json = JSON.parse(blob);
-                console.log(blob);
-                let fileName = item.attachmentName
-                let fileUrl = item.attachmentUrl
-                const extName = fileUrl.substring(fileUrl.lastIndexOf("."))
-                fileName = fileName + extName;
-                console.log(extName);
-                const link = document.createElement('a')
-                link.download = fileName
-                link.style.display = 'none'
-                link.href = URL.createObjectURL(blob)
-                document.body.appendChild(link)
-                link.click()
-                URL.revokeObjectURL(link.href)
-                document.body.removeChild(link)
+            checkAuth(item.courseId,).then(res => {
+                if(res.data.data.hasAuth){
+                    downloadAttachment(item.courseId,item.id).then((res) => {
+                        const blob = new Blob([res])
+                        let fileName = item.attachmentName
+                        let fileUrl = item.attachmentUrl
+                        const extName = fileUrl.substring(fileUrl.lastIndexOf("."))
+                        fileName = fileName + extName;
+                        const link = document.createElement('a')
+                        link.download = fileName
+                        link.style.display = 'none'
+                        link.href = URL.createObjectURL(blob)
+                        document.body.appendChild(link)
+                        link.click()
+                        URL.revokeObjectURL(link.href)
+                        document.body.removeChild(link)
+                    })
+                }else{
+                    this.$message({
+                        message: '购买该课程后才能下载资料哦',
+                        type: 'error'
+                    });
+                }
             })
-            //window.open('/api/course/downloadAttachment?courseId=' + item.courseId + 'attachmentId=' +item.id , '下载资料')
-
         },
         //加入购物车
         addCart(item){
