@@ -66,7 +66,6 @@
 <script>
 import {getShopCarList,deleteShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
-import {mapMutations} from 'vuex'
 export default{
     data(){
         return{
@@ -98,11 +97,14 @@ export default{
         },
     },
     methods:{
-        ...mapMutations(['getSelected']),
         // 去结算
         getSelecteds(){
-            this.getSelected(this.selectedProducts)
-            // this.$store.mutations('getSelected',)
+            let arr = new Array();
+            this.selectedProducts.forEach(item => {
+                arr.push({'number':item.counter,"id":item.courseId})
+            })
+            sessionStorage.setItem('selectedArr',JSON.stringify(arr))
+            
         },
         //全选
         selectAll(e){
@@ -147,19 +149,17 @@ export default{
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            })
-            .then(() => {
+            }).then(() => {
                 deleteShopCar({id:id,token:this.token}).then(response => {
                     if (response.meta.code === '200') {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功'
-                    })
-                    this.getShopCarList()
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功'
+                        })
+                        this.getShopCarList()
                     }
                 })
-            })
-            .catch(err => { console.error(err) })
+            }).catch(err => {})
         }
     }
 }

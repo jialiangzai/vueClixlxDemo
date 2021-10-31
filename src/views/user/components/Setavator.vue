@@ -180,13 +180,11 @@ export default {
             .then((res) => {
               //console.log(res);
               const token = res.data.token;
-              console.log(this.imgUrl);
               updateUserInfo({
                 avatar: this.imgUrl,
                 id: this.userInfo.id,
                 token: res.data.token,
               }).then((res) => {
-                console.log(res);
                 if (res.meta.code == "200") {
                   this.getUerInfo({
                     token,
@@ -199,16 +197,13 @@ export default {
                 }
               });
             })
-            .catch((err) => {
-              console.log(err);
-            });
+            .catch(err => {});
         });
       });
     },
     getUerInfo(params) {
       getInfo(params)
         .then((res) => {
-          console.log(res);
           if (res.meta.code == "200") {
             sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
             this.saveUserInfoAction();
@@ -220,9 +215,7 @@ export default {
           }
           // this.saveUserInfoActions()
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(err => {});
     },
     // 实时预览
     realTime(data) {

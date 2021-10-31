@@ -33,7 +33,7 @@
                 </div>
                 <div class="wx-dsc">指导老师</div>
             </div>
-            
+
         </div>
     </div>
 </template>
@@ -41,7 +41,7 @@
 <style scoped>
 .foot{
     width: 100%;
-    min-width: 1300px;
+    min-width: 1200px;
     height: 150px;
     background: #3483FF;
     opacity: 1;
@@ -49,6 +49,7 @@
 }
 .footer-main{
     display: flex;
+  justify-content: space-around;
     align-items: center;
     width: 1200px;
     height: 100%;
@@ -56,15 +57,14 @@
     margin: auto;
 }
 .footer-xlx{
-    margin-left: 100px;
     width:110px;
-    opacity: 1; 
+    opacity: 1;
 }
 .xlx{
     width: 100%;
     height: 100%;
 }
-.footer-factory{    
+.footer-factory{
     width: 130px;
     margin:0 20px;
 
@@ -95,10 +95,10 @@
     font-size: 12px;
 }
 .wx-bg{
-   
+
     width: 80px;
     height: 80px;
-   
+
 }
 .wx img{
     width: 100%;

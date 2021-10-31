@@ -4,19 +4,12 @@
     <div class="navSwiperContent">
       <div class="navigation">
         <ul>
-          <li
-            v-for="(item, index) in categorys"
-            :key="item.id"
-            @mouseenter="mourseHover(item,index)"
-            @mouseleave="mourseOut(index)"
-          >
-            <router-link to="/" :title="item.categoryName"
-              >{{ item.categoryName }} <i class="el-icon-arrow-right"></i
-            ></router-link>
+          <li v-for="(item, index) in categorys" :key="item.id" @mouseenter="mourseHover(item,index)" @mouseleave="mourseOut(index)" >
+            <router-link to="/" :title="item.categoryName" > {{ item.categoryName }} <i class="el-icon-arrow-right"></i></router-link>
             <div class="category-detail" v-if="categorysDetail[index]">
                 <div class="detail-main">
                     <div class="detail-desc">基础知识</div>
-                    <div class="detail-list"> 
+                    <div class="detail-list">
                         <div class="list-know">知识点:</div>
                         <div class="list-ul">
                             <router-link to="/course" class="list-item" v-for="(item,index) in tagarr" :key="index" >{{item.tagName}}</router-link>
@@ -28,7 +21,7 @@
                                 <img :src="item.courseCover" alt="">
                             </div>
                             <div class="right">
-                                <div class="courseName">{{item.courseName}}</div> 
+                                <div class="courseName">{{item.courseName}}</div>
                                 <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                                 <div class="buy">
                                     <div class="learn">免费学习</div>
@@ -52,11 +45,7 @@
         <el-carousel height="460px">
           <el-carousel-item v-for="item in sliders" :key="item.id">
             <router-link :to="item.pcHref">
-              <img
-                :src="item.imageUrl"
-                :title="item.imageName"
-                class="sliders-item-image"
-              />
+              <img :src="item.imageUrl" :title="item.imageName" class="sliders-item-image" />
             </router-link>
           </el-carousel-item>
         </el-carousel>
@@ -126,7 +115,7 @@ export default {
                     }
                 })
             })
-            
+
         },
 		// 课程分类，鼠标进入移出事件
 		mourseHover(item,index) {
@@ -193,7 +182,7 @@ export default {
                 this.tagarr = res.data.pageInfo.list
             })
         }
-       
+
 	},
 	components: {
 		courseType,
@@ -209,7 +198,7 @@ export default {
 	background: url(/image/transitionbg.png);
 }
 .navSwiperContent {
-	width: 1300px;
+	width: 1200px;
 	height: 460px;
 	margin: 35px auto 0 auto;
 	border-top-left-radius: 10px;
@@ -251,7 +240,7 @@ export default {
 .category-detail {
 	position: absolute;
 	top: 0;
-	left: 240px;
+	left: 220px;
 	background: rgba(255, 255, 255, 0.9);
 	z-index: 65535;
 	min-width: 700px;
@@ -314,7 +303,7 @@ export default {
 .detail-class{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     width: 700px;
     height: 250px;
     margin-top: 30px;

@@ -87,7 +87,6 @@ export default {
     getList() {
       myCourses(this.query)
         .then((res) => {
-          console.log(res);
           if (res.meta.code == "200") {
             res.data.pageInfo.list.map((item) => {
               switch (item.courseLevel) {
@@ -138,6 +137,7 @@ export default {
           } else {
             this.$message({
               message: res.meta.msg,
+<<<<<<< HEAD
               type: "error",
             });
           }
@@ -169,13 +169,13 @@ export default {
           } else {
             this.$message({
               message: res.meta.msg,
+=======
+>>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
               type: "error",
             });
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     },
     handleClick(tab, event) {
       // this.getList()

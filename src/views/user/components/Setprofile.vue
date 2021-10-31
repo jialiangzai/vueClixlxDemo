@@ -383,7 +383,6 @@ export default {
           this.form[item] = this.filterStr(this.form[item]);
         }
       }
-      console.log(this.form)
       createToken().then((res) => {
         // console.log(res.data.res)
         if (res.meta.code === "200") {
@@ -391,7 +390,6 @@ export default {
             token: res.data.token,
             ...this.form
           }).then((ress) => {
-            console.log(ress);
             if (ress.meta.code === "200") {
               this.getList();
               this.isDis = true;

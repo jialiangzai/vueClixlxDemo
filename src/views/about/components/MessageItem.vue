@@ -74,7 +74,7 @@ export default {
               window.location.reload()
             }else {
               this.$message({
-                message: "已读消息失败",
+                message: res.meta.msg,
                 type: "error",
               });
             }

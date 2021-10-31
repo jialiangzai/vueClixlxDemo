@@ -90,8 +90,8 @@ export default {
     getTotalList() {
       // this.query.entity.status = null;
       getByMemberId(this.query).then((res) => {
-        console.log(res);
         if (res.meta.code == "200") {
+<<<<<<< HEAD
           this.totalListPage = res.data.pageInfo.total;
           this.totalList = res.data.pageInfo.list;
         } else {
@@ -129,15 +129,52 @@ export default {
             type: "error",
           });
         }
+=======
+            this.totalListPage = res.data.pageInfo.total;
+            this.totalList = res.data.pageInfo.list;
+          } else {
+          this.$message({
+            message: res.meta.msg,
+            type: "error",
+          });
+          }
+>>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
       });
     },
     handleClick(tab, event) {
-      // console.log(tab,event)
-
       if (this.activeName === "second") {
+<<<<<<< HEAD
         this.getReadList();
       } else if (this.activeName == "third") {
         this.getunreadList();
+=======
+        this.readList = [1];
+        this.query.entity.status = 2;
+        getByMemberId(this.query).then((res) => {
+          if (res.meta.code == "200") {
+            this.readListPage = res.data.pageInfo.total;
+            this.readList = res.data.pageInfo.list;
+          } else {
+            this.$message({
+              message: res.meta.msg,
+              type: "error",
+            });
+          }
+        });
+      } else if (this.activeName == "third") {
+        this.query.entity.status = 1;
+        getByMemberId(this.query).then((res) => {
+          if (res.meta.code == "200") {
+            this.unreadPage = res.data.pageInfo.total;
+            this.unread = res.data.pageInfo.list;
+          } else {
+            this.$message({
+              message: res.meta.msg,
+              type: "error",
+            });
+          }
+        });
+>>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
       } else {
         this.getTotalList();
       }

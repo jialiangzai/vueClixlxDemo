@@ -69,7 +69,7 @@
 <style scoped>
 .course-type {
   display: flex;
-  width: calc(1300px - 2px);
+  width: calc(1200px);
   margin: 0 auto;
   /* border: #808080 solid 1px; */
   border-top: none;
@@ -77,7 +77,7 @@
   border-bottom-right-radius: 10px;
   overflow: hidden;
   background: #ffffff;
-  box-shadow: 0 20px 20px #d2d2d2;
+  box-shadow: 0px 10px 25px 10px #d2d2d2;
 }
 .course-type .course-type-item {
   width: 260px;

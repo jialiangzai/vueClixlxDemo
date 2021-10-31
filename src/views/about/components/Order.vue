@@ -104,7 +104,6 @@ export default {
         this.totalList = res.data.pageInfo.list;
         this.totalPage = res.data.pageInfo.total;
       });
-      // console.log(list)
     },
     finish(){
       // this.query.entity.orderStatus = "finish";
@@ -114,11 +113,11 @@ export default {
             this.completePage = res.data.pageInfo.total;
           }else {
             this.$message({
-              message: "获取订单失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
-          
+
         });
     },
     overtime(){
@@ -129,11 +128,11 @@ export default {
             this.incomplepage = res.data.pageInfo.total
           }else {
             this.$message({
-              message: "获取订单失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
-          
+
         });
     },
     closed(){
@@ -144,7 +143,7 @@ export default {
             this.invPage = res.data.pageInfo.invPage
           }else {
             this.$message({
-              message: "获取订单失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
