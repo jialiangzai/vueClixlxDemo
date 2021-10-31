@@ -99,12 +99,17 @@ export default {
         playCourse(){
             this.memberid = this.userInfo.id
             playCourse(this.courseId,this.chapterId).then(res => {
-                console.log(res,'pppppppppp');
                 if(res.meta.code === '200'){
                     this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
                     this.chapterInfo = res.data.chapterInfo
                     this.chapters = res.data.courseInfo.bizCourseChapters
                     this.playerOptions.poster = res.data.courseInfo.courseCover
+                }else if(res.meta.code === '70001'){
+                    this.$message({
+                        message: res.meta.msg,
+                        type: 'error'
+                    });
+                    this.$router.go(-1)
                 }
             })
             //获取播放历史记录
@@ -186,7 +191,7 @@ export default {
 .play-right {
 	color: #ffffff;
 	height: 595px;
-	overflow: hidden;
+	overflow: scroll;
 	position: relative;
 }
 .play-right .list {
@@ -236,5 +241,25 @@ export default {
 }
 .loading img{
     width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: rgba(240, 240, 240, 1);
+}
+ 
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px rgba(240, 240, 240, .5);
+  border-radius: 10px;
+  background-color: rgba(240, 240, 240, .5);
+}
+ 
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 0px rgba(240, 240, 240, .5);
+  background-color: rgba(240, 240, 240, .5);
 }
 </style>

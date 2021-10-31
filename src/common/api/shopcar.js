@@ -36,27 +36,14 @@ export function updateShopCar(params){
 }
 
 // 删除购物车数据
-
-export function deleteShopCar({id,token}){
-  return http.$axios({
-    url: 'api/shopcar/deleteShopCar',
-    method: 'GET',
-    params:{id},
-    headers:{
-        'Authorization': sessionStorage.getItem('token'),
-        'token':token
-    }
-  })
-}
-
-export function deleteShopCars({ids,token}){
+export function deleteShopCars(ids,token){
     return http.$axios({
-      url: 'api/shopcar/deleteShopCars',
-      method: 'GET',
-      params:{ids},
-      headers:{
-          'Authorization': sessionStorage.getItem('token'),
-          'token':token
-      }
+        url: 'api/shopcar/deleteShopCars',
+        method: 'POST',
+        data: ids,
+        headers:{
+            'Authorization': sessionStorage.getItem('token'),
+            'token':token
+        }
     })
   }

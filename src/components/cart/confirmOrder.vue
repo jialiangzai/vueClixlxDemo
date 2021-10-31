@@ -47,9 +47,10 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
 import {settlement,zfbpay,queryOrderWithAli,wxpay,queryOrderWithWX} from '@/common/api/payment.js'
-import {deleteShopCar,deleteShopCars} from '@/common/api/shopcar.js'
+import {deleteShopCars} from '@/common/api/shopcar.js'
+import {createToken} from '@/common/api/token.js'
+
 export default{
     data(){
         return{
@@ -57,25 +58,27 @@ export default{
             courseInfo:[],
             payment: {},
             totalPrice:'',
-            end:{},
-            orderNumber: "aa",
+            orderNumber: "",
             qrCode:'',
             timeInterVal: "",
             payMethod: [],
-            ids:[]
+            ids:[],
+            counter: 0,
+            isFinished: false,
+            token:'',
+
         }
     },
     created(){
         this.getNumberId()
         this.order()
     },
-    computed:{
-        ...mapState({
-            selectedArr:state => state.cart.selectedArr
-        })
-    },
+    
     methods:{
         queryOrderWithAli(){
+            if(this.isFinished){
+                return;
+            }
             queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
                     clearInterval(this.timeInterVal)
@@ -88,11 +91,16 @@ export default{
                     }).catch(() => {
                         this.$router.push('/')
                     });
+                    this.isFinished = true
+                    sessionStorage.removeItem("selectedArr");
                     this.removeShopCartCourses()
                 }
             })
         },
         queryOrderWithWX(){
+            if(this.isFinished){
+                return;
+            }
             queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
                     clearInterval(this.timeInterVal)
@@ -105,27 +113,38 @@ export default{
                     }).catch(() => {
                         this.$router.push('/')
                     });
+                    this.isFinished = true
+                    sessionStorage.removeItem("selectedArr");
                     this.removeShopCartCourses()
                 }
             })
         },
         removeShopCartCourses(){
             this.setArr.forEach(item => {
-                this.ids = item.id
+                this.ids.push(item.id) 
             })
-            deleteShopCars(this.ids)
+            createToken().then(res => {
+                this.token = res.data.token
+                deleteShopCars(this.ids,this.token)
+            })
         },
         toPayment(){
+            if(!this.payment.code){
+                this.$message({
+                    message: '请选择支付方式',
+                    type: 'error'
+                })
+            }
             if(this.payment.code === 'alipayment'){
-                this.end = {courses:this.setArr,payModes:"alipayment"}
-                zfbpay(this.end).then(res => {
+                let data = {courses: this.setArr, payModes: this.payment.code}
+                zfbpay(data).then(res => {
                     this.qrCode = res.data.payurl
                     this.orderNumber = res.data.orderNumber;
                     this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
                 })
             }else if(this.payment.code === 'wxpayment'){
-                this.end = {courses:this.setArr,payModes:"wxpayment"}
-                wxpay(this.end).then(res => {
+                let data = {courses: this.setArr, payModes: this.payment.code}
+                wxpay(data).then(res => {
                     this.qrCode = res.data.payurl
                     this.orderNumber = res.data.orderNumber
                     this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
@@ -137,9 +156,10 @@ export default{
             this.payment = payment
         },
         getNumberId(){
-            this.selectedArr.forEach(item => {
+            this.selectedArr = JSON.parse(sessionStorage.getItem("selectedArr"))
+            /* this.selectedArr.forEach(item => {
                  this.setArr.push({'number':item.counter,"id":item.courseId})
-            })
+            }) */
         },
         order(){
             settlement(this.setArr).then(res => {

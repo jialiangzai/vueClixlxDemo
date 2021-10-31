@@ -43,7 +43,6 @@ export default {
     this.query.isFress = null;
     this.query.isMember = null;
     this.getList();
-    console.log(sessionStorage.getItem("token"));
   },
   methods: {
     getList() {
@@ -52,9 +51,7 @@ export default {
           this.query.token = res.data.token;
           getFavoriteList(this.query)
             .then((res) => {
-              console.log(res);
               if (res.meta.code == "200") {
-                  console.log(res);
                   this.totalList = res.data.pageInfo.list;
                 } else {
                   this.$message({
@@ -64,7 +61,12 @@ export default {
                 }
 
             })
-            .catch((err) => console.log(err));
+            .catch(err => {
+                this.$message({
+                    message: err,
+                    type: "error",
+                });
+            });
         }
       });
     },
@@ -78,7 +80,6 @@ export default {
             getFavoriteList(this.query)
               .then((res) => {
                 if (res.meta.code == "200") {
-                  console.log(res);
                   this.freeList = res.data.pageInfo.list;
                 } else {
                   this.$message({
@@ -87,7 +88,12 @@ export default {
                   });
                 }
               })
-              .catch((err) => console.log(err));
+              .catch(err => {
+                  this.$message({
+                    message: err,
+                    type: "error",
+                  });
+              });
           }
         });
       } else if (this.activeName === "third") {
@@ -97,9 +103,7 @@ export default {
             this.query.token = res.data.token;
             getFavoriteList(this.query)
               .then((res) => {
-                console.log(res);
                 if (res.meta.code == "200") {
-                  console.log(res);
                   this.vipList = res.data.pageInfo.list;
                 } else {
                   this.$message({
@@ -108,7 +112,12 @@ export default {
                   });
                 }
               })
-              .catch((err) => console.log(err));
+              .catch(err => {
+                  this.$message({
+                    message: err,
+                    type: "error",
+                  });
+              });
           }
         });
       } else {

@@ -43,7 +43,6 @@ export default {
     getList() {
       myCourses(this.query)
         .then((res) => {
-          console.log(res);
           if (res.meta.code == "200") {
             res.data.pageInfo.list.map((item) => {
               switch (item.courseLevel) {
@@ -67,7 +66,10 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+            this.$message({
+                message: err,
+                type: "error",
+            });
         });
     },
     handleClick(tab, event) {

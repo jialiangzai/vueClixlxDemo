@@ -44,11 +44,10 @@
         <div class="main">
             <div class="introduction">
                 <div class="desc">
-                    {{courseDetail.content}}
-                    <!-- {{courseDetail.description ? courseDetail.description : ""}}   -->
+                    {{courseDetail.description ? courseDetail.description : ""}}  
                 </div>
                 <div class="btn">
-                    <button class="btn-item active">立即购买</button>
+                    <button class="btn-item active" @click="goOrder(courseInfoArr)">立即购买</button>
                     <button class="btn-item"  @click="addCart()">加入购物车</button>
                 </div>
             </div>
@@ -113,11 +112,13 @@ export default{
             courseChapters:{},
             downsource:[],
             token:'',
-            memberId:''
+            memberId:'',
+            token:''
 
         }
     },
     created(){
+        this.token = sessionStorage.getItem('token')
         this.getcourseInfo()
     },
     computed: {
@@ -127,6 +128,19 @@ export default{
         }),
     },
     methods:{
+        //跳转到订单页面
+        goOrder(item){
+            if(!this.token){
+                this.$message({
+                    message: '请先登录才能购买哦',
+                    type: 'error'
+                });
+            }
+            let arr = new Array();
+            arr.push({'number':1,"id":item.id})
+            sessionStorage.setItem('selectedArr',JSON.stringify(arr))
+            this.$router.push('/confirmOrder')
+        },
         //下载资料
         downloadSource(item){
             checkAuth(item.courseId,).then(res => {
@@ -155,7 +169,14 @@ export default{
             })
         },
         //加入购物车
-        addCart(item){
+        addCart(){
+            if(!this.token){
+                this.$message({
+                    message: '请先登录才能加入购物车哦',
+                    type: 'error'
+                });
+                return
+            }
             createToken().then(res => {
                 this.token = res.data.token
                 this.memberId = this.userInfo.id
@@ -169,10 +190,10 @@ export default{
                 })
             })
         },
+        //获取课程详情
         getcourseInfo(){
             getcourseInfo(this.courseId).then(res => {
                 if(res.meta.code === '200'){
-                    console.log(res,'kkkkkk');
                     this.courseInfoArr = res.data.data
                     this.courseDetail = res.data.data.bizCourseDetail
                     this.courseChapters = res.data.data.bizCourseChapters

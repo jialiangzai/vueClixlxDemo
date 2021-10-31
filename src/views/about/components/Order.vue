@@ -53,7 +53,6 @@ export default {
       getByMemberId(this.query).then((res) => {
         this.totalList = res.data.pageInfo.list;
       });
-      // console.log(list)
     },
     handleClick(tab, event) {
       if (this.activeName === "second") {

@@ -17,7 +17,6 @@ import Setprofile from '@/views/user/components/Setprofile.vue';
 import Setavator from '@/views/user/components/Setavator.vue';
 import Cart from '@/views/cart/Cart.vue';
 import ConfirmOrder from '@/views/cart/ConfirmOrder.vue';
-import Payment from '@/views/cart/Payment.vue';
 
 
 
@@ -72,9 +71,6 @@ const routes = [
   },
   {path: '/cart', component: Cart},
   {path: '/confirmOrder', component: ConfirmOrder},
-  {path: '/payment', component: Payment},
-
-
 ];
 
 export default new Router({

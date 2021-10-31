@@ -67,7 +67,6 @@ export default {
   methods: {
     getList() {
       getByMemberId(this.query).then((res) => {
-        console.log(res);
         if (res.meta.code == "200") {
             this.totalListPage = res.data.pageInfo.total;
             this.totalList = res.data.pageInfo.list;
@@ -80,13 +79,10 @@ export default {
       });
     },
     handleClick(tab, event) {
-      // console.log(tab,event)
-
       if (this.activeName === "second") {
         this.readList = [1];
         this.query.entity.status = 2;
         getByMemberId(this.query).then((res) => {
-          console.log(res);
           if (res.meta.code == "200") {
             this.readListPage = res.data.pageInfo.total;
             this.readList = res.data.pageInfo.list;

@@ -386,7 +386,6 @@ export default {
           });
           register(this.registerForm)
             .then((res) => {
-              console.log(res);
               if (res.meta.code == "200") {
                 this.$message({
                   message: "注册成功，去登录吧！",
@@ -420,7 +419,6 @@ export default {
               }
             })
             .catch((err) => {
-              console.log(err);
               this.$message({
                 message: "注册失败啦，请重新登陆！",
                 type: "error",
@@ -431,7 +429,6 @@ export default {
               });
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -478,7 +475,6 @@ export default {
               }
             })
             .catch((err) => {
-              console.log(err);
               this.$nextTick(() => {
                 // 以服务的方式调用的 Loading 需要异步关闭
                 phoneloading.close();
@@ -489,7 +485,6 @@ export default {
               });
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -498,7 +493,6 @@ export default {
     submitIdentifyForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.identifyForm);
           var identLoading = Loading.service({
             lock: true,
             text: "Loading",
@@ -508,7 +502,6 @@ export default {
           // alert('submit!');
           loginByMobile(this.identifyForm)
             .then((res) => {
-              console.log(res);
               if (res.meta.code === "10006") {
                 // 存储token
                 let accessToken = res.data.accessToken;
@@ -540,7 +533,6 @@ export default {
               }
             })
             .catch((err) => {
-              console.log(err);
               this.$nextTick(() => {
                 // 以服务的方式调用的 Loading 需要异步关闭
                 identLoading.close();
@@ -552,7 +544,6 @@ export default {
               });
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -578,17 +569,22 @@ export default {
             })
               .then((res) => {
                 if (res.meta.code === 200) {
-                  console.log("发送成功");
+                  this.$message({
+                    message: "发送成功",
+                    type: "success",
+                  });
                 } else {
                   this.$message({
                     message: "验证码发送失败啦",
                     type: "error",
                   });
                 }
-                // console.log(res);
               })
               .catch((err) => {
-                console.log(err);
+                this.$message({
+                    message: err,
+                    type: "error",
+                  });
               });
           } else {
             this.captcha = `重新发送${time}秒`;
@@ -603,7 +599,6 @@ export default {
     },
     // 获取个人信息
     getUserInfo(params) {
-      console.log(sessionStorage.getItem("token"), "123456");
       getInfo(params)
         .then((res) => {
           // this.saveUserInfoActions()
@@ -618,14 +613,16 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.$message({
+              message: err,
+              type: "error",
+            });
         });
     },
     // 获取购物车数据
     getCarNum() {
       if (sessionStorage.getItem("token")) {
         getShopCarCounter().then((res) => {
-          console.log(res);
           if (res.meta.code == 200) {
             this.carNum = res.data.counter;
           } else {
@@ -653,7 +650,6 @@ export default {
     goLogout() {
       logout()
         .then((res) => {
-          console.log(res);
           this.$message({
             message: "退出登录，欢迎下次登录",
             type: "success",
@@ -664,7 +660,10 @@ export default {
           sessionStorage.removeItem("isLogin");
         })
         .catch((err) => {
-          console.log(err);
+          this.$message({
+            message: err,
+            type: "error",
+          });
         });
     },
   },
