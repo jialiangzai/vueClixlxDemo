@@ -15,10 +15,10 @@ export default {
 	},
 	mutations:{
 		saveUserInfo(state,payload){
-			state.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+			state.userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || payload
 		},
 		saveLogin(state,payload) {
-			state.isLogin = JSON.parse(sessionStorage.getItem('isLogin'))
+			state.isLogin = JSON.parse(sessionStorage.getItem('isLogin')) || false
 		},
 		saveAvator(state,payload){
 			state.userInfo.avatar = payload

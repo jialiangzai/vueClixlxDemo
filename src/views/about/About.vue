@@ -34,7 +34,7 @@
                 </div>
               </div>
               <div class="banner-right">
-                <div class="banner-study">学习时长 <span>0h</span></div>
+                <div class="banner-study">学习时长 <span>{{ userInfo.totalHour ? parseFloat(userInfo.totalHour/360).toFixed(2)+'h' : '0h' }}</span></div>
                 <div class="banner-setting" @click="goMine">
                   <img src="/image/about/setting.png" alt="" />
                   <p>个人设置</p>

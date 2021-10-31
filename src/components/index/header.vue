@@ -150,6 +150,7 @@
                 v-model="registerForm.captcha"
                 style="width: 150px"
                 placeholder="请输入验证码"
+                @keyup.enter.native="submitRegisterForm('registerForm')"
               ></el-input>
               <div
                 class="sendcaptcha"
@@ -189,6 +190,7 @@
                   v-model="phoneForm.password"
                   placeholder="请输入密码"
                   show-password
+                  @keyup.enter.native="submitPhoneForm('phoneForm')"
                 ></el-input>
               </el-form-item>
               <el-form-item>
@@ -220,6 +222,7 @@
                   v-model="identifyForm.captcha"
                   style="width: 150px"
                   placeholder="请输入验证码"
+                  @keyup.enter.native="submitIdentifyForm('identifyForm')"
                 ></el-input>
                 <div
                   class="sendcaptcha"
@@ -650,9 +653,19 @@ export default {
           sessionStorage.removeItem("token");
           sessionStorage.removeItem("userInfo");
           sessionStorage.removeItem("isLogin");
+          this.$router.push('/')
+          this.saveUserInfoAction({
+            avatar: '/image/common/avator.png',
+            nickName: '小鹿线-默认',
+            gender: 1,
+            city: '北京',
+            id:1,
+          })
+          this.saveLoginAction()
         })
         .catch((err) => {});
     },
+
   },
 };
 </script>

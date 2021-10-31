@@ -4,8 +4,8 @@
 		<div class="play">
 			<div class="play-left">
                 <video-player  class="video-player vjs-custom-skin"
-                    ref="videoPlayer" 
-                    :playsinline="true" 
+                    ref="videoPlayer"
+                    :playsinline="true"
                     :options="playerOptions"
                     v-if="playerOptions.sources[0].src"
                     @timeupdate = "onPlayerTimeupdate($event)"
@@ -72,7 +72,7 @@ export default {
             currentTime:'',//播放时间
             memberid:'',//会员id
             count:0,
-            
+
         }
 	},
     computed:{
@@ -87,7 +87,7 @@ export default {
             this.$router.go(-1)
         }
         this.playCourse()
-        
+
 	},
     computed: {
         ...mapState({
@@ -152,11 +152,13 @@ export default {
 
 <style scoped>
 .main {
-	width: 100%;
-    margin-bottom: 100px;
+	width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 121px;
+  /*background-color: #00ac06;*/
 }
 .name {
-	padding: 20px 100px;
+	padding: 20px 0px;
 	width: 193px;
 	height: 26px;
 	font-size: 20px;
@@ -172,9 +174,9 @@ export default {
 }
 /* 视频播放开始 */
 .play-left {
-	width: 1100px;
+	width: 900px;
 	height: 500px;
-	margin: 0 0 0 20px;
+	/*margin: 0 0 0 20px;*/
 	background: #000;
 }
 /* .play-left .videos {
@@ -190,21 +192,23 @@ export default {
 /* 播放列表开始 */
 .play-right {
 	color: #ffffff;
-	height: 595px;
+  width: 300px;
+	height: 506px;
 	overflow: scroll;
 	position: relative;
 }
 .play-right .list {
-	margin: 10px 30px;
-	width: 400px;
+	margin: 15px;
+	width: 300px;
 	max-height: 500px;
 	/* background: chartreuse; */
 }
+
 .list .chapter {
-	font-size: 18px;
-	padding-bottom: 5px;
+	font-size: 16px;
+	/*padding-bottom: 5px;*/
 	font-weight: bold;
-	line-height: 24px;
+	line-height: 30px;
 	color: #ffffff;
 	opacity: 1;
 }
@@ -217,12 +221,13 @@ export default {
 	border-radius: 8px;
 	color: #a8a9ab;
 	cursor: pointer;
+  font-size: 14px;
 }
 .item:hover {
 	color: #ffffff;
 }
 .list .item .shipin {
-	margin: 0 10px;
+	margin: 0 5px;
 }
 .video-itemIcon,
 .item-name {
@@ -230,7 +235,7 @@ export default {
 }
 /* 播放列表结束 */
 .video-player{
-    height: 300px;
+    height: 600px;
 }
 .loading{
     color:#ffffff;
@@ -244,18 +249,18 @@ export default {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 0px;
+  height: 0px;
   background-color: rgba(240, 240, 240, 1);
 }
- 
+
 /*定义滚动条轨道 内阴影+圆角*/
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px rgba(240, 240, 240, .5);
   border-radius: 10px;
   background-color: rgba(240, 240, 240, .5);
 }
- 
+
 /*定义滑块 内阴影+圆角*/
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;

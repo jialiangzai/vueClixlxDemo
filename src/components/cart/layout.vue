@@ -1,5 +1,6 @@
 <template>
     <div class="fixed">
+        <div class="bgColor"></div>
         <div class="container">
             <div class="main">
                 <div class="cart">购物车</div>
@@ -52,7 +53,7 @@
                 <ul class="foot">
                     <li class="foot-item">已选课程<span class="unique">{{getCount}}</span></li>
                     <li class="foot-item">合计<span class="unique">{{price}}</span></li>
-                    <li > 
+                    <li >
                         <router-link to="/confirmOrder">
                             <button class="btn" @click="getSelecteds">去结算</button>
                         </router-link>
@@ -104,7 +105,7 @@ export default{
                 arr.push({'number':item.counter,"id":item.courseId})
             })
             sessionStorage.setItem('selectedArr',JSON.stringify(arr))
-            
+
         },
         //全选
         selectAll(e){
@@ -167,27 +168,76 @@ export default{
 
 <style scoped>
 .fixed{
+    position: relative;
     width: 100%;
     height: 100%;
     background: #FFFFFF;
 }
+.bgColor{
+  width: 100%;
+  height: 200px;
+  background-color: red;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 .container{
+    position: absolute;
+    left: 50%;
+  top: 50%;
+  transform: translate(-50%,0);
     width: 1200px;
     margin: 0 auto;
     background: #EBEDF2;
 }
 .main{
-    padding:20px 50px
+    padding:20px 50px;
+    border-radius: 15px;
 }
 .cart{
-    width: 96px;
+    /*width: 96px;*/
     height: 42px;
     font-size: 24px;
     font-family: Microsoft YaHei;
     font-weight: bold;
-    line-height: 0px;
+    line-height: 24px;
     color: #333333;
+    padding: 25px 0;
     opacity: 1;
+    color: #FF4400;
+
+}
+.cart:before{
+  width: 0;
+  height: 0;
+  content: '';
+  /*border: 10px solid red;*/
+  border-top: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #cccccc;
+
+}
+.cart:after{
+  width: 0;
+  height: 0;
+  content: '';
+  /*border: 10px solid red;*/
+  border-top: 10px solid transparent;
+  border-right: 10px solid #cccccc;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid transparent;
 }
 .nav{
     display: flex;
@@ -220,13 +270,17 @@ export default{
 /* 头部开始 */
 .head{
     display: flex;
-    margin: 10px 0;
+    padding: 0 10px;
+    margin: 20px 0;
     width: 100%;
     height: 35px;
     line-height: 35px;
     background: #FCFCFC;
     opacity: 1;
     border-radius: 0px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px 3px #888888;
 }
 .head .item{
     width: 150px;
@@ -239,7 +293,7 @@ export default{
 .check .text{
     width: 1487px;
     height: 40px;
-    
+
 }
 .classInfo{
     width: 400px!important;
@@ -254,6 +308,8 @@ export default{
     height: 200px;
     background: #FCFCFC;
     margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px 3px #888888;
 }
 .haveorder .order-item{
     height: 200px;
@@ -293,7 +349,7 @@ export default{
 .info .course-name{
     width: 300px;
    word-break: keep-all;
-   white-space: nowrap; 
+   white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
 }
@@ -357,5 +413,6 @@ export default{
     border-radius: 5px;
     background: #FF4400;
     cursor: pointer;
+    box-shadow: 0px 3px 5px 2px #ff727f;
 }
 </style>
