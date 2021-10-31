@@ -242,6 +242,7 @@ export default {
   /* height: 800px; */
   height: 100%;
   position: relative;
+  margin-top:20px;
 }
 .about-container {
   width: 1200px;
@@ -288,9 +289,8 @@ export default {
   /* height: 600px; */
   /* border: 1px solid blue; */
 }
-/*.foot {*/
-/*  position: fixed;*/
-/*  left: 0;*/
-/*  bottom: 0;*/
-/*}*/
+.foot {
+  position: fixed;
+  bottom: 0;
+}
 </style>

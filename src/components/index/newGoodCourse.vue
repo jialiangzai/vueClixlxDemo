@@ -62,7 +62,7 @@
         <!-- 推荐好课标题结束 -->
         <div class="commendCourseContent">
             <div class="commendLeft">
-                <img class="commendLeftimg" src="/image/commendLeft.png" alt="">
+                <img class="commendLeftimg" :src="imageCode" alt="">
             </div>
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
@@ -123,7 +123,7 @@ import {getNewCourse,getHotCourse} from '@/common/api/courseManage.js'
 import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
 import { mapState } from "vuex";
-
+import {getImageByCode} from '@/common/api/picture.js'
 export default {
 	data() {
 		return {
@@ -140,13 +140,15 @@ export default {
                 pageSize: 6,
                 entity: {}
             },
-            token:''
+            token:'',
+            imageCode:''
 
         }
 	},
     created(){
         this.getNewCourse()
         this.getHotCourse()
+        this.getImageByCode()
     },
     computed: {
         ...mapState({
@@ -155,6 +157,11 @@ export default {
         }),
     },
     methods:{
+        getImageByCode(){
+            getImageByCode({imageCode:'C56R35638I'}).then(res => {
+                this.imageCode = res.data.data.imageUrl;
+            })
+        },
         //加入购物车
         addCart(item){
             createToken().then(res => {

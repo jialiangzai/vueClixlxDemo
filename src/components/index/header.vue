@@ -358,7 +358,8 @@ export default {
             });
             return;
         }
-        this.$router.push({path: '/course',query: {keywords:this.keywords}})
+
+        this.$router.replace({path: '/course',query: {keywords:this.keywords}})
     },
     // 去我的课程
     goAbout() {

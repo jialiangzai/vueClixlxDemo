@@ -93,7 +93,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="container-body">
+            <div class="container-body" v-if="arrcourse && arrcourse.length > 0">
                 <div class="newCourseContent">
                     <ul class="courseUl">
                         <li class="courseItem" v-for="(item,index) in arrcourse" :key="index" >
@@ -117,6 +117,9 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+            <div class="container-body" v-else>
+                <el-empty image="/image/about/course-empt.png" description="暂无课程"></el-empty>
             </div>
             <div class="pages">
                 <pagination
@@ -178,6 +181,7 @@ export default{
     },
     created() {
         let keywords = this.$route.query.keywords
+
         if(keywords){
             this.queryParams.entity.courseName = keywords
         }
@@ -323,6 +327,13 @@ export default{
                 }
             })
         },
+    },
+    watch:{
+      '$route':function(to,from){
+        let query = to.query;
+        this.queryParams.entity.courseName= query.keywords;
+        this.queryCourse(this.queryParams);
+      }
     }
 }
 </script>
@@ -546,7 +557,6 @@ export default{
 	line-height: 25px;
 	left: 90px;
 	color: #ff727f;
-	margin-left: 10px;
 }
 /* 课程内容结束 */
 /* 分页开始 */

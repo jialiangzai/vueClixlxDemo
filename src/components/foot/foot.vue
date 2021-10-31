@@ -23,13 +23,13 @@
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img src="/image/guanfangwx.jpg" alt="">
+                    <img :src="guanfangwx" alt="">
                 </div>
                 <div class="wx-dsc">官方账号</div>
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img src="/image/laoshiwx.png" alt="">
+                    <img :src="teacherwx" alt="">
                 </div>
                 <div class="wx-dsc">指导老师</div>
             </div>
@@ -37,6 +37,38 @@
         </div>
     </div>
 </template>
+
+<script>
+import {getImageByCode} from '@/common/api/picture.js'
+
+export default{
+    data(){
+        return{
+            guanfangwx:'',
+            teacherwx:''
+        }
+    },
+    created(){
+        this.getImageByCodeGuanfangwx()
+        this.getImageByCodeTeacherwx()
+
+    },
+    methods:{
+        getImageByCodeGuanfangwx(){
+            getImageByCode({imageCode:'QATTS2KB5K'}).then(res => {
+                this.guanfangwx = res.data.data.imageUrl;
+            })
+        },
+        getImageByCodeTeacherwx(){
+            getImageByCode({imageCode:'YE1AT22QE3'}).then(res => {
+                this.teacherwx = res.data.data.imageUrl;
+            })
+        },
+    }
+}
+
+
+</script>
 
 <style scoped>
 .foot{
