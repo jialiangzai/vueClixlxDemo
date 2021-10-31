@@ -65,12 +65,7 @@ export default {
             });
           }
         })
-        .catch((err) => {
-            this.$message({
-                message: err,
-                type: "error",
-            });
-        });
+        .catch((err) => {});
     },
     handleClick(tab, event) {
       // this.getList()

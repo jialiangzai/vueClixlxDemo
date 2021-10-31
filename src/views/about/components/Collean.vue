@@ -61,12 +61,7 @@ export default {
                 }
 
             })
-            .catch(err => {
-                this.$message({
-                    message: err,
-                    type: "error",
-                });
-            });
+            .catch(err => {});
         }
       });
     },
@@ -88,12 +83,7 @@ export default {
                   });
                 }
               })
-              .catch(err => {
-                  this.$message({
-                    message: err,
-                    type: "error",
-                  });
-              });
+              .catch(err => {});
           }
         });
       } else if (this.activeName === "third") {
@@ -112,12 +102,7 @@ export default {
                   });
                 }
               })
-              .catch(err => {
-                  this.$message({
-                    message: err,
-                    type: "error",
-                  });
-              });
+              .catch(err => {});
           }
         });
       } else {

@@ -197,12 +197,7 @@ export default {
                 }
               });
             })
-            .catch(err => {
-                this.$message({
-                    message: err,
-                    type: "error",
-                });
-            });
+            .catch(err => {});
         });
       });
     },
@@ -220,12 +215,7 @@ export default {
           }
           // this.saveUserInfoActions()
         })
-        .catch(err => {
-            this.$message({
-                message: err,
-                type: "error",
-            });
-        });
+        .catch(err => {});
     },
     // 实时预览
     realTime(data) {

@@ -36,6 +36,20 @@ export function updateShopCar(params){
 }
 
 // 删除购物车数据
+
+export function deleteShopCar({id,token}){
+    return http.$axios({
+      url: 'api/shopcar/deleteShopCar',
+      method: 'GET',
+      params:{id},
+      headers:{
+          'Authorization': sessionStorage.getItem('token'),
+          'token':token
+      }
+    })
+  }
+
+// 删除购物车数据
 export function deleteShopCars(ids,token){
     return http.$axios({
         url: 'api/shopcar/deleteShopCars',
@@ -46,4 +60,4 @@ export function deleteShopCars(ids,token){
             'token':token
         }
     })
-  }
+}

@@ -582,12 +582,7 @@ export default {
                   });
                 }
               })
-              .catch((err) => {
-                this.$message({
-                    message: err,
-                    type: "error",
-                  });
-              });
+              .catch((err) => {});
           } else {
             this.captcha = `重新发送${time}秒`;
           }
@@ -614,12 +609,7 @@ export default {
             });
           }
         })
-        .catch((err) => {
-          this.$message({
-              message: err,
-              type: "error",
-            });
-        });
+        .catch((err) => {});
     },
     // 获取购物车数据
     getCarNum() {
@@ -661,12 +651,7 @@ export default {
           sessionStorage.removeItem("userInfo");
           sessionStorage.removeItem("isLogin");
         })
-        .catch((err) => {
-          this.$message({
-            message: err,
-            type: "error",
-          });
-        });
+        .catch((err) => {});
     },
   },
 };

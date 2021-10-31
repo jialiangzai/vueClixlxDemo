@@ -70,7 +70,6 @@ export default{
         }
     },
     created(){
-        this.getNumberId()
         this.order()
     },
     
@@ -155,13 +154,18 @@ export default{
         mouseup(payment){
             this.payment = payment
         },
-        getNumberId(){
-            this.selectedArr = JSON.parse(sessionStorage.getItem("selectedArr"))
-            /* this.selectedArr.forEach(item => {
-                 this.setArr.push({'number':item.counter,"id":item.courseId})
-            }) */
-        },
         order(){
+            let selectedArr = sessionStorage.getItem("selectedArr");
+            if(!selectedArr){
+                this.$message({
+                    message: '系统错误',
+                    type: 'error'
+                });
+                this.$router.push('/')
+                return;
+            }
+            this.setArr = JSON.parse(selectedArr);
+            console.log(this.setArr);
             settlement(this.setArr).then(res => {
                 this.payMethod = res.data.payModes
                 this.courseInfo = res.data.courses
