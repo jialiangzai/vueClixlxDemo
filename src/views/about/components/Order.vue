@@ -62,11 +62,11 @@ export default {
             this.completedList = res.data.pageInfo.list;
           }else {
             this.$message({
-              message: "获取订单失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
-          
+
         });
       } else if (this.activeName === "third") {
         this.query.entity.orderStatus = "overtime";
@@ -75,11 +75,11 @@ export default {
             this.incompleteList = res.data.pageInfo.list;
           }else {
             this.$message({
-              message: "获取订单失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
-          
+
         });
       }else if(this.activeName === "fourth") {
         this.query.entity.orderStatus = "closed";
@@ -88,7 +88,7 @@ export default {
             this.invalidList= res.data.pageInfo.list;
           }else {
             this.$message({
-              message: "获取订单失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }

@@ -77,3 +77,5 @@ export default new Router({
   routes,
   mode: 'hash',
 });
+
+

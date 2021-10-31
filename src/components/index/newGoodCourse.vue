@@ -21,7 +21,7 @@
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in newCourses" :key="index" >
                     <div class="courseInfo">
-                        <router-link :to="{path:'/course-info/' + item.id}">    
+                        <router-link :to="{path:'/course-info/' + item.id}">
                             <div class="courseBg">
                                 <img class="courseImg" :src="item.courseCover" alt="">
                             </div>
@@ -32,7 +32,7 @@
                             <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
                             <div class="price">¥ {{item.salePrice}}</div>
                             <div class="addCart" @click="addCart(item)">
-                                <i class="el-icon-shopping-cart-1 cart"></i> 
+                                <i class="el-icon-shopping-cart-1 cart"></i>
                                 <span class="cart-text">加入购物车</span>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
                     <div class="courseInfo">
-                        <router-link :to="{path:'/course-info/' + item.id}">    
+                        <router-link :to="{path:'/course-info/' + item.id}">
                             <div class="courseBg">
                                 <img class="courseImg" :src="item.courseCover" alt="">
                             </div>
@@ -78,7 +78,7 @@
                             <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
                             <div class="price">¥ {{item.salePrice}}</div>
                             <div class="addCart" @click="addCart(item)">
-                                <i class="el-icon-shopping-cart-1 cart"></i> 
+                                <i class="el-icon-shopping-cart-1 cart"></i>
                                 <span class="cart-text">加入购物车</span>
                             </div>
                         </div>
@@ -106,14 +106,14 @@
                                 <div>晋级TS高手</div>
                                 <div>搞定复杂项目</div>
                             </div>
-                        </div>                      
+                        </div>
                         <div class="courseName">
                             晋级TypeScript高手，成为抢手的前端开发人才
-                        </div>                      
+                        </div>
                     </div>
-                </li>                                     
+                </li>
             </ul>
-        </div>   -->  
+        </div>   -->
     <!-- </div> -->
 </div>
 </template>
@@ -169,7 +169,7 @@ export default {
                     }
                 })
             })
-            
+
         },
         //获取最新课程
         getNewCourse(){
@@ -221,7 +221,7 @@ export default {
         goCourse(){
             this.$router.push('/course')
         },
-        
+
 
     }
 }
@@ -229,7 +229,7 @@ export default {
 
 <style scoped>
 .layout{
-    width: 1300px;
+    width: 1200px;
     margin: 0 auto;
 }
 /* 新上好课开始 */
@@ -260,7 +260,7 @@ export default {
 .course-list-container h1 .hot .hot-left {
 	height: 38px;
 	font-size: 20px;
-    padding: 0 10px;
+  padding: 0 10px;
 	text-align: center;
 	line-height: 37px;
 	color: #ffffff;
@@ -296,7 +296,7 @@ export default {
 	z-index: -1;
 }
 .newCourseContent {
-	width: 1300px;
+	width: 1200px;
 	margin: 15px auto 0px auto;
 }
 .newCourseContent .courseUl {
@@ -304,7 +304,7 @@ export default {
 	flex-wrap: wrap;
 }
 .newCourseContent .courseUl .courseItem {
-	width: 310px;
+	width: 285px;
 	height: 280px;
 	margin: 0 20px 20px 0;
 }
@@ -317,12 +317,12 @@ export default {
 /* 新上好课结束 */
 /* 推荐好课开始 */
 .commendCourseContent {
-	width: 1300px;
+	width: 1200px;
 	margin: 15px auto 0px auto;
     display: flex;
 }
 .commendCourseContent .commendLeft{
-    width: 310px;
+    width: 285px;
     height: 580px;
 	margin: 0 20px 20px 0;
 }
@@ -331,12 +331,12 @@ export default {
     height: 100%;
 }
 .commendCourseContent .courseUl {
-    width: calc(100% - 330px);
+    width: calc(100% - 285px);
 	display: flex;
 	flex-wrap: wrap;
 }
 .commendCourseContent .courseUl .courseItem {
-	width: 310px;
+	width: 285px;
 	height: 280px;
 	margin: 0 20px 20px 0;
 }
@@ -348,7 +348,7 @@ export default {
 }
 /* 新上好课结束 */
 .courseCard {
-	width: 1300px;
+	width: 1200px;
 	height: 600px;
 	margin: 20px 0 0 0;
 }
@@ -430,7 +430,7 @@ export default {
 	flex-wrap: wrap;
 }
 .book .courseUl .goodBook {
-	width: 310px;
+	width: 285px;
 	height: 220px;
 	margin: 0 20px 20px 0;
 }

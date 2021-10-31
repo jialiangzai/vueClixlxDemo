@@ -135,7 +135,7 @@ export default {
 };
 </script>
 
-<style >
+<style scoped>
 .about-banner {
   background: url("/image/about/about-banner.png") no-repeat 0 0;
   box-sizing: border-box;
@@ -273,9 +273,9 @@ export default {
   /* height: 600px; */
   /* border: 1px solid blue; */
 }
-.foot {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-}
+/*.foot {*/
+/*  position: fixed;*/
+/*  left: 0;*/
+/*  bottom: 0;*/
+/*}*/
 </style>

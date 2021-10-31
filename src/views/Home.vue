@@ -27,7 +27,7 @@ export default {
     ],
   },
   created() {
-    
+
   },
   methods: {
   },
@@ -40,6 +40,5 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
 </style>

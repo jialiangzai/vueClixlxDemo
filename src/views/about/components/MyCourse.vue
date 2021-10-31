@@ -60,7 +60,7 @@ export default {
             this.totalList = res.data.pageInfo.list;
           } else {
             this.$message({
-              message: "获取我的课程失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }

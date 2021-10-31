@@ -71,10 +71,10 @@ export default {
             this.totalListPage = res.data.pageInfo.total;
             this.totalList = res.data.pageInfo.list;
           } else {
-            this.$message({
-              message: "获取消息失败，请联系管理员",
-              type: "error",
-            });
+          this.$message({
+            message: res.meta.msg,
+            type: "error",
+          });
           }
       });
     },
@@ -88,7 +88,7 @@ export default {
             this.readList = res.data.pageInfo.list;
           } else {
             this.$message({
-              message: "获取消息失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
@@ -101,7 +101,7 @@ export default {
             this.unread = res.data.pageInfo.list;
           } else {
             this.$message({
-              message: "获取消息失败，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }

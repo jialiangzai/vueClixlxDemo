@@ -1,12 +1,6 @@
 <template>
   <!-- 首页头部组件 -->
-  <div
-    class="header"
-    @mouseleave="
-      isUserInfo = false;
-      isCar = false;
-    "
-  >
+  <div class="header" @mouseleave="isUserInfo = false;isCar = false;">
     <div class="index-header">
       <div class="header-content">
         <!-- 头部logo -->
@@ -35,6 +29,7 @@
         </div>
         <!-- 搜索、购物车、登录注册 -->
         <div class="searBuyLogin">
+          <!--头部搜索框-->
           <div class="content-search">
             <input type="text" placeholder="请输入要搜索的课程" />
             <i class="el-icon-search" style="cursor: pointer"></i>
@@ -65,6 +60,52 @@
             </div>
           </div>
           <div class="content-login" v-else @click="goLogin">登录 / 注册</div>
+        </div>
+        <!-- 划过头像显示 -->
+        <div class="user-info" v-show="isUserInfo">
+          <div class="user-info-top">
+            <div class="u-i-t-top">
+              <img :src="userInfo.avatar" alt="" v-if="userInfo.avatar" />
+              <img class="avator" :src="avatorImg" alt="" v-else />
+              <div class="avator-info">
+                <p>
+                  {{ userInfo.nickName }}
+                </p>
+              </div>
+            </div>
+            <div class="u-i-i-bottom">
+              <div v-for="item in avatorList" :key="item.id">
+                <router-link :to="item.linkUrl">
+                  <div class="info-item">
+                    <img :src="item.imgUrl" alt="" />
+                    <p>{{ item.title }}</p>
+                  </div>
+                </router-link>
+              </div>
+            </div>
+          </div>
+          <div class="user-info-bottom">
+            <div class="logout" @click="goLogout">退出登录</div>
+          </div>
+        </div>
+        <!-- 购物车 -->
+        <div class="shopcar" v-show="isCar">
+          <div class="shopcar-top">
+            <div class="s-t-left">我的购物车</div>
+          </div>
+          <div class="shopcar-center">
+            <img src="/image/header/car.png" alt="" />
+            <p class="car-empy">购物车空空如也</p>
+            <p>快去选购你喜欢的课程吧</p>
+            <p class="course-center">课程中心</p>
+          </div>
+          <div class="shopcar-bottom">
+            <p>我的订单</p>
+            <div class="car">
+              <img src="/image/header/car-select.png" alt="" />
+              <p class="course-center">我的购物车</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -202,54 +243,6 @@
         </div>
       </div>
     </el-dialog>
-    <!-- 注册成功显示 -->
-    <!-- 划过头像显示 -->
-    <div class="user-info" v-show="isUserInfo">
-      <div class="user-info-top">
-        <div class="u-i-t-top">
-          <img :src="userInfo.avatar" alt="" v-if="userInfo.avatar" />
-          <img class="avator" :src="avatorImg" alt="" v-else />
-          <div class="avator-info">
-            <p>
-              {{ userInfo.nickName }}
-            </p>
-          </div>
-        </div>
-        <div class="u-i-i-bottom">
-          <div v-for="item in avatorList" :key="item.id">
-            <router-link :to="item.linkUrl">
-              <div class="info-item">
-                <img :src="item.imgUrl" alt="" />
-                <p>{{ item.title }}</p>
-              </div>
-            </router-link>
-          </div>
-        </div>
-      </div>
-      <div class="user-info-bottom">
-        <div class="logout" @click="goLogout">退出登录</div>
-      </div>
-    </div>
-
-    <!-- 购物车 -->
-    <div class="shopcar" v-show="isCar">
-      <div class="shopcar-top">
-        <div class="s-t-left">我的购物车</div>
-      </div>
-      <div class="shopcar-center">
-        <img src="/image/header/car.png" alt="" />
-        <p class="car-empy">购物车空空如也</p>
-        <p>快去选购你喜欢的课程吧</p>
-        <p class="course-center">课程中心</p>
-      </div>
-      <div class="shopcar-bottom">
-        <p>我的订单</p>
-        <div class="car">
-          <img src="/image/header/car-select.png" alt="" />
-          <p class="course-center">我的购物车</p>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -420,7 +413,7 @@ export default {
             })
             .catch((err) => {
               this.$message({
-                message: "注册失败啦，请重新登陆！",
+                message: res.meta.msg,
                 type: "error",
               });
               this.$nextTick(() => {
@@ -469,9 +462,14 @@ export default {
                 });
               } else {
                 this.$message({
-                  message: "登陆失败，请联系管理员",
+                  message: res.meta.msg,
                   type: "error",
                 });
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  phoneloading.close();
+                });
+                this.open = false;
               }
             })
             .catch((err) => {
@@ -480,7 +478,7 @@ export default {
                 phoneloading.close();
               });
               this.$message({
-                message: "登录失败啦，请重新登陆！",
+                message: res.meta.msg,
                 type: "error",
               });
             });
@@ -527,9 +525,14 @@ export default {
                 });
               } else {
                 this.$message({
-                  message: "登陆失败，请联系管理员",
+                  message: res.meta.msg,
                   type: "error",
                 });
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  identLoading.close();
+                });
+                this.open = false;
               }
             })
             .catch((err) => {
@@ -537,9 +540,8 @@ export default {
                 // 以服务的方式调用的 Loading 需要异步关闭
                 identLoading.close();
               });
-
               this.$message({
-                message: "登录失败啦，请重新登陆！",
+                message: res.meta.msg,
                 type: "error",
               });
             });
@@ -607,7 +609,7 @@ export default {
             this.saveUserInfoAction();
           } else {
             this.$message({
-              message: "获取用户信息失败啦，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
@@ -627,7 +629,7 @@ export default {
             this.carNum = res.data.counter;
           } else {
             this.$message({
-              message: "获取购物车数量失败啦，请联系管理员",
+              message: res.meta.msg,
               type: "error",
             });
           }
@@ -698,7 +700,7 @@ export default {
 .header-content {
   position: relative;
   display: flex;
-  width: 1300px;
+  width: 1200px;
   justify-content: space-around;
 }
 .content-logo {
@@ -742,8 +744,8 @@ export default {
   display: flex;
   align-items: center;
   padding: 5px 10px;
-  width: 460px;
-  height: 40px;
+  width: 350px;
+  height: 35px;
   border-radius: 8px;
   background: #f0f2f4;
 }
@@ -755,13 +757,15 @@ export default {
   border-radius: 8px;
   color: #808080;
   background: #f0f2f4;
-  font-size: 18px;
+  font-size: 16px;
   outline: none;
 }
 .content-search i {
-  font-size: 24px;
+  color: #808080;
+  font-size: 22px;
 }
 .content-Shopping i {
+  color: #808080;
   font-size: 24px;
 }
 .content-login {
@@ -867,8 +871,8 @@ export default {
   background-color: #fff;
   border: 1px solid rgba(248, 250, 252, 1);
   position: absolute;
-  top: 100px;
-  right: 210px;
+  top: 87px;
+  right: -40px;
   z-index: 999;
   display: block;
 }
@@ -951,8 +955,8 @@ export default {
   height: 220px;
   background: #fff;
   position: absolute;
-  top: 100px;
-  right: 390px;
+  top: 87px;
+  right: 130px;
   z-index: 999;
   padding: 0 10px;
   box-sizing: border-box;

@@ -5,25 +5,25 @@
                 <div class="course-list">
                     <ul class="title">
                         <li class="title-name">课程方向:</li>
-                        <el-tag 
-                            class="category-poniter" 
-                            effect="plain" 
+                        <el-tag
+                            class="category-poniter"
+                            effect="plain"
                             @click="handlerFirst()">
                             全部
                         </el-tag>
                         <el-tag class="category-poniter"
                             v-for="(item,index) in firstArr" :key="index"
                             @click="handlerFirstCategory(item,index)"
-                            effect="plain" 
+                            effect="plain"
                             :type="buttonType(index)"
                         >{{item.categoryName}}</el-tag>
-                        
+
                     </ul>
                     <ul class="title">
                         <li class="title-name">课程分类:</li>
-                        <el-tag 
-                            class="category-poniter" 
-                            effect="plain" 
+                        <el-tag
+                            class="category-poniter"
+                            effect="plain"
                             :type="all2"
                             @click="handlerSecond()">
                             全部
@@ -31,35 +31,35 @@
                         <el-tag class="category-poniter"
                             v-for="(item,index) in secondArr" :key="index"
                             @click="handlerSecondCategory(item,index)"
-                            effect="plain" 
+                            effect="plain"
                             :type="buttonType2(index)"
                         >{{item.categoryName}}</el-tag>
-                        
+
                     </ul>
                     <ul class="title">
                         <li class="title-name">课程难度:</li>
-                        <el-tag 
-                            class="category-poniter" 
-                            effect="plain" 
+                        <el-tag
+                            class="category-poniter"
+                            effect="plain"
                             :type="all3==='' ? all3 : 'info'"
                             @click="lev0()">
                             全部
                         </el-tag>
-                        <el-tag 
-                            class="category-poniter" 
-                            effect="plain" 
+                        <el-tag
+                            class="category-poniter"
+                            effect="plain"
                             :type="status1"
                             @click="lev1()"
                             >初阶</el-tag>
-                        <el-tag 
-                            class="category-poniter" 
-                            effect="plain" 
+                        <el-tag
+                            class="category-poniter"
+                            effect="plain"
                             :type="status2"
                             @click="lev2()"
                             >中阶</el-tag>
-                        <el-tag 
-                            class="category-poniter" 
-                            effect="plain" 
+                        <el-tag
+                            class="category-poniter"
+                            effect="plain"
                             :type="status3"
                             @click="lev3()"
                             >高阶</el-tag>
@@ -84,17 +84,16 @@
                                 <img class="down" src="/image/up-arrow8.png" @click="handleDownPrice" />
                             </span>
                         </a>
-                    </li>  
+                    </li>
                 </ul>
                 <ul class="right">
                     <li class="right-item" @click="freeCourse">
                         <input type="radio" name="mianfei" id="mianfei" class="check" >
                         <span class="right-items">免费课程</span>
-
                     </li>
                     <li class="right-item">
                         <input type="radio" name="mianfei" id="huiyuan" class="check" >
-                        <span class="right-items" @click="memberCourse">会员免费课程</span>
+                        <span class="right-items" @click="memberCourse">会员课程</span>
                     </li>
                 </ul>
             </div>
@@ -114,12 +113,12 @@
                                     <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
                                     <div class="price">¥ {{item.salePrice}}</div>
                                     <div class="addCart" @click="addCart(item)">
-                                        <i class="el-icon-shopping-cart-1 cart"></i> 
+                                        <i class="el-icon-shopping-cart-1 cart"></i>
                                         <span class="cart-text">加入购物车</span>
                                     </div>
                                 </div>
                             </div>
-                        </li>           
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -132,7 +131,7 @@
                     @current-change="jumpPage"
                     />
             </div>
-            
+
         </div>
     </div>
 </template>
@@ -203,7 +202,7 @@ export default{
                     }
                 })
             })
-            
+
         },
         lev0(){
             this.all3 = ''
@@ -276,7 +275,7 @@ export default{
         getFirstCategorys(){
             getFirstCategorys().then(res => {
                 if(res.meta.code = '200'){
-                    this.firstArr = res.data.list                    
+                    this.firstArr = res.data.list
                 }
             })
         },
@@ -284,7 +283,7 @@ export default{
         getSecondCategorys(categoryId){
             getSecondCategorys(categoryId ? categoryId : '-1' ).then(res => {
                 if(res.meta.code = '200'){
-                    this.secondArr = res.data.list                    
+                    this.secondArr = res.data.list
                 }
             })
         },
@@ -339,7 +338,7 @@ export default{
             this.queryCourse(this.queryParams)
         },
         /////////////////////////////////////////////////////////////
-      
+
         // 分页器
         jumpPage(page) {
             this.queryParams.pageNum = page
@@ -366,7 +365,7 @@ export default{
                             item.courseLevel = ''
                         }
                     })
-                }   
+                }
             })
         },
     }
@@ -377,29 +376,31 @@ export default{
 <style scoped>
 /* 分类开始 */
 .course {
+  padding: 20px 0;
 	width: 100%;
-	height: 220px;
+	/*height: 220px;*/
 	background: #F3F5F9;
 }
 .course-main{
-    width: 1300px;
+    width: 1200px;
     height: 100%;
     margin: 0 auto;
 }
 .course-list{
-    margin-left: 50px;
+    /*margin-left: 50px;*/
 }
 .title{
     display: flex;
-    padding-top: 40px;
+    padding-top: 20px;
 }
 .title .title-name{
     width: 90px;
     height: 24px;
-    font-size: 18px;
+    font-size: 16px;
     font-family: Microsoft YaHei;
     font-weight: bold;
     line-height: 21px;
+  text-align: justify;
     color: #333333;
     opacity: 1;
 }
@@ -430,7 +431,7 @@ export default{
 .category-poniter{
     height: 25px;
     line-height: 25px;
-    margin: 0 15px;
+    margin: 0 5px;
     cursor: pointer;
 }
 
@@ -443,8 +444,8 @@ export default{
     width: 100%;
 }
 .main-container{
-    width: 1300px;
-    height: 100%;
+    width: 1200px;
+    /*height: 100%;*/
     margin: 0 auto;
     /* background: chartreuse; */
 }
@@ -454,8 +455,7 @@ export default{
 }
 .all{
     display: flex;
-    margin-left: 50px;
-    padding-top: 50px;
+    padding-top: 20px;
     font-size: 16px;
     color: #515759;
 }
@@ -463,24 +463,23 @@ export default{
     margin-right: 20px;
 }
 .all .item{
-    margin:0 15px;
+    margin:0 10px;
 }
 .all .active{
     color: #2C81FF!important;
 }
 .right{
     display: flex;
-    margin-left: 50px;
-    padding-top: 50px;
+    padding-top: 20px;
     font-size: 16px;
     color: #515759;
 }
 .right .right-item{
     cursor: pointer;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 .right .right-items{
-    margin-right: 50px;
+    margin-right: 0px;
 }
 .arrow{
     background: chartreuse;
@@ -508,7 +507,7 @@ export default{
 /* 搜索调价结束 */
 /* 课程内容开始 */
 .newCourseContent {
-	width: 1300px;
+	width: 1200px;
 	margin: 15px auto 0px auto;
 }
 .newCourseContent .courseUl {
@@ -516,7 +515,7 @@ export default{
 	flex-wrap: wrap;
 }
 .newCourseContent .courseUl .courseItem {
-	width: 310px;
+	width: 285px;
 	height: 280px;
 	margin: 0 20px 20px 0;
 }
@@ -527,7 +526,7 @@ export default{
     margin-right: 0 !important;
 }
 .courseCard {
-	width: 1300px;
+	width: 1200px;
 	height: 600px;
 	margin: 20px 0 0 0;
 }
