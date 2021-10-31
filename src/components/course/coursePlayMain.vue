@@ -79,11 +79,6 @@ export default {
 
         }
 	},
-    computed:{
-        player(){
-            return this.$refs.videoPlayer.player
-        }
-    },
 	created() {
         let token = sessionStorage.getItem("token");
         if(!token){
@@ -96,6 +91,9 @@ export default {
 
 	},
     computed: {
+      player(){
+        return this.$refs.videoPlayer.player
+      },
         ...mapState({
             userInfo: (state) => state.user.userInfo,
             isLogin: (state) => state.user.isLogin,

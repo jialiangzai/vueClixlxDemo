@@ -3,7 +3,9 @@
         <div class="bgColor"></div>
         <div class="container">
             <div class="main">
-                <div class="cart">购物车</div>
+                <div class="main-shop">
+                  <div class="cart">购物车</div>
+                </div>
                 <div class="nav">
                     <span class="left">全部课程</span>
                     <span class="right">
@@ -200,44 +202,38 @@ export default{
     width: 1200px;
     margin: 0 auto;
     background: #EBEDF2;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px 3px #888888;
 }
 .main{
-    padding:20px 50px;
+    padding:30px 50px;
     border-radius: 15px;
 }
+.main-shop{
+  position: relative;
+  display: flex;
+  align-content: center;
+}
+.main-shop i{
+  font-size: 35px;
+  padding: 20px 10px 0 0;
+  color: #FF4400;
+  font-weight: bold;
+}
 .cart{
+    position: absolute;
+    top: -107px;
+    left: 0px;
     /*width: 96px;*/
     height: 42px;
     font-size: 24px;
     font-family: Microsoft YaHei;
     font-weight: bold;
     line-height: 24px;
-    color: #333333;
+    color: #FFFFFF;
     padding: 25px 0;
     opacity: 1;
-    color: #FF4400;
 
-}
-.cart:before{
-  width: 0;
-  height: 0;
-  content: '';
-  /*border: 10px solid red;*/
-  border-top: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid #cccccc;
-
-}
-.cart:after{
-  width: 0;
-  height: 0;
-  content: '';
-  /*border: 10px solid red;*/
-  border-top: 10px solid transparent;
-  border-right: 10px solid #cccccc;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid transparent;
 }
 .nav{
     display: flex;
@@ -280,7 +276,7 @@ export default{
     border-radius: 0px;
     box-sizing: border-box;
     border-radius: 10px;
-    box-shadow: 0px 5px 15px 3px #888888;
+    box-shadow: 0px 2px 5px 2px #cccccc;
 }
 .head .item{
     width: 150px;
@@ -309,7 +305,7 @@ export default{
     background: #FCFCFC;
     margin-bottom: 10px;
     border-radius: 10px;
-    box-shadow: 0px 5px 15px 3px #888888;
+  box-shadow: 0px 2px 5px 2px #cccccc;
 }
 .haveorder .order-item{
     height: 200px;

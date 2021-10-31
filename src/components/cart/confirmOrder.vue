@@ -1,6 +1,7 @@
 <template>
     <div class="confirmOrder">
-        <div class="main">
+      <div class="bgColor"></div>
+      <div class="main">
             <h1>确认订单</h1>
             <div class="info">
                 <div class="head">商品信息</div>
@@ -36,11 +37,11 @@
                 </div>
                 <ul class="foot">
                     <li class="foot-item">应付<span class="unique">￥{{totalPrice}}</span></li>
-                    <li> 
+                    <li>
                         <button class="btn" @click="toPayment">确认订单</button>
                     </li>
                 </ul>
-                
+
             </div>
         </div>
     </div>
@@ -72,7 +73,7 @@ export default{
     created(){
         this.order()
     },
-    
+
     methods:{
         queryOrderWithAli(){
             if(this.isFinished){
@@ -120,7 +121,7 @@ export default{
         },
         removeShopCartCourses(){
             this.setArr.forEach(item => {
-                this.ids.push(item.id) 
+                this.ids.push(item.id)
             })
             createToken().then(res => {
                 this.token = res.data.token
@@ -180,26 +181,54 @@ export default{
 
 <style scoped>
 .confirmOrder{
+    position: relative;
     width: 100%;
     height: 1000px;
+}
+.bgColor{
+  width: 100%;
+  height: 200px;
+  background-color: red;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 .main{
     width: 1200px;
     height: 100%;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
+  /*background-color: red;*/
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
 }
 .main h1{
-    padding: 30px 0;
+    color: #FFFFFF;
+    padding: 30px 0 30px 47px;
+
 }
 .info{
     width: 1200px;
-    padding:5px 0 ;
+    padding: 5px 0px 20px 0px;
     background: #F3F5F7;
     border-radius: 10px;
+  box-shadow: 0px 5px 15px 3px #888888;
 }
 .info-main{
     width: 1100px;
-    margin: 10px auto;
+    margin: 10px 0 0 26px;
     background: #FFFFFF;
     border-radius: 10px;
 }
@@ -229,11 +258,11 @@ export default{
     width: 400px;
     height: 200px;
     font-size: 16px;
-    color: 07111B;
+    color: #07111B;
     line-height:200px ;
-    word-break:keep-all;      
-    white-space:nowrap;       
-    overflow:hidden;           
+    word-break:keep-all;
+    white-space:nowrap;
+    overflow:hidden;
     text-overflow:ellipsis;
 }
 .coursePrice{
@@ -261,13 +290,14 @@ export default{
 }
 .choose h3{
     color: #222;
-    font-size: 16 px;
+    font-size: 16px;
     font-weight: 400;
-    padding-left: 50px;
+    padding-left: 51px;
 }
 .choosebg{
     margin-top: 10px;
     display: flex;
+    margin-left: 51px;
 }
 .payment{
     width: 130px;
@@ -292,10 +322,12 @@ export default{
 .alipayment{
     border: #01a8eb solid 1px;
     color: #01a8eb;
+    box-shadow: 0px 1px 2px 1px #01a8eb;
 }
 .wxpayment{
     border: #01af37 solid 1px;
     color: #01af37;
+    box-shadow: 0px 1px 2px 1px #01af37;
 }
 
 /* 支付结束 */
@@ -338,6 +370,7 @@ export default{
     border-radius: 5px;
     background: #F01414;
     cursor: pointer;
+    box-shadow: 0px 3px 5px 2px #ff727f;
 }
 .pay{
     font-size: 24px;

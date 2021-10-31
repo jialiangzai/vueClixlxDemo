@@ -25,7 +25,7 @@
         <div class="searBuyLogin">
           <!--头部搜索框-->
           <div class="content-search">
-            <input type="text" placeholder="请输入要搜索的课程" v-model="keywords" />
+            <input type="text" @keyup.enter="toSearch()" placeholder="请输入要搜索的课程" v-model="keywords" />
             <i class="el-icon-search" style="cursor: pointer" @click="toSearch()"></i>
           </div>
           <div class="content-Shopping" style="cursor: pointer">
@@ -654,7 +654,7 @@ export default {
             message: "退出登录，欢迎下次登录",
             type: "success",
           });
-          this.isLogin = false;
+          // this.isLogin = false;
           sessionStorage.removeItem("token");
           sessionStorage.removeItem("userInfo");
           sessionStorage.removeItem("isLogin");
@@ -739,7 +739,7 @@ export default {
 }
 .searBuyLogin {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   width: 752px;
 }
@@ -784,7 +784,7 @@ export default {
   width: 180px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   font-size: 18px;
   font-family: Microsoft YaHei;
   font-weight: 400;
@@ -873,6 +873,7 @@ export default {
   height: 194px;
   background-color: #fff;
   border: 1px solid rgba(248, 250, 252, 1);
+  box-shadow: 0px 5px 15px 3px #888888;
   position: absolute;
   top: 87px;
   right: -40px;
@@ -963,6 +964,7 @@ export default {
   z-index: 999;
   padding: 0 10px;
   box-sizing: border-box;
+  box-shadow: 0px 5px 15px 3px #888888;
 }
 .shopcar-top {
   height: 30px;
