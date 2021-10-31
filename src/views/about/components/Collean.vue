@@ -106,7 +106,6 @@ export default {
         }
       });
     },
-<<<<<<< HEAD
      getfree() {
       createToken().then((res) => {
         if (res.data.token) {
@@ -116,18 +115,6 @@ export default {
               console.log(res);
               if (res.meta.code == "200") {
                   console.log(res);
-=======
-    handleClick(tab, event) {
-      if (this.activeName === "second") {
-        this.query.entity.isFress = 1;
-        // this.getList();
-        createToken().then((res) => {
-          if (res.data.token) {
-            this.query.token = res.data.token;
-            getFavoriteList(this.query)
-              .then((res) => {
-                if (res.meta.code == "200") {
->>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
                   this.freeList = res.data.pageInfo.list;
                   this.freepage = res.data.pageInfo.total
                 } else {
@@ -136,7 +123,6 @@ export default {
                     type: "error",
                   });
                 }
-<<<<<<< HEAD
 
             })
             .catch((err) => console.log(err));
@@ -154,28 +140,12 @@ export default {
                   console.log(res);
                   this.vipList= res.data.pageInfo.list;
                   this.vippage = res.data.pageInfo.total;
-=======
-              })
-              .catch(err => {});
-          }
-        });
-      } else if (this.activeName === "third") {
-        this.query.entity.isMember = 1;
-        createToken().then((res) => {
-          if (res.data.token) {
-            this.query.token = res.data.token;
-            getFavoriteList(this.query)
-              .then((res) => {
-                if (res.meta.code == "200") {
-                  this.vipList = res.data.pageInfo.list;
->>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
                 } else {
                   this.$message({
                     message: res.meta.msg,
                     type: "error",
                   });
                 }
-<<<<<<< HEAD
 
             })
             .catch((err) => console.log(err));
@@ -187,12 +157,6 @@ export default {
         this.getfree()
       } else if (this.activeName === "third") {
         this.getvip()
-=======
-              })
-              .catch(err => {});
-          }
-        });
->>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
       } else {
         this.getList();
       }

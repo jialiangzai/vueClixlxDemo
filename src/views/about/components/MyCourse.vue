@@ -137,7 +137,6 @@ export default {
           } else {
             this.$message({
               message: res.meta.msg,
-<<<<<<< HEAD
               type: "error",
             });
           }
@@ -169,8 +168,6 @@ export default {
           } else {
             this.$message({
               message: res.meta.msg,
-=======
->>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
               type: "error",
             });
           }

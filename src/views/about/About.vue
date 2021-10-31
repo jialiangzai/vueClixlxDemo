@@ -146,19 +146,7 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
-<style >
-.about {
-  position: relative;
-}
-.about-containe {
-  width: 100%;
-  height: 100%;
-}
-
-=======
 <style scoped>
->>>>>>> 7ffcdce7af8e9b943c5794df8a2ff7df02485723
 .about-banner {
   background: url("/image/about/about-banner.png") no-repeat 0 0;
   box-sizing: border-box;
