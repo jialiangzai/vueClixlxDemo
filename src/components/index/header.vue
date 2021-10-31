@@ -5,7 +5,7 @@
       <div class="header-content">
         <!-- 头部logo -->
         <div class="content-logo">
-          <img src="/image/logo.png" alt="" />
+          <img src="/image/logo.png" alt="" @click="goHome()" />
         </div>
         <!-- 头部导航 -->
         <div class="content-nav">
@@ -336,7 +336,8 @@ export default {
           linkUrl: "/user/setbindsns",
         },
       ],
-      keywords: ""
+      keywords: "",
+      
     };
   },
   computed: {
@@ -347,9 +348,15 @@ export default {
   },
   created() {
     this.getCarNum();
+    this.copySearch();
   },
   methods: {
     ...mapActions(["saveUserInfoAction", "saveLoginAction"]),
+    //点击图标返回首页
+    goHome(){
+        this.$router.push('/')
+    },
+    //关键字搜索
     toSearch(){
         if(!this.keywords){
             this.$message({
@@ -358,9 +365,9 @@ export default {
             });
             return;
         }
-        this.$router.push({path: '/course',query: {keywords:this.keywords}})
+        this.$router.replace({path: '/course',query: {keywords:this.keywords}})
     },
-    // 去我的课程
+    // 去我的课程s
     goAbout() {
       this.$router.push({
         path: "/about",
@@ -670,8 +677,16 @@ export default {
         })
         .catch((err) => {});
     },
-
+    //给搜索赋值
+    copySearch(){
+        this.keywords =  this.$route.query.keywords;
+    }
   },
+  watch:{
+      '$route':function(to,from){
+         this.copySearch()
+      }
+  }
 };
 </script>
 

@@ -1,10 +1,10 @@
 import http from './requests';
 
-export function myCourses(imageCode){
+export function getImageByCode(imageCode){
   return http.$axios({
-    url: 'api/course/myCourses',
-    method: 'POST',
-    data: imageCode,
+    url: 'api/images/getImageByCode',
+    method: 'GET',
+    params: imageCode,
     headers: {
       'Authorization': sessionStorage.getItem('token')
     }
