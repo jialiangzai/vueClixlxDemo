@@ -11,7 +11,7 @@ import { HappyScroll } from 'vue-happy-scroll'
 import VideoPlayer from 'vue-video-player'
 require('video.js/dist/video-js.css')
 require('vue-video-player/src/custom-theme.css')
-
+import Pagination from "@/components/Pagination";
 Vue.use(VideoPlayer)
 Vue.use(MetaInfo);
 Vue.use(ElementUI);
@@ -19,6 +19,7 @@ Vue.use(ElementUI);
 
 //自定义组件名
 Vue.component('happy-scroll', HappyScroll)
+Vue.component('Pagination', Pagination)
 // 引入css
 import 'vue-happy-scroll/docs/happy-scroll.css'
 

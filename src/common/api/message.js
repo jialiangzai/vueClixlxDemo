@@ -42,8 +42,8 @@ export function deleteMess({id,token}){
 export function makeRead({ids,token}){
   return http.$axios({
     url: 'api/message/makeRead',
-    method: 'GET',
-    data: {ids},
+    method: 'POST',
+    data: ids,
     headers: {
       'Authorization': sessionStorage.getItem('token'),
       'token': token

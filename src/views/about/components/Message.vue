@@ -1,36 +1,43 @@
 <template>
   <div class="my-course">
     <el-tabs v-model="activeName" @tab-click="handleClick" class="course-tabs">
-      <el-tab-pane label="全部消息" name="first" style="height: 500px">
-        <MessageItem :messList="totalList"></MessageItem>
-        <el-pagination
-          v-show="totalListPage > 0"
-          :total="totalListPage"
-          :page.sync="query.pageNum"
-          :limit.sync="query.pageSize"
-          @pagination="getList"
-        >
-        </el-pagination>
+      <el-tab-pane label="全部消息" name="first">
+        <!-- <happy-scroll> -->
+          <MessageItem :messList="totalList"></MessageItem>
+          <pagination
+            v-show="totalListPage > 0"
+            :total="totalListPage"
+            :page.sync="query.pageNum"
+            :limit.sync="query.pageSize"
+            @pagination="getTotalList"
+          />
+        <!-- </happy-scroll> -->
       </el-tab-pane>
-      <el-tab-pane label="已读消息" name="second" style="height: 500px">
-        <MessageItem :messList="readList"></MessageItem>
-        <el-pagination
+      <el-tab-pane label="已读消息" name="second" >
+        <!-- <happy-scroll> -->
+          <MessageItem :messList="readList"></MessageItem>
+        <pagination
           v-show="readListPage > 0"
           :total="readListPage"
-          :page.sync="query.pageNum"
-          :limit.sync="query.pageSize"
-          @pagination="getList"
-        ></el-pagination>
+          :page.sync="readquery.pageNum"
+          :limit.sync="readquery.pageSize"
+          @pagination="getReadList"
+        />
+        <!-- </happy-scroll> -->
+        
       </el-tab-pane>
-      <el-tab-pane label="未读消息" name="third" style="height: 500px">
-        <MessageItem :messList="unread"></MessageItem>
-        <el-pagination
+      <el-tab-pane label="未读消息" name="third">
+        <!-- <happy-scroll> -->
+          <MessageItem :messList="unread"></MessageItem>
+        <pagination
           v-show="unreadPage > 0"
           :total="unreadPage"
-          :page.sync="query.pageNum"
-          :limit.sync="query.pageSize"
-          @pagination="getList"
-        ></el-pagination>
+          :page.sync="unreadquery.pageNum"
+          :limit.sync="unreadquery.pageSize"
+          @pagination="getunreadList"
+        />
+        <!-- </happy-scroll> -->
+        
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -43,7 +50,7 @@ export default {
   data() {
     return {
       activeName: "first",
-      totalList: [1],
+      totalList: [],
       totalListPage: 0,
       readList: [],
       readListPage: 0,
@@ -56,63 +63,83 @@ export default {
           status: null,
         },
       },
+      readquery:{
+        pageSize: 10,
+        pageNum: 1,
+        entity: {
+          status: 2,
+        },
+      },
+      unreadquery:{
+        pageSize: 10,
+        pageNum: 1,
+        entity: {
+          status: 1,
+        },
+      }
+
     };
   },
   components: {
     MessageItem,
   },
   created() {
-    this.getList();
+    this.getTotalList();
   },
   methods: {
-    getList() {
+    getTotalList() {
+      // this.query.entity.status = null;
       getByMemberId(this.query).then((res) => {
         console.log(res);
         if (res.meta.code == "200") {
-            this.totalListPage = res.data.pageInfo.total;
-            this.totalList = res.data.pageInfo.list;
-          } else {
-            this.$message({
-              message: "获取消息失败，请联系管理员",
-              type: "error",
-            });
-          }
+          this.totalListPage = res.data.pageInfo.total;
+          this.totalList = res.data.pageInfo.list;
+        } else {
+          this.$message({
+            message: "获取消息失败，请联系管理员",
+            type: "error",
+          });
+        }
+      });
+    },
+    getReadList() {
+      // this.query.entity.status = 2;
+      getByMemberId(this.readquery).then((res) => {
+        console.log(res);
+        if (res.meta.code == "200") {
+          this.readListPage = res.data.pageInfo.total;
+          this.readList = res.data.pageInfo.list;
+        } else {
+          this.$message({
+            message: "获取消息失败，请联系管理员",
+            type: "error",
+          });
+        }
+      });
+    },
+    getunreadList() {
+      // this.query.entity.status = 1;
+      getByMemberId(this.unreadquery).then((res) => {
+        if (res.meta.code == "200") {
+          this.unreadPage = res.data.pageInfo.total;
+          this.unread = res.data.pageInfo.list;
+        } else {
+          this.$message({
+            message: "获取消息失败，请联系管理员",
+            type: "error",
+          });
+        }
       });
     },
     handleClick(tab, event) {
       // console.log(tab,event)
 
       if (this.activeName === "second") {
-        this.readList = [1];
-        this.query.entity.status = 2;
-        getByMemberId(this.query).then((res) => {
-          console.log(res);
-          if (res.meta.code == "200") {
-            this.readListPage = res.data.pageInfo.total;
-            this.readList = res.data.pageInfo.list;
-          } else {
-            this.$message({
-              message: "获取消息失败，请联系管理员",
-              type: "error",
-            });
-          }
-        });
+        this.getReadList();
       } else if (this.activeName == "third") {
-        this.query.entity.status = 1;
-        getByMemberId(this.query).then((res) => {
-          if (res.meta.code == "200") {
-            this.unreadPage = res.data.pageInfo.total;
-            this.unread = res.data.pageInfo.list;
-          } else {
-            this.$message({
-              message: "获取消息失败，请联系管理员",
-              type: "error",
-            });
-          }
-        });
+        this.getunreadList();
       } else {
-        this.query.entity.status = null;
-        this.getList();
+        this.getTotalList();
       }
     },
   },
@@ -122,6 +149,7 @@ export default {
 <style scoped>
 .course-tabs {
   margin-left: 20px;
-  /* height: 800px; */
+  height: 100%;
+  margin-bottom: 120px;
 }
 </style>

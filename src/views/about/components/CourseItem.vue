@@ -34,7 +34,7 @@
       <div v-else class="course-empty">
         <div class="empty">
           <img src="/image/about/course-empt.png" alt="" />
-          <p>没有任何课程，可以先<span>去找找课程</span></p>
+          <p>没有任何课程，可以先<span @click="goCourse">去找找课程</span></p>
         </div>
       </div>
     </div>
@@ -52,6 +52,11 @@ export default {
     goStu(id){
       this.$router.push({
         path: '/course-info/'+id
+      })
+    },
+    goCourse(){
+      this.$router.push({
+        path: '/course'
       })
     }
   }
@@ -92,6 +97,7 @@ export default {
 }
 .empty span {
   color: rgba(255, 61, 61, 1);
+  cursor: pointer;
 }
 .course-item {
   width: 100%;
@@ -101,12 +107,12 @@ export default {
   margin-top: 20px;
 }
 .item-left {
-  width: 270px;
+  width: 250px;
   height: 150px;
   position: relative;
 }
 .item-left img {
-  width: 250px;
+  width: 220px;
   height: 125px;
   position: absolute;
   left: 50%;

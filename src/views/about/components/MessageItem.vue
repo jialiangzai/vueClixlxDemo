@@ -37,6 +37,8 @@ export default {
       type: Array,
       default: [],
       cur: 0,
+      // 已读数组
+      // idArr: []
       // isDelete: false,
     },
   },
@@ -56,9 +58,12 @@ export default {
       }else if(item.status === 1) {
         // 1是未读
         // ids
+        //this.ids.push(item.id)
+        const idArr = []
+        idArr.push(item.id)
         createToken().then(res => {
           makeRead({
-            ids: item.id,
+            ids: idArr,
             token: res.data.token
           }).then(res=> {
             if(res.meta.code === '200'){
@@ -66,6 +71,7 @@ export default {
                 message: "已读消息成功",
                 type: "success",
               });
+              window.location.reload()
             }else {
               this.$message({
                 message: "已读消息失败",
@@ -74,6 +80,7 @@ export default {
             }
           })
         })
+      
       }
     }
   },
