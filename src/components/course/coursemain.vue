@@ -119,15 +119,14 @@
                 </div>
             </div>
             <div class="pages">
-                <el-pagination
-                    v-show="queryParams.total>0"
-                    background
-                    layout="prev, pager, next"
+                <pagination
+                    v-show="queryParams.total > 0"
                     :total="queryParams.total"
-                    @current-change="jumpPage"
-                    />
+                    :page.sync="queryParams.pageNum"
+                    :limit.sync="queryParams.pageSize"
+                    @pagination="queryCourse(queryParams)"
+                />
             </div>
-
         </div>
     </div>
 </template>
@@ -178,6 +177,10 @@ export default{
         }
     },
     created() {
+        let keywords = this.$route.query.keywords
+        if(keywords){
+            this.queryParams.entity.courseName = keywords
+        }
         this.getFirstCategorys()
         this.getSecondCategorys()
 		this.queryCourse(this.queryParams)

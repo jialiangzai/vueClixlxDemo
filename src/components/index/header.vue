@@ -11,19 +11,13 @@
         <div class="content-nav">
           <ul>
             <li>
-              <router-link to="/" class="aaa" style="cursor: pointer"
-                >首 页</router-link
-              >
+              <router-link to="/" class="aaa" style="cursor: pointer">首 页</router-link>
             </li>
             <li>
-              <router-link to="/course" style="cursor: pointer"
-                >课 程</router-link
-              >
+              <router-link to="/course" style="cursor: pointer">课 程</router-link>
             </li>
             <li>
-              <router-link to="/member" style="cursor: pointer"
-                >会 员</router-link
-              >
+              <router-link to="/member" style="cursor: pointer">会 员</router-link>
             </li>
           </ul>
         </div>
@@ -31,8 +25,8 @@
         <div class="searBuyLogin">
           <!--头部搜索框-->
           <div class="content-search">
-            <input type="text" placeholder="请输入要搜索的课程" />
-            <i class="el-icon-search" style="cursor: pointer"></i>
+            <input type="text" placeholder="请输入要搜索的课程" v-model="keywords" />
+            <i class="el-icon-search" style="cursor: pointer" @click="toSearch()"></i>
           </div>
           <div class="content-Shopping" style="cursor: pointer">
             <el-badge :value="carNum" class="item" v-if="carNum">
@@ -342,6 +336,7 @@ export default {
           linkUrl: "/user/setbindsns",
         },
       ],
+      keywords: ""
     };
   },
   computed: {
@@ -355,6 +350,16 @@ export default {
   },
   methods: {
     ...mapActions(["saveUserInfoAction", "saveLoginAction"]),
+    toSearch(){
+        if(!this.keywords){
+            this.$message({
+                message: '请输入关键字进行搜索！',
+                type: 'error'
+            });
+            return;
+        }
+        this.$router.push({path: '/course',query: {keywords:this.keywords}})
+    },
     // 去我的课程
     goAbout() {
       this.$router.push({

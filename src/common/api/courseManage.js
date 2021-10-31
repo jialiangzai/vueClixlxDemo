@@ -70,3 +70,17 @@ export function checkAuth(courseId){
         }
     })
 }
+
+
+//获取学习时长
+export function updateStudyHour(data,token){
+    return http.$axios({
+        url:'api/member/updateStudyHour',
+        method:'POST',
+        data,
+        headers: {
+            'Authorization': sessionStorage.getItem('token'),
+            'token':token
+        }
+    })
+}
