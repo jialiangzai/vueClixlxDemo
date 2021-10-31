@@ -8,61 +8,57 @@
                         <el-tag
                             class="category-poniter"
                             effect="plain"
-                            @click="handlerFirst()">
+                            type="info"
+                            @click="buildingCondition('fcategory', null)">
                             全部
                         </el-tag>
                         <el-tag class="category-poniter"
                             v-for="(item,index) in firstArr" :key="index"
-                            @click="handlerFirstCategory(item,index)"
-                            effect="plain"
-                            :type="buttonType(index)"
+                            @click="buildingCondition('fcategory', item)"
+                            effect="plain" type="info"
                         >{{item.categoryName}}</el-tag>
-
                     </ul>
                     <ul class="title">
                         <li class="title-name">课程分类:</li>
                         <el-tag
                             class="category-poniter"
                             effect="plain"
-                            :type="all2"
-                            @click="handlerSecond()">
+                            type="info"
+                            @click="buildingCondition('scategory', null)">
                             全部
                         </el-tag>
                         <el-tag class="category-poniter"
                             v-for="(item,index) in secondArr" :key="index"
-                            @click="handlerSecondCategory(item,index)"
-                            effect="plain"
-                            :type="buttonType2(index)"
+                            @click="buildingCondition('scategory',item)"
+                            effect="plain" type="info"
                         >{{item.categoryName}}</el-tag>
-
                     </ul>
                     <ul class="title">
                         <li class="title-name">课程难度:</li>
                         <el-tag
                             class="category-poniter"
-                            effect="plain"
-                            :type="all3==='' ? all3 : 'info'"
-                            @click="lev0()">
+                            effect="plain" type="info"
+                            @click="buildingCondition('clevel', null)">
                             全部
                         </el-tag>
                         <el-tag
                             class="category-poniter"
                             effect="plain"
-                            :type="status1"
-                            @click="lev1()"
-                            >初阶</el-tag>
+                            type="info"
+                            @click="buildingCondition('clevel', item)"
+                            v-for="item in courseLevel" :key="item.code">{{item.text}}</el-tag>
+                    </ul>
+                    <ul class="title" v-if="selectedConditions && selectedConditions.length > 0">
+                        <li class="title-name">已选择:</li>
                         <el-tag
                             class="category-poniter"
-                            effect="plain"
-                            :type="status2"
-                            @click="lev2()"
-                            >中阶</el-tag>
-                        <el-tag
-                            class="category-poniter"
-                            effect="plain"
-                            :type="status3"
-                            @click="lev3()"
-                            >高阶</el-tag>
+                            type="success"
+                            effect="dark"
+                            :closable="true"
+                            v-for="(item,index) in selectedConditions" :key="index"
+                            @close="closeSelectedCondition(item.type, item, index)">
+                            {{item.text}}
+                        </el-tag>
                     </ul>
                 </div>
             </div>
@@ -145,12 +141,6 @@ import {queryCourse} from '@/common/api/courseManage.js'
 export default{
     data() {
         return{
-            status1:'info',
-            status2:'info',
-            status3:'info',
-            all1:'info',
-            all2:'info',
-            all3:'',
             firstArr:[],//一级分类
             secondArr:[],//二级分类
             arrcourse:[],//课程信息
@@ -160,7 +150,7 @@ export default{
             degreeArr:[],
             queryParams: {
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 12,
                 total: 0,
                 entity: {
                     courseName: '',
@@ -171,9 +161,20 @@ export default{
                     sortBy:''
                 }
             },
+            courseLevel: [{
+                text: "初级",
+                code: "1"
+            },{
+                text: "中级",
+                code: "2"
+            },{
+                text: "高级",
+                code: "3"
+            }],
             memberId:'',
             courseId:'',
-            token:''
+            token:'',
+            selectedConditions:[]
         }
     },
     created() {
@@ -188,6 +189,41 @@ export default{
         }),
     },
     methods:{
+        // 关闭已选择条件
+        closeSelectedCondition(type, item, idx){
+            this.selectedConditions.splice(idx, 1)
+            this.buildingCondition(type, null)
+        },
+        // 构建已选择条件
+        buildingSelectedCondition(item){
+            for(let i = 0;i < this.selectedConditions.length;i++){
+                if(this.selectedConditions[i].type === item.type){
+                    this.selectedConditions.splice(i, 1)
+                }
+            }
+            this.selectedConditions.push(item)
+        },
+        // 构建搜索条件并搜索
+        buildingCondition(type, object){
+            console.log(object);
+            if(type === "fcategory"){
+                this.queryParams.entity.firstCategory = (object && object.id) ? object.id : ""
+                if(object && object.id){
+                    this.buildingSelectedCondition({text: object.categoryName, code: object.id, type: 'fcategory'})
+                }
+            }else if(type === "scategory"){
+                this.queryParams.entity.secondCategory = (object && object.id) ? object.id : ""
+                if(object && object.id){
+                    this.buildingSelectedCondition({text: object.categoryName, code: object.id, type: 'scategory'})
+                }
+            }else if(type === 'clevel'){
+                this.queryParams.entity.courseLevel = (object && object.code) ? object.code : ""
+                if(object && object.code){
+                    this.buildingSelectedCondition({text: object.text, code: object.code, type: 'clevel'})
+                }
+            }
+            this.queryCourse(this.queryParams)
+        },
         //加入购物车
         addCart(item){
             createToken().then(res => {
@@ -203,39 +239,6 @@ export default{
                 })
             })
 
-        },
-        lev0(){
-            this.all3 = ''
-            this.status1 = 'info'
-            this.status2 = 'info'
-            this.status3 = 'info'
-            this.queryParams.entity.courseLevel = ''
-            this.queryCourse(this.queryParams)
-        },
-        lev1(){
-            this.status1 = ''
-            this.status2 = 'info'
-            this.status3 = 'info'
-            this.all3 = 'info'
-            this.queryParams.entity.courseLevel = '1'
-            this.queryCourse(this.queryParams)
-
-        },
-        lev2(){
-            this.status2 = ''
-            this.status1 = 'info'
-            this.status3 = 'info'
-            this.all3 = 'info'
-            this.queryParams.entity.courseLevel = '2'
-            this.queryCourse(this.queryParams)
-        },
-        lev3(){
-            this.status3 = ''
-            this.status1 = 'info'
-            this.status2 = 'info'
-            this.all3 = 'info'
-            this.queryParams.entity.courseLevel = '3'
-            this.queryCourse(this.queryParams)
         },
         //免费课程
         freeCourse(){
@@ -287,57 +290,6 @@ export default{
                 }
             })
         },
-        // 获取一级分类id
-        handlerFirstCategory(item, val) {
-            this.currentType = val
-            this.getSecondCategorys(item.id)
-            this.queryParams.entity.firstCategory = item.id
-            this.handleQuery()
-        },
-        // 获取二级分类id
-        handlerSecondCategory(item, val) {
-            this.currentType2 = val
-            this.queryParams.entity.secondCategory = item.id
-            this.handleQuery()
-        },
-        // 更改一级分类type属性
-        buttonType(index) {
-            this.all1 = 'info'
-            if (index === this.currentType) {
-                return ''
-            } else {
-                return 'info'
-            }
-        },
-        // 更改二级分类type属性
-        buttonType2(index) {
-            if (index === this.currentType2) {
-                return ''
-            } else {
-                return 'info'
-            }
-        },
-        // 一级不限
-        handlerFirst() {
-            this.queryParams.entity.firstCategory = ''
-            this.handleQuery()
-        },
-        // 二级不限
-        handlerSecond() {
-            this.queryParams.entity.secondCategory = ''
-            this.handleQuery()
-        },
-        //等级不限
-        handlerThird() {
-            this.queryParams.entity.courseLevel = ''
-            this.handleQuery()
-        },
-        /** 搜索按钮操作 */
-        handleQuery() {
-            this.queryParams.pageNum = 1
-            this.queryCourse(this.queryParams)
-        },
-        /////////////////////////////////////////////////////////////
 
         // 分页器
         jumpPage(page) {
@@ -596,13 +548,9 @@ export default{
 /* 课程内容结束 */
 /* 分页开始 */
 .pages{
-    width: 500px;
-    margin: 50px auto !important;
-}
-.page{
     width: 100%;
-    /* margin: 50px auto !important; */
-
+    height: 100%;
+    margin: 50px auto !important;
 }
 .addCart{
     margin-top: 3px;
