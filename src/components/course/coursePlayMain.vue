@@ -1,11 +1,11 @@
 <template>
 	<div class="main">
-		<div class="name">{{chapterInfo.chapterName}}</div>
+		<div class="name">{{courseInfo.courseName}}    {{chapterInfo.chapterName}}</div>
 		<div class="play">
 			<div class="play-left">
                 <video-player  class="video-player vjs-custom-skin"
-                    ref="videoPlayer" 
-                    :playsinline="true" 
+                    ref="videoPlayer"
+                    :playsinline="true"
                     :options="playerOptions"
                     v-if="playerOptions.sources[0].src"
                     @timeupdate = "onPlayerTimeupdate($event)"
@@ -19,7 +19,7 @@
 			<div class="play-right" ref="wrapper">
 				<dl class="list" v-for="(item,index) in chapters" :key="index">
 					<dt class="chapter">{{item.chapterName}}</dt>
-					<dd class="item" v-for="i in item.children" :key="i.id">
+					<dd class="item" v-for="i in item.children" :key="i.id" @click="play(i)">
 						<div class="video-itemIcon">
 							<i class="el-icon-video-camera-solid"></i>
 						</div>
@@ -35,10 +35,11 @@
 </template>
 
 <script>
-import {playCourse} from '@/common/api/courseManage.js'
+import {playCourse,updateStudyHour} from '@/common/api/courseManage.js'
 import { mapState } from "vuex";
 import {recordHistory,getLastHistoryByChapterId} from '@/common/api/history.js'
-import Iscroll from 'iscroll'
+import {createToken} from '@/common/api/token.js'
+
 export default {
 	data() {
 		return {
@@ -72,14 +73,12 @@ export default {
             currentTime:'',//播放时间
             memberid:'',//会员id
             count:0,
-            
+            courseInfo:{},
+            duration:'',
+            token:''
+
         }
 	},
-    computed:{
-        player(){
-            return this.$refs.videoPlayer.player
-        }
-    },
 	created() {
         let token = sessionStorage.getItem("token");
         if(!token){
@@ -87,23 +86,43 @@ export default {
             this.$router.go(-1)
         }
         this.playCourse()
-        
+
+        this.playCourse(this.courseId,this.chapterId)
+
 	},
     computed: {
+      player(){
+        return this.$refs.videoPlayer.player
+      },
         ...mapState({
             userInfo: (state) => state.user.userInfo,
             isLogin: (state) => state.user.isLogin,
         }),
     },
     methods:{
-        playCourse(){
+        // 播放列表课程
+        play(item){
+            this.$router.push({path:'/course-play/'+item.courseId+'/'+item.id})
+            this.playCourse(item.courseId,item.id)
+        },
+        //已进入页面播放课程
+        playCourse(courseId,chapterId){
             this.memberid = this.userInfo.id
-            playCourse(this.courseId,this.chapterId).then(res => {
+            playCourse(courseId,chapterId).then(res => {
                 if(res.meta.code === '200'){
+                    console.log(res);
                     this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
                     this.chapterInfo = res.data.chapterInfo
                     this.chapters = res.data.courseInfo.bizCourseChapters
                     this.playerOptions.poster = res.data.courseInfo.courseCover
+                    this.courseInfo = res.data.courseInfo
+                    this.duration = res.data.playInfo.playInfoList[0].duration
+                }else if(res.meta.code === '70001'){
+                    this.$message({
+                        message: res.meta.msg,
+                        type: 'error'
+                    });
+                    this.$router.go(-1)
                 }
             })
             //获取播放历史记录
@@ -139,6 +158,9 @@ export default {
                     lastTime:player.cache_.currentTime
                 }
             )
+            createToken().then(res => {
+                updateStudyHour({id:this.userInfo.id,duration:this.duration}, res.data.token)
+            })
         },
     }
 }
@@ -146,11 +168,13 @@ export default {
 
 <style scoped>
 .main {
-	width: 100%;
-    margin-bottom: 100px;
+	width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 121px;
+  /*background-color: #00ac06;*/
 }
 .name {
-	padding: 20px 100px;
+	padding: 20px 0px;
 	width: 193px;
 	height: 26px;
 	font-size: 20px;
@@ -184,21 +208,23 @@ export default {
 /* 播放列表开始 */
 .play-right {
 	color: #ffffff;
-	height: 595px;
-	overflow: hidden;
+  width: 300px;
+	height: 506px;
+	overflow: scroll;
 	position: relative;
 }
 .play-right .list {
-	margin: 10px 30px;
-	width: 400px;
+	margin: 15px;
+	width: 300px;
 	max-height: 500px;
 	/* background: chartreuse; */
 }
+
 .list .chapter {
-	font-size: 18px;
-	padding-bottom: 5px;
+	font-size: 16px;
+	/*padding-bottom: 5px;*/
 	font-weight: bold;
-	line-height: 24px;
+	line-height: 30px;
 	color: #ffffff;
 	opacity: 1;
 }
@@ -235,5 +261,25 @@ export default {
 }
 .loading img{
     width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background-color: rgba(240, 240, 240, 1);
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px rgba(240, 240, 240, .5);
+  border-radius: 10px;
+  background-color: rgba(240, 240, 240, .5);
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 0px rgba(240, 240, 240, .5);
+  background-color: rgba(240, 240, 240, .5);
 }
 </style>

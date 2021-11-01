@@ -1,8 +1,11 @@
 <template>
     <div class="fixed">
+        <div class="bgColor"></div>
         <div class="container">
             <div class="main">
-                <div class="cart">购物车</div>
+                <div class="main-shop">
+                  <div class="cart">购物车</div>
+                </div>
                 <div class="nav">
                     <span class="left">全部课程</span>
                     <span class="right">
@@ -13,8 +16,7 @@
                 </div>
                 <ul class="head">
                     <li class="item check">
-                         <input type="checkbox" name="all" id="all" class="all" >
-                         <span class="text">全选</span>
+                        <el-checkbox v-model="allChecked" @change="selectAll">全选</el-checkbox>
                     </li>
                     <li class="item classInfo">课程信息</li>
                     <li class="item price">单价</li>
@@ -25,7 +27,7 @@
                 <div v-if="orderList.length > 0">
                     <ul class="haveorder" v-for="(item,index) in orderList" :key="index" >
                         <li class="order-item">
-                            <input type="checkbox" name="one" id="one" class="one" >
+                            <el-checkbox v-model="item.checked" @change="selectSingleProduct($event, item)"></el-checkbox>
                         </li>
                         <li class="order-item info" >
                             <div class="courseimg" >
@@ -51,11 +53,11 @@
                 </div>
                 <el-divider class="line"></el-divider>
                 <ul class="foot">
-                    <li class="foot-item">已选课程<span class="unique">1</span></li>
-                    <li class="foot-item">合计<span class="unique">299.00</span></li>
-                    <li > 
+                    <li class="foot-item">已选课程<span class="unique">{{getCount}}</span></li>
+                    <li class="foot-item">合计<span class="unique">{{price}}</span></li>
+                    <li >
                         <router-link to="/confirmOrder">
-                            <button class="btn">结 算</button>
+                            <button class="btn" @click="getSelecteds">去结算</button>
                         </router-link>
                     </li>
                 </ul>
@@ -67,25 +69,81 @@
 <script>
 import {getShopCarList,deleteShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
-
 export default{
     data(){
         return{
             orderList:[],
-            token:''
+            allChecked:false,
+            selectedProducts:[],
+            token:'',
+            count:0,
+            price:0,
         }
     },
     created(){
         this.getShopCarList()
     },
+    watch:{
+        selectedProducts:{
+            handler(newval,oldval){
+                this.price = 0
+                    newval.forEach(item => {
+                        this.price += item.discountPrice * item.counter
+                    })
+            },
+            immediate: true
+        },
+    },
+    computed:{
+        getCount(){
+            return this.selectedProducts.length
+        },
+    },
     methods:{
+        // 去结算
+        getSelecteds(){
+            let arr = new Array();
+            this.selectedProducts.forEach(item => {
+                arr.push({'number':item.counter,"id":item.courseId})
+            })
+            sessionStorage.setItem('selectedArr',JSON.stringify(arr))
+
+        },
+        //全选
+        selectAll(e){
+            if(e){
+                this.orderList.forEach(item => {
+                    item['checked'] = true
+                })
+            }else{
+                this.orderList.forEach(item => {
+                    item['checked'] = false
+                })
+            }
+        },
+        //数量 、价格变化
+        selectSingleProduct(e, item){
+            if(e){
+                this.selectedProducts.push(item);
+            }else{
+                for(let i = 0;i < this.selectedProducts.length;i++){
+                    if(item.id === this.selectedProducts[i].id){
+                        this.selectedProducts.splice(i,1);
+                    }
+                }
+            }
+        },
         //获取购物车数据
         getShopCarList(){
             createToken().then(res => {
                 this.token = res.data.token
             })
             getShopCarList().then(res => {
-                this.orderList = res.data.list
+                let list = res.data.list
+                list.forEach(item => {
+                    item['checked'] = false
+                })
+                this.orderList = list;
             })
         },
         //删除购物车数据
@@ -94,52 +152,88 @@ export default{
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            })
-            .then(() => {
+            }).then(() => {
                 deleteShopCar({id:id,token:this.token}).then(response => {
                     if (response.meta.code === '200') {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功'
-                    })
-                    this.getShopCarList()
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功'
+                        })
+                        this.getShopCarList()
                     }
                 })
-            })
-            .catch(err => { console.error(err) })
+            }).catch(err => {})
         }
     }
 }
-
-
-
-
-
 </script>
 
 <style scoped>
 .fixed{
+    position: relative;
     width: 100%;
     height: 100%;
     background: #FFFFFF;
 }
+.bgColor{
+  width: 100%;
+  height: 200px;
+  background-color: red;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 .container{
+    position: absolute;
+    left: 50%;
+  top: 50%;
+  transform: translate(-50%,0);
     width: 1200px;
     margin: 0 auto;
     background: #EBEDF2;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px 3px #888888;
 }
 .main{
-    padding:20px 50px
+    padding:30px 50px;
+    border-radius: 15px;
+}
+.main-shop{
+  position: relative;
+  display: flex;
+  align-content: center;
+}
+.main-shop i{
+  font-size: 35px;
+  padding: 20px 10px 0 0;
+  color: #FF4400;
+  font-weight: bold;
 }
 .cart{
-    width: 96px;
+    position: absolute;
+    top: -107px;
+    left: 0px;
+    /*width: 96px;*/
     height: 42px;
     font-size: 24px;
     font-family: Microsoft YaHei;
     font-weight: bold;
-    line-height: 0px;
-    color: #333333;
+    line-height: 24px;
+    color: #FFFFFF;
+    padding: 25px 0;
     opacity: 1;
+
 }
 .nav{
     display: flex;
@@ -172,13 +266,17 @@ export default{
 /* 头部开始 */
 .head{
     display: flex;
-    margin: 10px 0;
+    padding: 0 10px;
+    margin: 20px 0;
     width: 100%;
     height: 35px;
     line-height: 35px;
     background: #FCFCFC;
     opacity: 1;
     border-radius: 0px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px 2px #cccccc;
 }
 .head .item{
     width: 150px;
@@ -191,7 +289,7 @@ export default{
 .check .text{
     width: 1487px;
     height: 40px;
-    
+
 }
 .classInfo{
     width: 400px!important;
@@ -206,6 +304,8 @@ export default{
     height: 200px;
     background: #FCFCFC;
     margin-bottom: 10px;
+    border-radius: 10px;
+  box-shadow: 0px 2px 5px 2px #cccccc;
 }
 .haveorder .order-item{
     height: 200px;
@@ -245,7 +345,7 @@ export default{
 .info .course-name{
     width: 300px;
    word-break: keep-all;
-   white-space: nowrap; 
+   white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
 }
@@ -309,5 +409,6 @@ export default{
     border-radius: 5px;
     background: #FF4400;
     cursor: pointer;
+    box-shadow: 0px 3px 5px 2px #ff727f;
 }
 </style>

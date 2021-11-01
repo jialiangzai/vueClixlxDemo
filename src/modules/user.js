@@ -10,13 +10,18 @@ export default {
 		},
 		isLogin: JSON.parse(sessionStorage.getItem('isLogin')) || false
 	},
-	getters:{},
+	getters:{
+		avatar:state => state.userInfo.avatar
+	},
 	mutations:{
 		saveUserInfo(state,payload){
-			state.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+			state.userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || payload
 		},
 		saveLogin(state,payload) {
-			state.isLogin = JSON.parse(sessionStorage.getItem('isLogin'))
+			state.isLogin = JSON.parse(sessionStorage.getItem('isLogin')) || false
+		},
+		saveAvator(state,payload){
+			state.userInfo.avatar = payload
 		}
 	},
 	actions:{
@@ -25,6 +30,9 @@ export default {
 		},
 		saveLoginAction({commit},payload){
 			commit('saveLogin',payload)
+		},
+		saveAvatorAction({commit},payload){
+			commit('saveAvator',payload)
 		}
 	}
 }

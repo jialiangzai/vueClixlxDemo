@@ -23,25 +23,57 @@
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img src="/image/guanfangwx.jpg" alt="">
+                    <img :src="guanfangwx" alt="">
                 </div>
                 <div class="wx-dsc">官方账号</div>
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img src="/image/laoshiwx.png" alt="">
+                    <img :src="teacherwx" alt="">
                 </div>
                 <div class="wx-dsc">指导老师</div>
             </div>
-            
+
         </div>
     </div>
 </template>
 
+<script>
+import {getImageByCode} from '@/common/api/picture.js'
+
+export default{
+    data(){
+        return{
+            guanfangwx:'',
+            teacherwx:''
+        }
+    },
+    created(){
+        this.getImageByCodeGuanfangwx()
+        this.getImageByCodeTeacherwx()
+
+    },
+    methods:{
+        getImageByCodeGuanfangwx(){
+            getImageByCode({imageCode:'QATTS2KB5K'}).then(res => {
+                this.guanfangwx = res.data.data.imageUrl;
+            })
+        },
+        getImageByCodeTeacherwx(){
+            getImageByCode({imageCode:'YE1AT22QE3'}).then(res => {
+                this.teacherwx = res.data.data.imageUrl;
+            })
+        },
+    }
+}
+
+
+</script>
+
 <style scoped>
 .foot{
     width: 100%;
-    min-width: 1300px;
+    min-width: 1200px;
     height: 150px;
     background: #3483FF;
     opacity: 1;
@@ -49,6 +81,7 @@
 }
 .footer-main{
     display: flex;
+  justify-content: space-around;
     align-items: center;
     width: 1200px;
     height: 100%;
@@ -56,15 +89,14 @@
     margin: auto;
 }
 .footer-xlx{
-    margin-left: 100px;
     width:110px;
-    opacity: 1; 
+    opacity: 1;
 }
 .xlx{
     width: 100%;
     height: 100%;
 }
-.footer-factory{    
+.footer-factory{
     width: 130px;
     margin:0 20px;
 
@@ -95,10 +127,10 @@
     font-size: 12px;
 }
 .wx-bg{
-   
+
     width: 80px;
     height: 80px;
-   
+
 }
 .wx img{
     width: 100%;

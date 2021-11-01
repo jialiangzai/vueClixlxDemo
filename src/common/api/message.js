@@ -39,10 +39,14 @@ export function deleteMess({id,token}){
 }
 
 // 标记已读
-export function makeRead(params){
+export function makeRead({ids,token}){
   return http.$axios({
     url: 'api/message/makeRead',
-    method: 'GET',
-    data: params
+    method: 'POST',
+    data: ids,
+    headers: {
+      'Authorization': sessionStorage.getItem('token'),
+      'token': token
+    }
   })
 }

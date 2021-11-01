@@ -1,62 +1,89 @@
 <template>
   <div class="about">
-    <Header ></Header>
-    <div class="about-banner">
-      <div class="banner-main">
-        <div class="banner-content">
-          <div class="banner-left">
-            <img
-              class="banner-avator"
-              :src="userInfo.avatar"
-              alt=""
-            />
-            <div class="banner-my">
-              <div class="banner-name">{{userInfo.nickName}}</div>
-              <div class="banner-introduce">
-                <p>{{userInfo && userInfo.gender == 1 ? '男':'女'}}</p>
-                <p>{{userInfo && userInfo.city ? userInfo.city : '北京'}}</p>
-                <p>web前端工程师</p>
-              </div>
-              <div class="banner-autograph">
-                这位同学很神秘，没有留下个性签名
-              </div>
-            </div>
-          </div>
-          <div class="banner-right">
-            <div class="banner-study">学习时长 <span>0h</span></div>
-            <div class="banner-setting" @click="goMine">
-              <img src="/image/about/setting.png" alt="" />
-              <p>个人设置</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="about-main">
-      <div class="about-container">
-        <div class="about-left">
-          <div class="about-list">
-            <div v-for="(item,index) in aboutList" :key="item.id" @click="geDetail(index)">
-              <router-link :to="item.link">
-                <div class="about-list-item" :class="current == index ? 'active' :''">
-                  <img :src="current == index ? item.selectImg : item.imgUrl" alt="" />
-                  <p class="list-title">{{ item.title }}</p>
+    <Header></Header>
+    <div class="about-containe" >
+      <div class="about-ee">
+        <div class="about-banner">
+          <div class="banner-main">
+            <div class="banner-content">
+              <div class="banner-left">
+                <img
+                  class="banner-avator"
+                  :src="userInfo.avatar"
+                  alt=""
+                  v-if="userInfo.avatar"
+                />
+                <img
+                  class="banner-avator"
+                  :src="userInfo.avatar"
+                  alt=""
+                  v-else
+                />
+                <div class="banner-my">
+                  <div class="banner-name">{{ userInfo.nickName }}</div>
+                  <div class="banner-introduce">
+                    <p>{{ userInfo && userInfo.gender == 1 ? "男" : "女" }}</p>
+                    <p>
+                      {{ userInfo && userInfo.city ? userInfo.city : "北京" }}
+                    </p>
+                    <p>web前端工程师</p>
+                  </div>
+                  <div class="banner-autograph">
+                    这位同学很神秘，没有留下个性签名
+                  </div>
                 </div>
-              </router-link>
+              </div>
+              <div class="banner-right">
+                <div class="banner-study">学习时长 <span>{{ userInfo.totalHour ? parseFloat(userInfo.totalHour/360).toFixed(2)+'h' : '0h' }}</span></div>
+                <div class="banner-setting" @click="goMine">
+                  <img src="/image/about/setting.png" alt="" />
+                  <p>个人设置</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="about-right">
-          <router-view></router-view>
+        <div class="about-main">
+          <div class="about-container">
+            <div class="about-left">
+              <div class="about-list">
+                <div
+                  v-for="(item, index) in aboutList"
+                  :key="item.id"
+                  @click="geDetail(index)"
+                >
+                  <router-link :to="item.link">
+                    <div
+                      class="about-list-item"
+                      :class="current == index ? 'active' : ''"
+                    >
+                      <img
+                        :src="current == index ? item.selectImg : item.imgUrl"
+                        alt=""
+                      />
+                      <p class="list-title">{{ item.title }}</p>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+            </div>
+            <div class="about-right">
+              <router-view></router-view>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <Foot class="foot"></Foot>
   </div>
 </template>
 
 <script>
 import Header from "@/components/index/header.vue";
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
+import Foot from "@/components/foot/foot.vue";
+// import Footer from '@/components/foot/Footer.vue';
+import IScroll from "iscroll";
 
 export default {
   name: "About",
@@ -92,34 +119,34 @@ export default {
           link: "/about/message",
         },
       ],
-      current:  0,
-      avatorImg: '/image/common/avator.png'
+      current: 0,
+      avatorImg: "/image/common/avator.png",
     };
   },
-  computed:{
+  computed: {
     ...mapState({
-      userInfo: state => state.user.userInfo
+      userInfo: (state) => state.user.userInfo,
     }),
+  },
+  mounted() {
   },
   components: {
     Header,
+    Foot,
   },
   methods: {
     geDetail(index) {
       this.current = index;
       // sessionStorage.setItem('current',JSON.stringify(index))
     },
-    goMine(){
-      this.$router.push('/user')
-    }
+    goMine() {
+      this.$router.push("/user");
+    },
   },
 };
 </script>
 
-<style >
-.about {
-  height: 1000px;
-}
+<style scoped>
 .about-banner {
   background: url("/image/about/about-banner.png") no-repeat 0 0;
   box-sizing: border-box;
@@ -212,12 +239,15 @@ export default {
 /* 主体开始 */
 .about-main {
   width: 100%;
-  height: 800px;
+  /* height: 800px; */
+  height: 100%;
   position: relative;
+  margin-top:20px;
 }
 .about-container {
   width: 1200px;
-  height: 800px;
+  /* height: 800px; */
+  /* height: 800px; */
   position: absolute;
   top: 30px;
   left: 50%;
@@ -226,6 +256,10 @@ export default {
 }
 .about-left {
   width: 200px;
+  height: 100%;
+  /* height: 1000px; */
+  /* height: 800px;
+  overflow: hidden; */
 }
 
 .about-list .about-list-item {
@@ -252,6 +286,11 @@ export default {
 }
 .about-right {
   flex: 1;
-  
+  /* height: 600px; */
+  /* border: 1px solid blue; */
+}
+.foot {
+  position: fixed;
+  bottom: 0;
 }
 </style>

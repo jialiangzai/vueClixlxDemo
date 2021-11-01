@@ -2,7 +2,7 @@
   <div class="setbindsns">
     <div class="setbindsns-header">
       <p>账号信息</p>
-      <p class="header-complete">完成 <span>2/4</span></p>
+      <p class="header-complete">完成 <span>0/4</span></p>
     </div>
     <div class="setbindsns-container">
       <div class="setbindsns-item">
@@ -10,7 +10,7 @@
           <img src="/image/user/phone.png" alt="" />
         </div>
         <div class="item-center">
-          <p class="item-phone"><span>手机</span> 156****1235</p>
+          <p class="item-phone"><span>手机</span> 未绑定</p>
           <p>可用手机号加密登录在线网校，可通过手机号找回密码</p>
         </div>
         <!-- <div class="item-btn" @click="goHone">操作</div> -->

@@ -45,3 +45,42 @@ export function playCourse(courseId,chapterId){
         }
     })
 }
+
+//下载资料
+export function downloadAttachment(courseId,attachmentId){
+    return http.$axios({
+        url:'api/course/downloadAttachment',
+        method:'GET',
+        params:{courseId,attachmentId},
+        responseType: "blob",
+        headers: {
+            'Authorization': sessionStorage.getItem('token')
+        }
+    })
+}
+
+//检查是否有权限
+export function checkAuth(courseId){
+    return http.$axios({
+        url:'api/course/checkAuth',
+        method:'GET',
+        params:{courseId},
+        headers: {
+            'Authorization': sessionStorage.getItem('token')
+        }
+    })
+}
+
+
+//获取学习时长
+export function updateStudyHour(data,token){
+    return http.$axios({
+        url:'api/member/updateStudyHour',
+        method:'POST',
+        data,
+        headers: {
+            'Authorization': sessionStorage.getItem('token'),
+            'token':token
+        }
+    })
+}

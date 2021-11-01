@@ -1,7 +1,7 @@
 <template>
   <div class="order-item-ins">
     <div v-if="orderList.length > 0" class="order-container">
-      <happy-scroll style="width: 940px">
+      <!-- <happy-scroll style="width: 940px;"> -->
         <div style="width: 940px">
           <div class="order-item" v-for="item in orderList" :key="item.id">
             <div class="item-top">
@@ -65,7 +65,7 @@
             </div>
           </div>
         </div>
-      </happy-scroll>
+      <!-- </happy-scroll> -->
     </div>
     <div v-else class="order-empty">
       <el-empty
@@ -116,13 +116,13 @@ export default {
 .order-container {
   margin: 10px 0;
   width: 940px;
-  height: 700px;
+  height: 100%;
   overflow: hidden;
 }
 .order-item {
   width: 100%;
   height: 240px;
-  border: 1px solid #93999f;
+  border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.07);
   border-radius: 8px;
   padding: 20px;
@@ -145,7 +145,9 @@ export default {
   height: 19px;
 }
 .order-num {
-  padding: 0 40px;
+  /* padding: 0 40px; */
+  padding-right: 40px;
+  padding-left:10px;
 }
 .item-bottom {
   width: 100%;
@@ -200,8 +202,12 @@ export default {
   font-size: 12px;
   font-family: Microsoft YaHei;
   font-weight: 400;
-  color: #333333;
-  margin: 10px 0;
+  color: #999;
+  margin: 10px 10px 10px 0;
+  display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
 }
 .i-b-l-r-price {
   font-size: 12px;

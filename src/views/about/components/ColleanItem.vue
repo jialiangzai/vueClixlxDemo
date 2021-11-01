@@ -1,43 +1,42 @@
 <template>
   <div class="my-course-content">
-    <div
-      v-if="courseList && courseList.length > 0"
-      style="height: 750px; width: 980px"
-    >
-      <happy-scroll style="width: 980px">
-        <div class="course-main" style="width: 980px">
-          <div class="course-item" v-for="item in courseList" :key="item">
-            <div class="item-left">
-              <img :src="item.courseCover" alt="" />
-              <!-- <p>晋级TS高手搞定复杂项目</p> -->
-            </div>
-            <div class="item-right">
-              <div class="i-r-left">
-                <div class="i-r-l-title">
-                  <p class="tip" v-if="item.discountPrice === 0">免费课</p>
-                  <p class="tip vip" v-if="item.isMember === 1">会员课程</p>
-                  <p class="title">{{ item.courseName }}</p>
-                </div>
-                <div class="i-r-l-center">
-                  <!-- <p class="study-time">总时长: {{ item.totalHour }}</p> -->
-                  <p>{{ item.description }}</p>
-                  <!-- <p>课程级别： {{ item.courseLevel }}</p> -->
-                </div>
+    <div v-if="courseList && courseList.length > 0" style="width: 980px">
+      <div
+        class="course-main"
+        style="width: 980px"
+        v-if="courseList && courseList.length > 0"
+      >
+        <div class="course-item" v-for="item in courseList" :key="item">
+          <div class="item-left">
+            <img :src="item.courseCover" alt="" />
+            <!-- <p>晋级TS高手搞定复杂项目</p> -->
+          </div>
+          <div class="item-right">
+            <div class="i-r-left">
+              <div class="i-r-l-title">
+                <p class="tip" v-if="item.discountPrice === 0">免费课</p>
+                <p class="tip vip" v-if="item.isMember === 1">会员课程</p>
+                <p class="title">{{ item.courseName }}</p>
               </div>
-              <div class="i-r-right">
-                <div class="i-r-bottom">
-                  <div @click="goRemove(item.id)">取消收藏</div>
-                </div>
+              <div class="i-r-l-center">
+                <!-- <p class="study-time">总时长: {{ item.totalHour }}</p> -->
+                <p>{{ item.description }}</p>
+                <!-- <p>课程级别： {{ item.courseLevel }}</p> -->
+              </div>
+            </div>
+            <div class="i-r-right">
+              <div class="i-r-bottom">
+                <div @click="goRemove(item.id)">取消收藏</div>
               </div>
             </div>
           </div>
         </div>
-      </happy-scroll>
+      </div>
     </div>
     <div v-else class="course-empty">
       <div class="empty">
         <img src="/image/about/course-empt.png" alt="" />
-        <p>没有任何课程，可以先<span>去找找课程</span></p>
+        <p>没有任何课程，可以先<span @click="goCourse">去找找课程</span></p>
       </div>
     </div>
   </div>
@@ -61,21 +60,34 @@ export default {
             id: id,
             token: res.data.token,
           }).then((res) => {
-            this.$message({
-              message: "取消收藏成功",
-              type: "success",
+            if (res.meta.code == "200") {
+              this.$message({
+                message: "取消收藏成功",
+                type: "success",
+              });
+            }else {
+              this.$message({
+              message: "取消收藏失败",
+              type: "error",
             });
+            }
           });
         }
       });
     },
+    goCourse(){
+      this.$router.push({
+        path: '/course'
+      })
+    }
   },
 };
 </script>
 <style scoped>
 .my-course-content {
   width: 100%;
-  height: 800px;
+  margin-bottom: 50px;
+  /* height: 800px; */
 }
 .course-empty {
   height: 500px;
@@ -105,6 +117,7 @@ export default {
 }
 .empty span {
   color: rgba(255, 61, 61, 1);
+  cursor: pointer;
 }
 .course-item {
   width: 100%;
@@ -119,7 +132,7 @@ export default {
   position: relative;
 }
 .item-left img {
-  width: 250px;
+  width: 220px;
   height: 125px;
   position: absolute;
   left: 50%;
@@ -175,6 +188,7 @@ export default {
     rgba(255, 61, 61, 1) 0%,
     rgba(255, 122, 21, 1) 100%
   );
+  color: #fff;
 }
 .title {
   font-size: 18px;

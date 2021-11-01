@@ -55,7 +55,7 @@
 /* 背景部分开始 */
 .courseInfoTop .info-container{
     margin: 0 auto;
-    width: 1300px;
+    width: 1200px;
     height: 200px;
     color: #FFFFFF;
     z-index: 5;
@@ -94,7 +94,7 @@
     width: 100%;
     height: 80px;
     background: #F8FAFC;
-    
+
 }
 .nav-container{
     margin: 0 auto;

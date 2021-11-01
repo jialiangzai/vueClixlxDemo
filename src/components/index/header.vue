@@ -1,49 +1,38 @@
 <template>
   <!-- 首页头部组件 -->
-  <div
-    class="header"
-    @mouseleave="
-      isUserInfo = false;
-      isCar = false;
-    "
-  >
+  <div class="header" @mouseleave="isUserInfo = false;isCar = false;">
     <div class="index-header">
       <div class="header-content">
         <!-- 头部logo -->
         <div class="content-logo">
-          <img src="/image/logo.png" alt="" />
+          <img src="/image/logo.png" alt="" @click="goHome()" />
         </div>
         <!-- 头部导航 -->
         <div class="content-nav">
           <ul>
             <li>
-              <router-link to="/" class="aaa" style="cursor: pointer"
-                >首 页</router-link
-              >
+              <router-link to="/" class="aaa" style="cursor: pointer">首 页</router-link>
             </li>
             <li>
-              <router-link to="/course" style="cursor: pointer"
-                >课 程</router-link
-              >
+              <router-link to="/course" style="cursor: pointer">课 程</router-link>
             </li>
             <li>
-              <router-link to="/member" style="cursor: pointer"
-                >会 员</router-link
-              >
+              <router-link to="/member" style="cursor: pointer">会 员</router-link>
             </li>
           </ul>
         </div>
         <!-- 搜索、购物车、登录注册 -->
         <div class="searBuyLogin">
+          <!--头部搜索框-->
           <div class="content-search">
-            <input type="text" placeholder="请输入要搜索的课程" />
-            <i class="el-icon-search" style="cursor: pointer"></i>
+            <input type="text" @keyup.enter="toSearch()" placeholder="请输入要搜索的课程" v-model="keywords" />
+            <i class="el-icon-search" style="cursor: pointer" @click="toSearch()"></i>
           </div>
           <div class="content-Shopping" style="cursor: pointer">
             <el-badge :value="carNum" class="item" v-if="carNum">
-                <router-link to="/cart">
-                    <i class="el-icon-shopping-cart-1"></i> 
-                </router-link>               
+              <router-link to="/cart">
+                <i class="el-icon-shopping-cart-1"></i>
+              </router-link>
             </el-badge>
             <i
               class="el-icon-shopping-cart-1"
@@ -60,16 +49,57 @@
                 alt=""
                 v-if="userInfo.avatar"
               />
-              <img
-                class="avator"
-                :src="avatorImg"
-                alt=""
-                v-else
-              />
+              <img class="avator" :src="avatorImg" alt="" v-else />
               <!-- 头像信息 -->
             </div>
           </div>
           <div class="content-login" v-else @click="goLogin">登录 / 注册</div>
+        </div>
+        <!-- 划过头像显示 -->
+        <div class="user-info" v-show="isUserInfo">
+          <div class="user-info-top">
+            <div class="u-i-t-top">
+              <img :src="userInfo.avatar" alt="" v-if="userInfo.avatar" />
+              <img class="avator" :src="avatorImg" alt="" v-else />
+              <div class="avator-info">
+                <p>
+                  {{ userInfo.nickName }}
+                </p>
+              </div>
+            </div>
+            <div class="u-i-i-bottom">
+              <div v-for="item in avatorList" :key="item.id">
+                <router-link :to="item.linkUrl">
+                  <div class="info-item">
+                    <img :src="item.imgUrl" alt="" />
+                    <p>{{ item.title }}</p>
+                  </div>
+                </router-link>
+              </div>
+            </div>
+          </div>
+          <div class="user-info-bottom">
+            <div class="logout" @click="goLogout">退出登录</div>
+          </div>
+        </div>
+        <!-- 购物车 -->
+        <div class="shopcar" v-show="isCar">
+          <div class="shopcar-top">
+            <div class="s-t-left">我的购物车</div>
+          </div>
+          <div class="shopcar-center">
+            <img src="/image/header/car.png" alt="" />
+            <p class="car-empy">购物车空空如也</p>
+            <p>快去选购你喜欢的课程吧</p>
+            <p class="course-center">课程中心</p>
+          </div>
+          <div class="shopcar-bottom">
+            <p>我的订单</p>
+            <div class="car">
+              <img src="/image/header/car-select.png" alt="" />
+              <p class="course-center">我的购物车</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -114,6 +144,7 @@
                 v-model="registerForm.captcha"
                 style="width: 150px"
                 placeholder="请输入验证码"
+                @keyup.enter.native="submitRegisterForm('registerForm')"
               ></el-input>
               <div
                 class="sendcaptcha"
@@ -153,6 +184,7 @@
                   v-model="phoneForm.password"
                   placeholder="请输入密码"
                   show-password
+                  @keyup.enter.native="submitPhoneForm('phoneForm')"
                 ></el-input>
               </el-form-item>
               <el-form-item>
@@ -184,6 +216,7 @@
                   v-model="identifyForm.captcha"
                   style="width: 150px"
                   placeholder="请输入验证码"
+                  @keyup.enter.native="submitIdentifyForm('identifyForm')"
                 ></el-input>
                 <div
                   class="sendcaptcha"
@@ -207,56 +240,6 @@
         </div>
       </div>
     </el-dialog>
-    <!-- 注册成功显示 -->
-    <!-- 划过头像显示 -->
-    <div class="user-info" v-show="isUserInfo">
-      <div class="user-info-top">
-        <div class="u-i-t-top">
-          <img
-            :src=" userInfo.avatar "
-            alt=""
-          />
-          <div class="avator-info">
-            <p>
-              {{ userInfo.nickName}}
-            </p>
-          </div>
-        </div>
-        <div class="u-i-i-bottom">
-          <div v-for="item in avatorList" :key="item.id">
-            <router-link :to="item.linkUrl">
-              <div class="info-item">
-                <img :src="item.imgUrl" alt="" />
-                <p>{{ item.title }}</p>
-              </div>
-            </router-link>
-          </div>
-        </div>
-      </div>
-      <div class="user-info-bottom">
-        <div class="logout" @click="goLogout">退出登录</div>
-      </div>
-    </div>
-
-    <!-- 购物车 -->
-    <div class="shopcar" v-show="isCar">
-      <div class="shopcar-top">
-        <div class="s-t-left">我的购物车</div>
-      </div>
-      <div class="shopcar-center">
-        <img src="/image/header/car.png" alt="" />
-        <p class="car-empy">购物车空空如也</p>
-        <p>快去选购你喜欢的课程吧</p>
-        <p class="course-center">课程中心</p>
-      </div>
-      <div class="shopcar-bottom">
-        <p>我的订单</p>
-        <div class="car">
-          <img src="/image/header/car-select.png" alt="" />
-          <p class="course-center">我的购物车</p>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -271,12 +254,12 @@ import {
   getShopCarCounter,
 } from "@/common/api/auth";
 import { Loading } from "element-ui";
-import { mapState,mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
       msg: "我是头部",
-      carNum: 1,
+      carNum: 0,
       isCar: false,
       // isLogin: false,
       isUserInfo: false,
@@ -353,6 +336,8 @@ export default {
           linkUrl: "/user/setbindsns",
         },
       ],
+      keywords: "",
+      
     };
   },
   computed: {
@@ -361,12 +346,28 @@ export default {
       isLogin: (state) => state.user.isLogin,
     }),
   },
-  created(){
-    this.getCarNum()
+  created() {
+    this.getCarNum();
+    this.copySearch();
   },
   methods: {
-    ...mapActions(['saveUserInfoAction','saveLoginAction']),
-    // 去我的课程
+    ...mapActions(["saveUserInfoAction", "saveLoginAction"]),
+    //点击图标返回首页
+    goHome(){
+        this.$router.push('/')
+    },
+    //关键字搜索
+    toSearch(){
+        if(!this.keywords){
+            this.$message({
+                message: '请输入关键字进行搜索！',
+                type: 'error'
+            });
+            return;
+        }
+        this.$router.replace({path: '/course',query: {keywords:this.keywords}})
+    },
+    // 去我的课程s
     goAbout() {
       this.$router.push({
         path: "/about",
@@ -393,7 +394,6 @@ export default {
           });
           register(this.registerForm)
             .then((res) => {
-              console.log(res);
               if (res.meta.code == "200") {
                 this.$message({
                   message: "注册成功，去登录吧！",
@@ -407,7 +407,17 @@ export default {
               } else if (res.meta.code == "10005") {
                 this.$message({
                   message: res.meta.msg,
-                  type: "success",
+                  type: "info",
+                });
+                this.isregister = false;
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  regiterloading.close();
+                });
+              } else {
+                this.$message({
+                  message: res.meta.msg,
+                  type: "error",
                 });
                 this.isregister = false;
                 this.$nextTick(() => {
@@ -417,9 +427,8 @@ export default {
               }
             })
             .catch((err) => {
-              console.log(err);
               this.$message({
-                message: "注册失败啦，请重新登陆！",
+                message: res.meta.msg,
                 type: "error",
               });
               this.$nextTick(() => {
@@ -428,7 +437,6 @@ export default {
               });
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -459,29 +467,37 @@ export default {
                 sessionStorage.setItem("isLogin", JSON.stringify(true));
                 // 获取用户信息
                 this.getUserInfo({
-                  token: accessToken
+                  token: accessToken,
                 });
                 this.getCarNum();
-                this.saveLoginAction()
+                this.saveLoginAction();
                 this.$message({
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
+              } else {
+                this.$message({
+                  message: res.meta.msg,
+                  type: "error",
+                });
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  phoneloading.close();
+                });
+                this.open = false;
               }
             })
             .catch((err) => {
-              console.log(err);
               this.$nextTick(() => {
                 // 以服务的方式调用的 Loading 需要异步关闭
                 phoneloading.close();
               });
               this.$message({
-                message: "登录失败啦，请重新登陆！",
+                message: res.meta.msg,
                 type: "error",
               });
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -490,7 +506,6 @@ export default {
     submitIdentifyForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.identifyForm);
           var identLoading = Loading.service({
             lock: true,
             text: "Loading",
@@ -500,7 +515,6 @@ export default {
           // alert('submit!');
           loginByMobile(this.identifyForm)
             .then((res) => {
-              console.log(res);
               if (res.meta.code === "10006") {
                 // 存储token
                 let accessToken = res.data.accessToken;
@@ -511,7 +525,7 @@ export default {
                 this.getUserInfo({
                   token: accessToken,
                 });
-                this.saveLoginAction()
+                this.saveLoginAction();
                 // 获取购物车数据
                 this.getCarNum();
                 //  this.saveIsLoginAction(true)
@@ -524,22 +538,29 @@ export default {
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
+              } else {
+                this.$message({
+                  message: res.meta.msg,
+                  type: "error",
+                });
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  identLoading.close();
+                });
+                this.open = false;
               }
             })
             .catch((err) => {
-              console.log(err);
               this.$nextTick(() => {
                 // 以服务的方式调用的 Loading 需要异步关闭
                 identLoading.close();
               });
-
               this.$message({
-                message: "登录失败啦，请重新登陆！",
+                message: res.meta.msg,
                 type: "error",
               });
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -565,13 +586,18 @@ export default {
             })
               .then((res) => {
                 if (res.meta.code === 200) {
-                  console.log("发送成功");
+                  this.$message({
+                    message: "发送成功",
+                    type: "success",
+                  });
+                } else {
+                  this.$message({
+                    message: "验证码发送失败啦",
+                    type: "error",
+                  });
                 }
-                // console.log(res);
               })
-              .catch((err) => {
-                console.log(err);
-              });
+              .catch((err) => {});
           } else {
             this.captcha = `重新发送${time}秒`;
           }
@@ -585,25 +611,35 @@ export default {
     },
     // 获取个人信息
     getUserInfo(params) {
-      console.log(sessionStorage.getItem("token"),"123456");
       getInfo(params)
         .then((res) => {
-          sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-          this.saveUserInfoAction()
           // this.saveUserInfoActions()
+          if (res.meta.code == "200") {
+            sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+            this.saveUserInfoAction();
+          } else {
+            this.$message({
+              message: res.meta.msg,
+              type: "error",
+            });
+          }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     },
     // 获取购物车数据
     getCarNum() {
-      getShopCarCounter().then((res) => {
-        console.log(res)
-        if (res.meta.code == 200) {
-          this.carNum = res.data.counter;
-        }
-      });
+      if (sessionStorage.getItem("token")) {
+        getShopCarCounter().then((res) => {
+          if (res.meta.code == 200) {
+            this.carNum = res.data.counter;
+          } else {
+            this.$message({
+              message: res.meta.msg,
+              type: "error",
+            });
+          }
+        });
+      }
     },
     // 返回登陆页面
     backLogin() {
@@ -621,21 +657,36 @@ export default {
     goLogout() {
       logout()
         .then((res) => {
-          console.log(res);
           this.$message({
             message: "退出登录，欢迎下次登录",
             type: "success",
           });
-          this.isLogin = false;
+          // this.isLogin = false;
           sessionStorage.removeItem("token");
           sessionStorage.removeItem("userInfo");
           sessionStorage.removeItem("isLogin");
+          this.$router.push('/')
+          this.saveUserInfoAction({
+            avatar: '/image/common/avator.png',
+            nickName: '小鹿线-默认',
+            gender: 1,
+            city: '北京',
+            id:1,
+          })
+          this.saveLoginAction()
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     },
+    //给搜索赋值
+    copySearch(){
+        this.keywords =  this.$route.query.keywords;
+    }
   },
+  watch:{
+      '$route':function(to,from){
+         this.copySearch()
+      }
+  }
 };
 </script>
 
@@ -667,7 +718,7 @@ export default {
 .header-content {
   position: relative;
   display: flex;
-  width: 1300px;
+  width: 1200px;
   justify-content: space-around;
 }
 .content-logo {
@@ -703,7 +754,7 @@ export default {
 }
 .searBuyLogin {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   width: 752px;
 }
@@ -711,8 +762,8 @@ export default {
   display: flex;
   align-items: center;
   padding: 5px 10px;
-  width: 460px;
-  height: 40px;
+  width: 350px;
+  height: 35px;
   border-radius: 8px;
   background: #f0f2f4;
 }
@@ -724,13 +775,15 @@ export default {
   border-radius: 8px;
   color: #808080;
   background: #f0f2f4;
-  font-size: 18px;
+  font-size: 16px;
   outline: none;
 }
 .content-search i {
-  font-size: 24px;
+  color: #808080;
+  font-size: 22px;
 }
 .content-Shopping i {
+  color: #808080;
   font-size: 24px;
 }
 .content-login {
@@ -746,7 +799,7 @@ export default {
   width: 180px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   font-size: 18px;
   font-family: Microsoft YaHei;
   font-weight: 400;
@@ -835,9 +888,10 @@ export default {
   height: 194px;
   background-color: #fff;
   border: 1px solid rgba(248, 250, 252, 1);
+  box-shadow: 0px 5px 15px 3px #888888;
   position: absolute;
-  top: 100px;
-  right: 210px;
+  top: 87px;
+  right: -40px;
   z-index: 999;
   display: block;
 }
@@ -920,11 +974,12 @@ export default {
   height: 220px;
   background: #fff;
   position: absolute;
-  top: 100px;
-  right: 390px;
+  top: 87px;
+  right: 130px;
   z-index: 999;
   padding: 0 10px;
   box-sizing: border-box;
+  box-shadow: 0px 5px 15px 3px #888888;
 }
 .shopcar-top {
   height: 30px;

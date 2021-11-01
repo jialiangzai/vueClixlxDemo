@@ -1,30 +1,23 @@
 <template>
   <div class="my-course-content">
-    <div
-      v-if="messList && messList.length > 0"
-      style="height: 750px; width: 980px"
-    >
-      <happy-scroll style="width: 980px">
-        <div class="course-main" style="width: 980px">
-          <div
-            class="course-item"
-            @mouseenter="goShow"
-            @mouseleave="goRemove"
-            :class="isDelete ? 'item-active' : ''"
-            v-for="item in messList"
-            :key="item.id"
-          >
-            <div class="item-dot" v-if="item.title"></div>
-            <div class="item-main">
-              <p class="title">{{ item.title }}</p>
-              <p class="time">{{ item.createTime }}</p>
-            </div>
-            <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
-              <img src="/image/about/remove.png" alt="" />
-            </div>
+    <div v-if="messList && messList.length > 0" style="width: 980px">
+      <div class="course-main" style="width: 980px">
+        <div
+          class="course-item"
+          v-for="item in messList"
+          :key="item.id"
+          @click="goRead(item)"
+        >
+          <div class="item-dot" v-if="item.status === 1"></div>
+          <div class="item-main">
+            <p class="title">{{ item.title }}</p>
+            <p class="time">{{ item.createTime }}</p>
           </div>
+          <!-- <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
+            <img src="/image/about/remove.png" alt="" />
+          </div> -->
         </div>
-      </happy-scroll>
+      </div>
     </div>
     <div v-else class="course-empty">
       <el-empty
@@ -36,47 +29,60 @@
 </template>
 
 <script>
-import { createToken } from "@/common/api/auth";
-import { deleteMess } from "@/common/api/message";
+import {makeRead} from '@/common/api/message'
+import {createToken} from '@/common/api/token'
 export default {
   props: {
     messList: {
       type: Array,
       default: [],
+      cur: 0,
+      // 已读数组
+      // idArr: []
+      // isDelete: false,
     },
   },
   data() {
     return {
-      isDelete: false,
+      // isDelete: false,
     };
   },
   onLoad() {
-    console.log(this.messList);
+    // console.log(this.messList);
   },
   methods: {
-    goShow() {
-      this.isDelete = true;
-    },
-    goRemove() {
-      this.isDelete = false;
-    },
-    goDelete(id) {
-      createToken().then((res) => {
-        if (res.data.token) {
-          deleteMess({
-            ids: id,
-            token: res.data.token,
-          }).then((res) => {
-            if (res.meta.code == "200") {
+    goRead(item){
+      // 2是已读
+      if(item.status === 2) {
+        return;
+      }else if(item.status === 1) {
+        // 1是未读
+        // ids
+        //this.ids.push(item.id)
+        const idArr = []
+        idArr.push(item.id)
+        createToken().then(res => {
+          makeRead({
+            ids: idArr,
+            token: res.data.token
+          }).then(res=> {
+            if(res.meta.code === '200'){
               this.$message({
-                message: "删除消息成功",
+                message: "已读消息成功",
                 type: "success",
               });
+              window.location.reload()
+            }else {
+              this.$message({
+                message: res.meta.msg,
+                type: "error",
+              });
             }
-          });
-        }
-      });
-    },
+          })
+        })
+      
+      }
+    }
   },
 };
 </script>
@@ -84,7 +90,8 @@ export default {
 <style scoped>
 .my-course-content {
   width: 100%;
-  height: 800px;
+  /* height: 400px; */
+  margin-bottom: 30px;
 }
 .course-empty {
   height: 500px;
@@ -100,6 +107,7 @@ export default {
   align-items: center;
   margin-top: 10px;
   position: relative;
+  cursor: pointer;
 }
 .item-dot {
   width: 5px;
@@ -118,7 +126,7 @@ export default {
   margin-left: 10px;
 }
 .item-main .title {
-  width: 400px;
+  width: 900px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

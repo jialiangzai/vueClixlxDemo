@@ -45,6 +45,11 @@
             :autoCropHeight="options.autoCropHeight"
             :fixedBox="options.fixedBox"
             @realTime="realTime"
+            style="
+               {
+                touch-action: 'none';
+              }
+            "
           />
         </el-col>
         <el-col :span="12" :style="{ height: '350px' }">
@@ -87,7 +92,9 @@
 import { VueCropper } from "vue-cropper";
 import { updatePortrait, getInfo } from "@/common/api/auth";
 import { mapState, mapActions } from "vuex";
-// import { uploadAvatar } from "@/api/system/user";
+import { uploadFileWithBlob, uploadFile } from "@/common/api/common";
+import { updateUserInfo } from "@/common/api/user";
+import { createToken } from "@/common/api/token";
 
 export default {
   components: { VueCropper },
@@ -104,23 +111,28 @@ export default {
       // visible: true,
       // 弹出层标题
       title: "修改头像",
+      imgUrl: "",
       options: {
-        img: "/image/common/avator.png", //裁剪图片的地址
+        img: this.$store.getters.avatar, //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度
         fixedBox: true, // 固定截图框大小 不允许改变
       },
       previews: {},
+      files: null,
     };
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
+    avatar() {
+      return (this.options.img = this.userInfo.avatar);
+    },
   },
   methods: {
-    ...mapActions(["saveUserInfoAction"]),
+    ...mapActions(["saveAvatorAction", "saveUserInfoAction"]),
     // 覆盖默认的上传行为
     requestUpload() {},
     // 向左旋转
@@ -138,6 +150,7 @@ export default {
     },
     // 上传预处理
     beforeUpload(file) {
+      this.files = file;
       if (file.type.indexOf("image/") == -1) {
         this.msgError("文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。");
       } else {
@@ -151,39 +164,58 @@ export default {
     // 上传图片
     uploadImg() {
       this.$refs.cropper.getCropBlob((data) => {
-        // let formData = new FormData();
+        //console.log(data);
+        //console.log(this.files);
+        let formData = new FormData();
         // console.log(data);
-        // var fileReader = new FileReader();
-        // fileReader.readAsDataURL(data);
-        // fileReader.onload = function (res) {
-        //   console.log(res); //这里输出的数据放到url里能生成图片
-        // };
         // console.log(" data:image/jpeg;base64,+" + data);
-        formData.append("avatar", data);
-        formData.append("id", this.userInfo.id);
+        formData.append("file", data);
+        // formData.append("id", this.userInfo.id);
         // console.log(formData)
-        for (var value of formData.values()) {
-          console.log(value);
-        }
-        // updatePortrait(formData).then(response => {
-        //   console.log(res)
-        //   this.open = false;
-        //   this.msgSuccess("修改成功");
-        //   this.getUerInfo()
-        //   this.visible = false;
-        // });
+
+        uploadFileWithBlob(formData).then((res) => {
+          // console.log(res)
+          this.imgUrl = res.data.url;
+          createToken()
+            .then((res) => {
+              //console.log(res);
+              const token = res.data.token;
+              updateUserInfo({
+                avatar: this.imgUrl,
+                id: this.userInfo.id,
+                token: res.data.token,
+              }).then((res) => {
+                if (res.meta.code == "200") {
+                  this.getUerInfo({
+                    token,
+                  });
+                } else {
+                  this.$message({
+                    message: "上传头像失败，请重新上传",
+                    type: "error",
+                  });
+                }
+              });
+            })
+            .catch(err => {});
+        });
       });
     },
-    getUerInfo() {
+    getUerInfo(params) {
       getInfo(params)
         .then((res) => {
-          sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-          this.saveUserInfoAction();
+          if (res.meta.code == "200") {
+            sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+            this.saveUserInfoAction();
+          } else {
+            this.$message({
+              message: "获取用户信息失败，请联系管理员",
+              type: "error",
+            });
+          }
           // this.saveUserInfoActions()
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(err => {});
     },
     // 实时预览
     realTime(data) {
@@ -236,7 +268,7 @@ html {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  box-shadow: 0 0 4px #ccc;
+  box-shadow: 0 0 4px rgb(126, 120, 120);
   overflow: hidden;
 }
 
@@ -268,5 +300,10 @@ html {
   text-align: center;
   color: #fff;
   background: rgba(0, 102, 255, 1);
+}
+.img {
+  width: 200px;
+  height: 20px;
+  border: 1px solid red;
 }
 </style>
