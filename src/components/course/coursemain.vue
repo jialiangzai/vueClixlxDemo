@@ -66,31 +66,33 @@
         <div class="main-container">
             <div class="container-top">
                 <ul class="all">
-                    <li class="item" @click="handleZonghe"><a href="#">综合</a></li>
-                    <li class="item">|</li>
-                    <li class="item" @click="handleNewCourse"><a href="#">最新课程</a></li>
-                    <li class="item">|</li>
-                    <li class="item" @click="mostbuy"><a href="#">最多购买</a></li>
-                    <li class="item">|</li>
-                    <li class="item">
-                        <a href="#">
-                            价格
-                            <span class="arrow">
-                                <img class="up" src="/image/up-arrow8.png" @click="handleUpPrice" />
-                                <img class="down" src="/image/up-arrow8.png" @click="handleDownPrice" />
-                            </span>
-                        </a>
+                    <li class="item" :class="[active == true ? 'active' :'']" @click="handleZonghe">综合</li>
+                    <li class="item split">|</li>
+                    <li class="item"  :class="[active2 == true ? 'active2' :'']"  @click="handleNewCourse">最新课程</li>
+                    <li class="item split">|</li>
+                    <li class="item"  :class="[active3 == true ? 'active3' :'']"  @click="mostbuy">最多购买</li>
+                    <li class="item split">|</li>
+                    <li class="item" @click="handlePrice">
+                        价格
+                        
+                        <span class="arrow">
+                            <i class="el-icon-caret-top" :style="priceSortBy === '2' ? 'color:#2C80FF':''"></i>
+                            <i class="el-icon-caret-bottom" :style="priceSortBy === '1' ? 'color:#2C80FF':''"></i>
+<!-- 
+                            <img class="up" src="/image/up-arrow8.png" @click="handleUpPrice" />
+                            <img class="down" src="/image/up-arrow8.png" @click="handleDownPrice" /> -->
+                        </span>
                     </li>
                 </ul>
                 <ul class="right">
-                    <li class="right-item" @click="freeCourse">
-                        <input type="radio" name="mianfei" id="mianfei" class="check" >
-                        <span class="right-items">免费课程</span>
-                    </li>
                     <li class="right-item">
-                        <input type="radio" name="mianfei" id="huiyuan" class="check" >
-                        <span class="right-items" @click="memberCourse">会员课程</span>
+                        <el-radio-group v-model="isFreeOrIsMember" @change="changeFreeOrMember">
+                            <el-radio label="1">免费课程</el-radio>
+                            <el-radio label="2">会员课程</el-radio>
+                         </el-radio-group>
                     </li>
+                   <!--  <li class="right-item"  @click="memberCourse">
+                    </li> -->
                 </ul>
             </div>
             <div class="container-body" v-if="arrcourse && arrcourse.length > 0">
@@ -99,9 +101,9 @@
                         <li class="courseItem" v-for="(item,index) in arrcourse" :key="index" >
                             <div class="courseInfo">
                                 <router-link :to="{path:'/course-info/' + item.id}">
-                                        <div class="courseBg">
-                                            <img class="courseImg" :src="item.courseCover" alt="">
-                                        </div>
+                                    <div class="courseBg">
+                                        <img class="courseImg" :src="item.courseCover" alt="">
+                                    </div>
                                 </router-link>
                                 <div class="courseName">{{item.courseName}}</div>
                                 <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
@@ -143,12 +145,11 @@ import {queryCourse} from '@/common/api/courseManage.js'
 export default{
     data() {
         return{
+            priceSortBy:'',
+            isFreeOrIsMember:'',
             firstArr:[],//一级分类
             secondArr:[],//二级分类
             arrcourse:[],//课程信息
-            currentType: '', // 当前选中的类型
-            currentType2: '', // 当前选中的类型
-            currentType3: '',
             degreeArr:[],
             queryParams: {
                 pageNum: 1,
@@ -160,7 +161,9 @@ export default{
                     firstCategory: '',
                     courseLevel:'',
                     secondCategory: '',
-                    sortBy:''
+                    sortBy:'',
+                    isMember:'',
+                    isFree:''
                 }
             },
             courseLevel: [{
@@ -176,12 +179,16 @@ export default{
             memberId:'',
             courseId:'',
             token:'',
-            selectedConditions:[]
+            selectedConditions:[],
+            active:false,
+            active2:false,
+            active3:false,
+            
+
         }
     },
     created() {
         let keywords = this.$route.query.keywords
-
         if(keywords){
             this.queryParams.entity.courseName = keywords
         }
@@ -245,41 +252,90 @@ export default{
                     }
                 })
             })
-
         },
-        //免费课程
-        freeCourse(){
-            this.queryParams.entity.isFree = '1'
-            this.queryCourse(this.queryParams)
+        //免费课程还是会员课程
+        changeFreeOrMember(e){
+            if(e === "1"){
+                this.active1 = false
+                this.active2 = false
+                this.active3 = false
+                this.priceSortBy = ''
+                this.queryParams.entity.isMember = ''
+                this.queryParams.entity.isFree = '1'
+                this.queryCourse(this.queryParams)
+            }else if(e === "2"){
+                this.active1 = false
+                this.active2 = false
+                this.active3 = false
+                this.priceSortBy = ''
+                this.queryParams.entity.isFree = ''
+                this.queryParams.entity.isMember = '1'
+                this.queryCourse(this.queryParams)
+            }
         },
-        //会员课程
-        memberCourse(){
-            this.queryParams.entity.isMember = '1'
-            this.queryCourse(this.queryParams)
+        //升降序排列
+        handlePrice(){
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {}
+            }
+            if(this.priceSortBy === '1' || this.priceSortBy === ''){
+                queryParams.entity.sortBy = 'price-asc'
+                this.queryCourse(queryParams)
+                this.priceSortBy = '2'
+            }else{
+                queryParams.entity.sortBy = 'price-desc'
+                this.queryCourse(queryParams)
+                this.priceSortBy = '1'
+            }
         },
-        //升序排列
-        handleUpPrice(){
-            this.queryParams.entity.sortBy = 'price-asc'
-            this.queryCourse(this.queryParams)
-        },
-        //降序排列
-        handleDownPrice(){
-            this.queryParams.entity.sortBy = 'price-desc'
-            this.queryCourse(this.queryParams)
-        },
+        
         //点击综合
         handleZonghe(){
-            this.queryCourse(this.queryParams)
+            this.active = !this.active
+            this.active2 = false
+            this.active3 = false
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {}
+            }
+            this.isFreeOrIsMember = ""
+            this.priceSortBy = ''
+            this.queryCourse(queryParams)
         },
         //点击最新课程
         handleNewCourse(){
-            this.queryParams.entity.sortBy = 'time-desc'
-            this.queryCourse(this.queryParams)
+            this.active2 = !this.active2
+            this.active1 = false
+            this.active3 = false
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {
+                    sortBy:'time-desc'
+                }
+            }
+            this.isFreeOrIsMember = ""
+            this.priceSortBy = ''
+            this.queryCourse(queryParams)
         },
         //最多购买
         mostbuy(){
-            this.queryParams.entity.sortBy = 'purchase-desc'
-            this.queryCourse(this.queryParams)
+            this.active3 = !this.active3
+            this.active2 = false
+            this.active1 = false
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {
+                    sortBy:'purchase-desc'
+                }
+            }
+            this.isFreeOrIsMember = ""
+            this.priceSortBy = ''
+            this.queryCourse(queryParams)
         },
         //获取一级分类
         getFirstCategorys(){
@@ -297,7 +353,6 @@ export default{
                 }
             })
         },
-
         // 分页器
         jumpPage(page) {
             this.queryParams.pageNum = page
@@ -340,6 +395,12 @@ export default{
 
 
 <style scoped>
+.all .active,.all .active2,.all .active3{
+    color: #2C80FF;
+}
+.all .split{
+    color: #d2d2d2;
+}
 /* 分类开始 */
 .course {
   padding: 20px 0;
@@ -394,6 +455,9 @@ export default{
     color: #515759;
     opacity: 1;
 }
+.title .item .active{
+    color: #2C80FF;
+}
 .category-poniter{
     height: 25px;
     line-height: 25px;
@@ -430,10 +494,9 @@ export default{
 }
 .all .item{
     margin:0 10px;
+    cursor: pointer;
 }
-.all .active{
-    color: #2C81FF!important;
-}
+
 .right{
     display: flex;
     padding-top: 20px;
@@ -441,19 +504,27 @@ export default{
     color: #515759;
 }
 .right .right-item{
-    cursor: pointer;
     margin-left: 10px;
 }
 .right .right-items{
     margin-right: 0px;
 }
 .arrow{
-    background: chartreuse;
     position: relative;
+}
+.arrow i:first-child{
+    position: absolute;
+    top: 0;
+}
+.arrow i:last-child{
+    position: absolute;
+    top: 8px;
 }
 .check{
     width: 15px;
     height: 15px;
+    cursor: pointer;
+
 }
 .up{
     position: absolute;
@@ -498,11 +569,17 @@ export default{
 }
 .courseInfo {
 	width: 100%;
-	height: 280px;
+	height: 260px;
 	background: #ffffff;
-	box-shadow: 2px 4px 4px rgba(27, 39, 94, 0.1);
+	box-shadow: 1px 1px 10px rgba(27, 39, 94, 0.4);
 	opacity: 1;
+    overflow: hidden;
 	border-radius: 8px;
+    transition:margin-top 0.2s;
+    -webkit-transition: margin-top 0.2s;
+}
+.courseInfo:hover{
+    margin-top: -10px;
 }
 .courseBg {
 	position: relative;
@@ -521,12 +598,14 @@ export default{
 	color: #ffffff;
 }
 .courseName {
-    width: 300px;
-    height: 40px;
 	margin: 10px;
 	font-weight: bold;
 	font-size: 14px;
 	color: #333333;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 .courseDegree {
 	margin-left: 10px;

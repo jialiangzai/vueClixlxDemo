@@ -40,6 +40,8 @@
 
 <script>
 import {getImageByCode} from '@/common/api/picture.js'
+import imgCode from '@/common/globalImages.js'
+
 
 export default{
     data(){
@@ -55,12 +57,12 @@ export default{
     },
     methods:{
         getImageByCodeGuanfangwx(){
-            getImageByCode({imageCode:'QATTS2KB5K'}).then(res => {
+            getImageByCode({imageCode:imgCode.global_guanfangcode}).then(res => {
                 this.guanfangwx = res.data.data.imageUrl;
             })
         },
         getImageByCodeTeacherwx(){
-            getImageByCode({imageCode:'YE1AT22QE3'}).then(res => {
+            getImageByCode({imageCode:imgCode.global_teachercode}).then(res => {
                 this.teacherwx = res.data.data.imageUrl;
             })
         },

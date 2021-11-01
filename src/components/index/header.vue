@@ -725,6 +725,7 @@ export default {
   width: 160px;
   height: 55px;
   margin: 10px 0;
+  cursor: pointer;
 }
 .content-logo img {
   height: 100%;
@@ -791,6 +792,7 @@ export default {
   font-size: 18px;
   color: #808080;
   text-align: center;
+  cursor: pointer;
 }
 .content-login-success {
   height: 53px;

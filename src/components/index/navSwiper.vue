@@ -7,7 +7,7 @@
           <li v-for="(item, index) in categorys" :key="item.id" @mouseenter="mourseHover(item,index)" @mouseleave="mourseOut(index)" >
             <router-link to="/" :title="item.categoryName" > {{ item.categoryName }} <i class="el-icon-arrow-right"></i></router-link>
             <div class="category-detail" v-if="categorysDetail[index]">
-                <div class="detail-main">
+                <div class="detail-main" >
                     <div class="detail-desc">基础知识</div>
                     <div class="detail-list">
                         <div class="list-know">知识点:</div>
@@ -31,7 +31,6 @@
                                         </div>
                                         <span class="addcart">加购物车</span>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -258,6 +257,7 @@ export default {
 }
 /* 分类详情 */
 .detail-main{
+    cursor: pointer;
     height: 100%;
     margin: 0 10px;
 }

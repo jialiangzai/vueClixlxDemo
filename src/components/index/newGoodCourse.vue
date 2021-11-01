@@ -62,7 +62,7 @@
         <!-- 推荐好课标题结束 -->
         <div class="commendCourseContent">
             <div class="commendLeft">
-                <img class="commendLeftimg" :src="imageCode" alt="">
+                <img class="commendLeftimg" :src="imgUrl" alt="">
             </div>
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
@@ -124,6 +124,7 @@ import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
 import { mapState } from "vuex";
 import {getImageByCode} from '@/common/api/picture.js'
+import imgCode from '@/common/globalImages.js'
 export default {
 	data() {
 		return {
@@ -141,7 +142,7 @@ export default {
                 entity: {}
             },
             token:'',
-            imageCode:''
+            imgUrl:''
 
         }
 	},
@@ -158,8 +159,8 @@ export default {
     },
     methods:{
         getImageByCode(){
-            getImageByCode({imageCode:'C56R35638I'}).then(res => {
-                this.imageCode = res.data.data.imageUrl;
+            getImageByCode({imageCode:imgCode.global_commendcourse}).then(res => {
+                this.imgUrl = res.data.data.imageUrl;
             })
         },
         //加入购物车
@@ -267,7 +268,7 @@ export default {
 .course-list-container h1 .hot .hot-left {
 	height: 38px;
 	font-size: 20px;
-  padding: 0 10px;
+    padding: 0 10px;
 	text-align: center;
 	line-height: 37px;
 	color: #ffffff;
@@ -314,8 +315,11 @@ export default {
 	width: 285px;
 	height: 280px;
 	margin: 0 20px 20px 0;
+    transition:margin-top 0.2s;
+    -webkit-transition: margin-top 0.2s;
 }
 .newCourseContent .courseUl .courseItem:hover{
+    margin-top: -10px;
     cursor: pointer;
 }
 .newCourseContent .courseUl .courseItem:nth-child(4n+0){
@@ -346,8 +350,11 @@ export default {
 	width: 285px;
 	height: 280px;
 	margin: 0 20px 20px 0;
+    transition:margin-top 0.2s;
+    -webkit-transition: margin-top 0.2s;
 }
 .commendCourseContent .courseUl .courseItem:hover{
+    margin-top: -10px;
     cursor: pointer;
 }
 .commendCourseContent .courseUl .courseItem:nth-child(3n+0){
@@ -361,11 +368,12 @@ export default {
 }
 .courseInfo {
 	width: 100%;
-	height: 280px;
+	height: 260px;
 	background: #ffffff;
-	box-shadow: 2px 4px 4px rgba(27, 39, 94, 0.1);
+	box-shadow: 1px 1px 10px rgba(27, 39, 94, 0.4);
 	opacity: 1;
 	border-radius: 8px;
+    overflow: hidden;
 }
 .courseBg {
 	position: relative;
@@ -384,8 +392,6 @@ export default {
 	color: #ffffff;
 }
 .courseName {
-    width: 300px;
-    height: 40px;
 	margin: 10px;
 	font-weight: bold;
 	font-size: 14px;
@@ -405,6 +411,7 @@ export default {
     justify-content: space-between;
 	font-size: 14px;
 	margin-top: 10px;
+    padding: 0 10px;
 }
 .courseMemberbg {
 	position: relative;
@@ -424,7 +431,6 @@ export default {
 	line-height: 25px;
 	left: 90px;
 	color: #ff727f;
-	margin-left: 10px;
 }
 
 /* 推荐好课结束 */
