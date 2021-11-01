@@ -256,7 +256,7 @@ export default{
         //免费课程还是会员课程
         changeFreeOrMember(e){
             if(e === "1"){
-                this.active1 = false
+                this.active = false
                 this.active2 = false
                 this.active3 = false
                 this.priceSortBy = ''
@@ -264,7 +264,7 @@ export default{
                 this.queryParams.entity.isFree = '1'
                 this.queryCourse(this.queryParams)
             }else if(e === "2"){
-                this.active1 = false
+                this.active = false
                 this.active2 = false
                 this.active3 = false
                 this.priceSortBy = ''
@@ -281,10 +281,16 @@ export default{
                 entity: {}
             }
             if(this.priceSortBy === '1' || this.priceSortBy === ''){
+                this.active = false
+                this.active2 = false
+                this.active3 = false
                 queryParams.entity.sortBy = 'price-asc'
                 this.queryCourse(queryParams)
                 this.priceSortBy = '2'
             }else{
+                this.active = false
+                this.active2 = false
+                this.active3 = false
                 queryParams.entity.sortBy = 'price-desc'
                 this.queryCourse(queryParams)
                 this.priceSortBy = '1'
@@ -308,7 +314,7 @@ export default{
         //点击最新课程
         handleNewCourse(){
             this.active2 = !this.active2
-            this.active1 = false
+            this.active = false
             this.active3 = false
             let queryParams = {
                 pageNum: 1,
@@ -325,7 +331,7 @@ export default{
         mostbuy(){
             this.active3 = !this.active3
             this.active2 = false
-            this.active1 = false
+            this.active = false
             let queryParams = {
                 pageNum: 1,
                 pageSize: 12,

@@ -4,7 +4,7 @@
     <div class="navSwiperContent">
       <div class="navigation">
         <ul>
-          <li v-for="(item, index) in categorys" :key="item.id" @mouseenter="mourseHover(item,index)" @mouseleave="mourseOut(index)" >
+          <li v-for="(item, index) in categorys" :key="item.id" v-if="index < 8" @mouseenter="mourseHover(item,index)" @mouseleave="mourseOut(index)">
             <router-link to="/" :title="item.categoryName" > {{ item.categoryName }} <i class="el-icon-arrow-right"></i></router-link>
             <div class="category-detail" v-if="categorysDetail[index]">
                 <div class="detail-main" >
@@ -37,6 +37,9 @@
                     </div>
                 </div>
             </div>
+          </li>
+          <li>
+            <router-link to="/course" :title="全部课程" > 全部课程 </router-link>
           </li>
         </ul>
       </div>
@@ -212,12 +215,12 @@ export default {
 	position: relative;
 }
 .navigation ul {
-	margin: 35px 0;
+	margin: 20px 0;
 }
 .navigation ul li {
 	height: 40px;
 	list-style: none;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 }
 .navigation ul li a i {
 	line-height: 40px;

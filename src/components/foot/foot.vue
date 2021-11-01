@@ -5,7 +5,7 @@
                 <img class="xlx" src="/image/logo02.png" alt="" />
             </div>
             <div class="footer-factory">
-                <img class="factory" src="/image/组件 33 – 1.png" alt="">
+                <img class="factory" src="/image/foot-factory.png" alt="">
             </div>
             <div class="copytight">
                 <ul class="copy-top">

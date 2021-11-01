@@ -1,8 +1,9 @@
 <template>
     <div class="confirmOrder">
-      <div class="bgColor"></div>
+      <div class="bgColor">
+          <h1 class="main-shopcart">确认订单</h1>
+      </div>
       <div class="main">
-            <h1>确认订单</h1>
             <div class="info">
                 <div class="head">商品信息</div>
                 <div class="info-main"  v-for="(item,index) in courseInfo" :key="index">
@@ -16,7 +17,6 @@
                         <div class="coursePrice">
                             <span class="nowprice">￥{{item.discountPrice}}</span>
                             <span class="oldprice">￥{{item.salePrice}}</span>
-
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,6 @@
 import {settlement,zfbpay,queryOrderWithAli,wxpay,queryOrderWithWX} from '@/common/api/payment.js'
 import {deleteShopCars} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
-
 export default{
     data(){
         return{
@@ -181,7 +180,6 @@ export default{
 
 <style scoped>
 .confirmOrder{
-    position: relative;
     width: 100%;
     height: 1000px;
 }
@@ -192,6 +190,18 @@ export default{
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
+}
+.main-shopcart{
+    width: 1200px;
+    margin: 0 auto;
+    height: 42px;
+    font-size: 24px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    line-height: 35px;
+    color: #FFFFFF;
+    padding: 30px 0;
+    opacity: 1;
 }
 @keyframes gradient {
   0% {
@@ -206,13 +216,8 @@ export default{
 }
 .main{
     width: 1200px;
-    height: 100%;
-    /*margin: 0 auto;*/
+    margin: -100px auto 0 auto;
   /*background-color: red;*/
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
 }
 .main h1{
     color: #FFFFFF;
@@ -224,42 +229,41 @@ export default{
     padding: 5px 0px 20px 0px;
     background: #F3F5F7;
     border-radius: 10px;
-  box-shadow: 0px 5px 15px 3px #888888;
+    box-shadow: 0px 5px 15px 3px #888888;
 }
 .info-main{
-    width: 1100px;
-    margin: 10px 0 0 26px;
+    margin: 10px 20px;
     background: #FFFFFF;
     border-radius: 10px;
+    padding: 20px;
 }
 .head{
-    padding: 20px 0 0 50px;
+    padding: 20px;
     font-size: 18px;
     color: #333333;
 }
 /* 课程信息 */
 .courseInfo{
     display: flex;
-    width: 1050px;
-    height: 200px;
+    width: 100%;
+    height: 160px;
     margin: 0 auto;
 }
 .coursebg{
-    margin: 15px 0;
     width: 280px;
-    height:150px ;
+    height: 160px;
 }
 .coursebg img{
     width: 100%;
     height: 100%;
 }
 .courseName{
-    margin:0 10px;
+    margin:0 20px;
     width: 400px;
-    height: 200px;
+    height: 160px;
     font-size: 16px;
     color: #07111B;
-    line-height:200px ;
+    line-height:160px ;
     word-break:keep-all;
     white-space:nowrap;
     overflow:hidden;
@@ -267,9 +271,9 @@ export default{
 }
 .coursePrice{
     margin-left: 100px;
-    width: 200px;
-    height: 200px;
-    line-height: 200px;
+    height: 160px;
+    text-align: right;
+    line-height: 160px;
 }
 .coursePrice .nowprice{
     font-size: 18px;
@@ -292,12 +296,12 @@ export default{
     color: #222;
     font-size: 16px;
     font-weight: 400;
-    padding-left: 51px;
+    padding: 0 20px;
 }
 .choosebg{
     margin-top: 10px;
     display: flex;
-    margin-left: 51px;
+    margin: 20px;
 }
 .payment{
     width: 130px;
@@ -361,7 +365,7 @@ export default{
     color: #F01414;
 }
 .btn{
-    margin-right: 50px;
+    margin-right: 20px;
     width: 150px;
     height: 50px;
     border: none;
