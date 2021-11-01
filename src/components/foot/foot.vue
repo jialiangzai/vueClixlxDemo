@@ -18,7 +18,8 @@
                     <li><a href="#">版权声明</a></li>
                 </ul>
                 <div class="copy-bottom">
-                    <span class="">Copyrignt© 2021 imooc.com  京ICP备  12003892号-11  京公网安备11010802030151号  营业执照</span>
+<!--                    <span class="">Copyrignt© 2021 imooc.com  京ICP备  12003892号-11  京公网安备11010802030151号  营业执照</span>-->
+                    <span class="">{{webconfig.copyright}}</span><a href="https://beian.miit.gov.cn/" target="_blank">{{webconfig.icp}}</a>
                 </div>
             </div>
             <div class="wx">
@@ -44,6 +45,12 @@ import imgCode from '@/common/globalImages.js'
 
 
 export default{
+    props:{
+      webconfig:{
+        type:Object,
+        default:{}
+      }
+    },
     data(){
         return{
             guanfangwx:'',

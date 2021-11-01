@@ -47,23 +47,38 @@
         </div>
       </div>
       <!-- 公共底部 -->
-      <MyFooter></MyFooter>
+      <MyFooter :webconfig="webconfig"></MyFooter>
   </div>
 </template>
 
 <script>
 import MyHeader from '../components/index/header.vue'
 import MyFooter from '../components/foot/foot.vue'
+import {webConfig} from '@/common/api/webConfig.js'
 export default {
-  metaInfo: {
-    title: '鹿线课堂', // set a title
-    meta: [
-      {
-        // set meta
-        name: 'keyWords',
-        content: 'My Example App',
-      },
-    ],
+  data(){
+    return{
+      webconfig:{}
+    }
+  },
+  metaInfo() {
+    return {
+      title: this.webconfig.title, // set a title
+      meta: [{ // set meta
+        name: this.webconfig.keywords,
+        content: this.webconfig.description
+      }]
+    }
+  },
+  created() {
+    this.__init()
+  },
+  methods: {
+    async __init(){
+      let res = await webConfig()
+      console.log('网页配置', res.data.data )
+      this.webconfig = res.data.data
+    }
   },
   components:{
     MyHeader,
