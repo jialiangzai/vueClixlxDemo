@@ -117,7 +117,6 @@ export default {
     getfree(){
       myCourses(this.freequery)
         .then((res) => {
-          console.log(res);
           if (res.meta.code == "200") {
             res.data.pageInfo.list.map((item) => {
               switch (item.courseLevel) {
@@ -148,7 +147,6 @@ export default {
     getvip(){
       myCourses(this.vipquery)
         .then((res) => {
-          console.log(res);
           if (res.meta.code == "200") {
             res.data.pageInfo.list.map((item) => {
               switch (item.courseLevel) {

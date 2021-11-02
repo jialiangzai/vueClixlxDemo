@@ -122,9 +122,11 @@
 import {getNewCourse,getHotCourse} from '@/common/api/courseManage.js'
 import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
-import { mapState } from "vuex";
 import {getImageByCode} from '@/common/api/picture.js'
 import imgCode from '@/common/globalImages.js'
+import {getShopCarCounter} from "@/common/api/auth";
+import { mapState, mapActions } from "vuex";
+
 export default {
 	data() {
 		return {
@@ -158,6 +160,7 @@ export default {
         }),
     },
     methods:{
+        ...mapActions(["saveCartNumAction"]),
         getImageByCode(){
             getImageByCode({imageCode:imgCode.global_commendcourse}).then(res => {
                 this.imgUrl = res.data.data.imageUrl;
@@ -170,6 +173,16 @@ export default {
                 this.memberId = this.userInfo.id
                 addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
                     if(res.meta.code === '200'){
+                        getShopCarCounter().then((res) => {
+                            if (res.meta.code == '200') {
+                                this.saveCartNumAction(res.data.counter)
+                            } else {
+                                this.$message({
+                                message: res.meta.msg,
+                                type: "error",
+                                });
+                            }
+                        });
                         this.$message({
                             message: '恭喜你，加入购物车成功',
                             type: 'success'

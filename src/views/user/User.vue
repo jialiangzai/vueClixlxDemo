@@ -177,7 +177,7 @@ export default {
 .mine-right {
   flex: 1;
   height: 100%;
-  padding: 20px;
+  padding-left: 20px;
   box-sizing: border-box;
 }
 </style>

@@ -81,10 +81,7 @@
       <div class="video" >
         <div class="chapterName">下载资料</div>
         <div class="source" v-for="(x,y) in downsource" :key="y">
-          <span class="chapterName">{{x.attachmentName}}</span>
-          <!-- <span>
-              <a href="#">{{x.attachmentUrl}}</a>
-          </span> -->
+          <span class="downloadCourse">{{x.attachmentName}}</span>
           <button class="download" @click="downloadSource(x)">下载资料</button>
         </div>
 
@@ -97,10 +94,10 @@
 
 <script>
 import {getcourseInfo,downloadAttachment,checkAuth} from '@/common/api/courseManage.js'
-import { mapState } from "vuex";
 import {createToken} from '@/common/api/token.js'
 import {addShopCar} from '@/common/api/shopcar.js'
-
+import {getShopCarCounter} from "@/common/api/auth";
+import { mapState, mapActions } from "vuex";
 
 export default{
   data(){
@@ -128,6 +125,7 @@ export default{
     }),
   },
   methods:{
+    ...mapActions(["saveCartNumAction"]),
     //跳转到订单页面
     goOrder(item){
       if(!this.token){
@@ -143,30 +141,31 @@ export default{
     },
     //下载资料
     downloadSource(item){
-      checkAuth(item.courseId,).then(res => {
-        if(res.data.data.hasAuth){
-          downloadAttachment(item.courseId,item.id).then((res) => {
-            const blob = new Blob([res])
-            let fileName = item.attachmentName
-            let fileUrl = item.attachmentUrl
-            const extName = fileUrl.substring(fileUrl.lastIndexOf("."))
-            fileName = fileName + extName;
-            const link = document.createElement('a')
-            link.download = fileName
-            link.style.display = 'none'
-            link.href = URL.createObjectURL(blob)
-            document.body.appendChild(link)
-            link.click()
-            URL.revokeObjectURL(link.href)
-            document.body.removeChild(link)
-          })
+        if(!this.token){
+            this.$message({
+                message: '购买该课程后才能下载资料哦',
+                type: 'error'
+            });
+            return 
         }else{
-          this.$message({
-            message: '购买该课程后才能下载资料哦',
-            type: 'error'
-          });
+            checkAuth(item.courseId,).then(res => {
+                downloadAttachment(item.courseId,item.id).then((res) => {
+                  const blob = new Blob([res])
+                  let fileName = item.attachmentName
+                  let fileUrl = item.attachmentUrl
+                  const extName = fileUrl.substring(fileUrl.lastIndexOf("."))
+                  fileName = fileName + extName;
+                  const link = document.createElement('a')
+                  link.download = fileName
+                  link.style.display = 'none'
+                  link.href = URL.createObjectURL(blob)
+                  document.body.appendChild(link)
+                  link.click()
+                  URL.revokeObjectURL(link.href)
+                  document.body.removeChild(link)
+                })
+            })
         }
-      })
     },
     //加入购物车
     addCart(){
@@ -182,9 +181,19 @@ export default{
         this.memberId = this.userInfo.id
         addShopCar({courseId:this.courseId,memberId:this.memberId,token:this.token}).then(res => {
           if(res.meta.code === '200'){
+            getShopCarCounter().then((res) => {
+                if (res.meta.code == '200') {
+                    this.saveCartNumAction(res.data.counter)
+                } else {
+                    this.$message({
+                        message: res.meta.msg,
+                        type: "error",
+                    });
+                }
+            });
             this.$message({
-              message: '恭喜你，加入购物车成功',
-              type: 'success'
+                message: '恭喜你，加入购物车成功',
+                type: 'success'
             });
           }
         })
@@ -194,6 +203,7 @@ export default{
     getcourseInfo(){
       getcourseInfo(this.courseId).then(res => {
         if(res.meta.code === '200'){
+            console.log(res);
           this.courseInfoArr = res.data.data
           this.courseDetail = res.data.data.bizCourseDetail
           this.courseChapters = res.data.data.bizCourseChapters
@@ -223,6 +233,13 @@ export default{
       j.isShow = false
     },
     goPlay(courseId,chapterId){
+        if(!this.token){
+            this.$message({
+            message: '购买该课程后才能开始学习哦',
+            type: 'error'
+            });
+        return
+      }
       this.$router.push({path:'/course-play/'+courseId+'/'+chapterId})
     }
   }
@@ -250,9 +267,6 @@ export default{
   height: 200px;
   color: #FFFFFF;
   z-index: 5;
-}
-.video{
-  box-sizing: border-box;
 }
 .route{
   /*margin-left: 50px;*/
@@ -323,11 +337,14 @@ export default{
   overflow: hidden;
 }
 .desc{
+    padding: 20px;
   color: #474747;
 }
 .btn{
   float: right;
   margin-top: 10px;
+    padding:0 20px 20px ;
+
 }
 .btn-item{
   width: 120px;
@@ -343,19 +360,20 @@ export default{
 .btn .active{
   background: #F11D1D!important;
   color: #FFFFFF;
+  margin-right: 10px;
 }
 /* 课程介绍结束 */
 
 /* 视频目录开始 */
 .video{
-  margin:20px 0 0 50px;
-  /*padding: 20px;*/
-  width: 1100px;
+  margin: 20px 0;
+  padding: 20px;
+  width: 1170px;
   background: #F8FAFC;
   border-radius: 10px;
   overflow: hidden;
 }
-.chapterName{
+ .video .chapterName{
   font-weight: bold;
   font-size: 20px;
   color: #333333;
@@ -409,10 +427,7 @@ export default{
   border-radius: 10px;
   color: #388FFF!important;
 }
-.chapterName{
-  /*padding: 0 30px;*/
-  box-sizing: border-box;
-}
+
 .download{
   width: 100px;
   height: 30px;

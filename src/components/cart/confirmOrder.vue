@@ -165,7 +165,6 @@ export default{
                 return;
             }
             this.setArr = JSON.parse(selectedArr);
-            console.log(this.setArr);
             settlement(this.setArr).then(res => {
                 this.payMethod = res.data.payModes
                 this.courseInfo = res.data.courses

@@ -27,7 +27,7 @@ const routes = [
   { path: '/home', component: Home ,name:'home'},
   { path: '/course', component: Course ,name:'course'},
   { path:'/course-info/:courseId',component:CourseInfo,name:'course-info'},
-  { path:'/course-play/:courseId/:chapterId',component:CoursePlay,name:'course-play',meta:{ requiresAuth : true }},
+  { path:'/course-play/:courseId/:chapterId',component:CoursePlay,name:'course-play',meta:{ requiresAuth : false }},
   { path: '/member', component: Member ,name:'member'},
   {
     path: '/about', component: About, name: 'about',
@@ -106,16 +106,27 @@ router.beforeEach((to,from,next)=>{
   let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
   if( to.matched.some(record => record.meta.requiresAuth) ){
     if( !userInfo ){
-      next({
+       /*  this.$confirm('未登录，请您登录', '提示信息', {
+            confirmButtonText: '登录',
+            cancelButtonText: '取消',
+            type: 'success'
+        }).then(() => {
+            this.$router.push('/home')
+        }).catch(() => {
+            this.$router.go(-1)
+        }); */
+        return 
+      /* next({
         name:'home',
         query:{redirect:'/home'}
-      })
+      }) */
     }else{
       next()
     }
   }else{
     next()
   }
+ 
 })
 
 export default router;

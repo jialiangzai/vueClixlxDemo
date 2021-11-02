@@ -104,7 +104,6 @@ export default {
     getReadList() {
       // this.query.entity.status = 2;
       getByMemberId(this.readquery).then((res) => {
-        console.log(res);
         if (res.meta.code == "200") {
           this.readListPage = res.data.pageInfo.total;
           this.readList = res.data.pageInfo.list;

@@ -63,7 +63,7 @@ export default {
 
 <style scoped>
 .setbindsns {
-  width: 800px;
+  width: 1000px;
   height: 700px;
 }
 .setbindsns-header {

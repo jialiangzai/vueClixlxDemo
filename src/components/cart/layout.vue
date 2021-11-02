@@ -66,6 +66,8 @@
 <script>
 import {getShopCarList,deleteShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
+import {getShopCarCounter} from "@/common/api/auth";
+import { mapState, mapActions } from "vuex";
 export default{
     data(){
         return{
@@ -97,6 +99,7 @@ export default{
         },
     },
     methods:{
+        ...mapActions(["saveCartNumAction"]),
         // 去结算
         getSelecteds(){
             if(!this.selectedProducts || this.selectedProducts.length <= 0){
@@ -154,13 +157,23 @@ export default{
         },
         //删除购物车数据
         deleteOrder(id){
-            this.$confirm('确定是否删除该订单', '警告', {
+            this.$confirm('确定是否删除该课程', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 deleteShopCar({id:id,token:this.token}).then(response => {
                     if (response.meta.code === '200') {
+                        getShopCarCounter().then((res) => {
+                            if (res.meta.code == '200') {
+                                this.saveCartNumAction(res.data.counter)
+                            } else {
+                                this.$message({
+                                message: res.meta.msg,
+                                type: "error",
+                                });
+                            }
+                        });
                         this.$message({
                             type: 'success',
                             message: '删除成功'

@@ -110,7 +110,6 @@ export default {
             this.memberid = this.userInfo.id
             playCourse(courseId,chapterId).then(res => {
                 if(res.meta.code === '200'){
-                    console.log(res);
                     this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
                     this.chapterInfo = res.data.chapterInfo
                     this.chapters = res.data.courseInfo.bizCourseChapters
@@ -185,6 +184,7 @@ export default {
 	opacity: 1;
 }
 .play {
+	height: 521px;
 	display: flex;
 	background: #1c1f21;
 }

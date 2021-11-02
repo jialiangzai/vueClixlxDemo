@@ -138,10 +138,11 @@
 
 <script>
 import {getFirstCategorys,getSecondCategorys} from '@/common/api/courseCategory.js'
-import { mapState } from "vuex";
 import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
 import {queryCourse} from '@/common/api/courseManage.js'
+import {getShopCarCounter} from "@/common/api/auth";
+import { mapState, mapActions } from "vuex";
 export default{
     data() {
         return{
@@ -203,6 +204,8 @@ export default{
         }),
     },
     methods:{
+        ...mapActions(["saveCartNumAction"]),
+
         // 关闭已选择条件
         closeSelectedCondition(type, item, idx){
             this.selectedConditions.splice(idx, 1)
@@ -219,7 +222,6 @@ export default{
         },
         // 构建搜索条件并搜索
         buildingCondition(type, object){
-            console.log(object);
             if(type === "fcategory"){
                 this.queryParams.entity.firstCategory = (object && object.id) ? object.id : ""
                 if(object && object.id){
@@ -245,6 +247,16 @@ export default{
                 this.memberId = this.userInfo.id
                 addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
                     if(res.meta.code === '200'){
+                        getShopCarCounter().then((res) => {
+                            if (res.meta.code == '200') {
+                                this.saveCartNumAction(res.data.counter)
+                            } else {
+                                this.$message({
+                                message: res.meta.msg,
+                                type: "error",
+                                });
+                            }
+                        });
                         this.$message({
                             message: '恭喜你，加入购物车成功',
                             type: 'success'

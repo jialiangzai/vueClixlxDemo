@@ -11,13 +11,13 @@
         <div class="content-nav">
           <ul>
             <li>
-              <router-link to="/" class="aaa" style="cursor: pointer">首 页</router-link>
+              <router-link to="/" style="cursor: pointer" :class="active === '1' ? 'active' : ''">首 页</router-link>
             </li>
             <li>
-              <router-link to="/course" style="cursor: pointer">课 程</router-link>
+              <router-link to="/course"  style="cursor: pointer"  :class="active === '2' ? 'active' : ''">课 程</router-link>
             </li>
             <li>
-              <router-link to="/member" style="cursor: pointer">会 员</router-link>
+              <router-link to="/member"  style="cursor: pointer"  :class="active === '3' ? 'active' : ''">会 员</router-link>
             </li>
           </ul>
         </div>
@@ -29,7 +29,7 @@
             <i class="el-icon-search" style="cursor: pointer" @click="toSearch()"></i>
           </div>
           <div class="content-Shopping" style="cursor: pointer">
-            <el-badge :value="carNum" class="item" v-if="carNum">
+            <el-badge :value="cartNum" class="item" v-if="cartNum">
               <router-link to="/cart">
                 <i class="el-icon-shopping-cart-1"></i>
               </router-link>
@@ -120,7 +120,7 @@
             :class="loginCurrent === index ? 'active' : ''"
             @click="gochange(index)"
           >
-            <p>{{ item.title }}</p>
+            <p class="title-desc">{{ item.title }}</p>
             <span></span>
           </div>
         </div>
@@ -132,6 +132,7 @@
             :rules="registerRules"
             ref="registerForm"
             class="demo-ruleForm"
+            
           >
             <el-form-item prop="mobile" class="captcha">
               <el-input
@@ -154,6 +155,13 @@
                 {{ captcha }}
               </div>
             </el-form-item>
+            <el-form-item prop="password" class="captcha">
+                <el-input
+                  type="password"
+                  v-model="registerForm.password"
+                  placeholder="请输入密码"
+                ></el-input>
+              </el-form-item>
             <el-form-item>
               <el-button
                 type="primary"
@@ -226,6 +234,7 @@
                   {{ captcha }}
                 </div>
               </el-form-item>
+              
               <el-form-item>
                 <el-button
                   type="primary"
@@ -258,92 +267,98 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      msg: "我是头部",
-      carNum: 0,
-      isCar: false,
-      // isLogin: false,
-      isUserInfo: false,
-      avatorImg: "/image/common/avator.png",
-      username: "小鹿线-默认",
-      // userInfo: null,
-      loginNav: [
+        active:'1',
+        msg: "我是头部",
+        // carNum: 0,
+        isCar: false,
+        // isLogin: false,
+        isUserInfo: false,
+        avatorImg: "/image/common/avator.png",
+        username: "小鹿线-默认",
+        // userInfo: null,
+        loginNav: [
         {
-          id: 0,
-          title: "账号登录",
+            id: 0,
+            title: "账号登录",
         },
         {
-          id: 1,
-          title: "验证码登录",
+            id: 1,
+            title: "验证码登录",
         },
-      ],
-      loginCurrent: 0,
-      open: false,
-      isregister: false,
-      isSend: false,
-      registerForm: {}, // 注册
-      captcha: "短信验证码",
-      registerRules: {
-        mobile: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
-          {
-            pattern: /^1[3456789]\d{9}$/,
-            message: "目前只支持中国大陆的手机号码",
-          },
         ],
-        captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-      }, // 注册
-      phoneForm: {}, // 账号登陆
-      phoneRules: {
+        loginCurrent: 0,
+        open: false,
+        isregister: false,
+        isSend: false,
+        registerForm: {}, // 注册
+        captcha: "短信验证码",
+        registerRules: {
+            mobile: [
+                { required: true, message: "请输入手机号", trigger: "blur" },
+                {
+                pattern: /^1[3456789]\d{9}$/,
+                message: "目前只支持中国大陆的手机号码",
+                },
+            ],
+            captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+            password: [
+                { required: true, message: '请输入密码', trigger: 'blur' },
+                { min: 6, max: 30, message: '长度在 6 到 30个字符', trigger: 'blur' }
+            ]
+        }, // 注册
+        phoneForm: {}, // 账号登陆
+        phoneRules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+            { required: true, message: "请输入用户名", trigger: "blur" },
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-      }, // 账号
-      identifyForm: {}, // 验证码登陆
-      identifyRules: {
-        mobile: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
-          {
-            pattern: /^1[3456789]\d{9}$/,
-            message: "目前只支持中国大陆的手机号码",
-          },
+        }, // 账号
+        identifyForm: {}, // 验证码登陆
+        identifyRules: {
+            mobile: [
+                { required: true, message: "请输入手机号", trigger: "blur" },
+                {
+                pattern: /^1[3456789]\d{9}$/,
+                message: "目前只支持中国大陆的手机号码",
+                },
+            ],
+            captcha: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        },
+        avatorList: [
+        {
+            id: 1,
+            imgUrl: "/image/header/course.png",
+            title: "我的课程",
+            linkUrl: "/about/my-course",
+        },
+        {
+            id: 2,
+            imgUrl: "/image/header/order.png",
+            title: "订单中心",
+            linkUrl: "/about/order",
+        },
+        {
+            id: 3,
+            imgUrl: "/image/header/mess.png",
+            title: "我的消息",
+            linkUrl: "/about/message",
+        },
+        {
+            id: 4,
+            imgUrl: "/image/header/setting.png",
+            title: "个人设置",
+            linkUrl: "/user/setbindsns",
+        },
         ],
-        captcha: [{ required: true, message: "请输入密码", trigger: "blur" }],
-      },
-      avatorList: [
-        {
-          id: 1,
-          imgUrl: "/image/header/course.png",
-          title: "我的课程",
-          linkUrl: "/about/my-course",
-        },
-        {
-          id: 2,
-          imgUrl: "/image/header/order.png",
-          title: "订单中心",
-          linkUrl: "/about/order",
-        },
-        {
-          id: 3,
-          imgUrl: "/image/header/mess.png",
-          title: "我的消息",
-          linkUrl: "/about/message",
-        },
-        {
-          id: 4,
-          imgUrl: "/image/header/setting.png",
-          title: "个人设置",
-          linkUrl: "/user/setbindsns",
-        },
-      ],
-      keywords: "",
-      
+        keywords: "",
+
     };
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       isLogin: (state) => state.user.isLogin,
+      cartNum: state => state.user.cartNum
     }),
   },
   created() {
@@ -351,7 +366,16 @@ export default {
     this.copySearch();
   },
   methods: {
-    ...mapActions(["saveUserInfoAction", "saveLoginAction"]),
+    ...mapActions(["saveUserInfoAction", "saveLoginAction","saveCartNumAction"]),
+    active1(){
+        this.active = '1'
+    },
+    active2(){
+        this.active = '2'
+    },
+    active3(){
+        this.active = '3'
+    },
     //点击图标返回首页
     goHome(){
         this.$router.push('/')
@@ -630,8 +654,8 @@ export default {
     getCarNum() {
       if (sessionStorage.getItem("token")) {
         getShopCarCounter().then((res) => {
-          if (res.meta.code == 200) {
-            this.carNum = res.data.counter;
+          if (res.meta.code == '200') {
+              this.saveCartNumAction(res.data.counter)
           } else {
             this.$message({
               message: res.meta.msg,
@@ -683,14 +707,40 @@ export default {
     }
   },
   watch:{
-      '$route':function(to,from){
+      $route:{
+        immediate:true,
+        handler(to,from){
+            if(to.fullPath === '/home'){
+                this.active = '1'
+            }else if(to.fullPath === '/course'){
+                this.active = '2'
+            }else if(to.fullPath === '/memeber'){
+                this.active = '3'
+            }
+            this.copySearch()
+        }
+      },
+     /*  '$route':function(to,from){
+          console.log(555);
+           console.log(to,'kkkkkkkk',from);
+          if(to === '/home'){
+              this.active = '1'
+          }else if(to === '/course'){
+              
+              this.active = '2'
+          }else if(to === '/memeber'){
+              this.active = '3'
+          }
          this.copySearch()
-      }
+      } */
   }
 };
 </script>
 
 <style scoped>
+.active{
+    font-weight: bold;
+}
 * {
   list-style: none;
   text-decoration: none;
@@ -700,7 +750,9 @@ export default {
   height: 100px;
   position: relative;
 }
-
+.title-desc{
+    cursor: pointer;
+}
 .index-header {
   position: relative;
   display: flex;
@@ -750,9 +802,7 @@ export default {
   font-family: MicrosoftYaHei;
   color: #808080;
 }
-.aaa {
-  font-weight: bold;
-}
+
 .searBuyLogin {
   display: flex;
   justify-content: space-between;
@@ -847,6 +897,7 @@ export default {
   font-size: 16px;
   font-family: Microsoft YaHei;
   font-weight: bold;
+  cursor: pointer;
 }
 .captcha {
   width: 100%;
@@ -896,6 +947,7 @@ export default {
   right: -40px;
   z-index: 999;
   display: block;
+  border-radius: 10px;
 }
 .user-info-top {
   display: flex;
@@ -982,6 +1034,7 @@ export default {
   padding: 0 10px;
   box-sizing: border-box;
   box-shadow: 0px 5px 15px 3px #888888;
+  border-radius: 10px;
 }
 .shopcar-top {
   height: 30px;

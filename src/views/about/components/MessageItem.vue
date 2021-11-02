@@ -10,8 +10,8 @@
         >
           <div class="item-dot" v-if="item.status === 1"></div>
           <div class="item-main">
-            <p class="title">{{ item.title }}</p>
-            <p class="time">{{ item.createTime }}</p>
+            <p class="title">{{ item.title }} </p>
+            <p class="time">{{ dateFormat(item.createTime, 'yyyy-MM-dd hh:mm:ss') }}</p>
           </div>
           <!-- <div class="delete" v-show="isDelete" @click="goDelete(item.id)">
             <img src="/image/about/remove.png" alt="" />
@@ -51,6 +51,22 @@ export default {
     // console.log(this.messList);
   },
   methods: {
+    dateFormat(datetime, fmt){
+        datetime = new Date(datetime)
+        var o = {
+            "M+": datetime.getMonth() + 1, //月份 
+            "d+": datetime.getDate(), //日 
+            "h+": datetime.getHours(), //小时 
+            "m+": datetime.getMinutes(), //分 
+            "s+": datetime.getSeconds(), //秒 
+            "q+": Math.floor((datetime.getMonth() + 3) / 3), //季度 
+            "S": datetime.getMilliseconds() //毫秒 
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    },
     goRead(item){
       // 2是已读
       if(item.status === 2) {
@@ -123,7 +139,7 @@ export default {
   display: flex;
   flex-direction: column;
   height: 40px;
-  margin-left: 10px;
+  margin-left: 20px;
 }
 .item-main .title {
   width: 900px;
@@ -138,7 +154,6 @@ export default {
 .item-main .time {
   font-size: 12px;
   margin-top: 5px;
-  margin-left: 10px;
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #666666;

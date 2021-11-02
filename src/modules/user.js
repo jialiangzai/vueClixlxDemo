@@ -8,7 +8,8 @@ export default {
 			city: '北京',
 			id:1,
 		},
-		isLogin: JSON.parse(sessionStorage.getItem('isLogin')) || false
+		isLogin: JSON.parse(sessionStorage.getItem('isLogin')) || false,
+        cartNum: 0,
 	},
 	getters:{
 		avatar:state => state.userInfo.avatar
@@ -22,7 +23,10 @@ export default {
 		},
 		saveAvator(state,payload){
 			state.userInfo.avatar = payload
-		}
+		},
+        saveCartNum(state,payload){
+            state.cartNum = payload
+        }
 	},
 	actions:{
 		saveUserInfoAction({commit},payload){
@@ -33,6 +37,9 @@ export default {
 		},
 		saveAvatorAction({commit},payload){
 			commit('saveAvator',payload)
-		}
+		},
+        saveCartNumAction({commit},payload){
+            commit('saveCartNum',payload)
+        }
 	}
 }

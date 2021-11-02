@@ -36,7 +36,6 @@ export default {
   methods: {
     async __init(){
       let res = await webConfig()
-      console.log('网页配置', res.data.data )
       this.webconfig = res.data.data
     }
   },

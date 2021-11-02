@@ -15,7 +15,7 @@
                 />
                 <img
                   class="banner-avator"
-                  :src="userInfo.avatar"
+                  :src="avatar"
                   alt=""
                   v-else
                 />
@@ -74,21 +74,23 @@
         </div>
       </div>
     </div>
-    <Foot class="foot"></Foot>
+    <foot :webconfig="webconfig"></foot>
   </div>
 </template>
 
 <script>
 import Header from "@/components/index/header.vue";
 import { mapState } from "vuex";
-import Foot from "@/components/foot/foot.vue";
-// import Footer from '@/components/foot/Footer.vue';
+import foot from '@/components/foot/foot.vue';
+import {webConfig} from '@/common/api/webConfig.js'
 import IScroll from "iscroll";
 
 export default {
   name: "About",
   data() {
     return {
+        avatar:'/image/common/avator.png',
+    webconfig:{},
       aboutList: [
         {
           id: 1,
@@ -132,9 +134,17 @@ export default {
   },
   components: {
     Header,
-    Foot,
+    foot,
   },
+    created() {
+    this.__init()
+  },
+ 
   methods: {
+      async __init(){
+      let res = await webConfig()
+      this.webconfig = res.data.data
+    },
     geDetail(index) {
       this.current = index;
       // sessionStorage.setItem('current',JSON.stringify(index))

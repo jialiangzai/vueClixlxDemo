@@ -39,7 +39,7 @@
             </div>
           </li>
           <li>
-            <router-link to="/course" :title="全部课程" > 全部课程 </router-link>
+            <router-link to="/course" title="全部课程" > 全部课程 </router-link>
           </li>
         </ul>
       </div>
@@ -66,7 +66,8 @@ import courseType from './courseType.vue'
 import http from '../../common/api/requests'
 import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
-import { mapState } from "vuex";
+import {getShopCarCounter} from "@/common/api/auth";
+import { mapState, mapActions } from "vuex";
 
 export default {
 	data() {
@@ -100,6 +101,7 @@ export default {
         }),
     },
 	methods: {
+        ...mapActions(["saveCartNumAction"]),
         goCourseInfo(item){
             this.$router.push('/course-info/' + item.id)
         },
@@ -110,6 +112,16 @@ export default {
                 this.memberId = this.userInfo.id
                 addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
                     if(res.meta.code === '200'){
+                        getShopCarCounter().then((res) => {
+                            if (res.meta.code == '200') {
+                                this.saveCartNumAction(res.data.counter)
+                            } else {
+                                this.$message({
+                                message: res.meta.msg,
+                                type: "error",
+                                });
+                            }
+                        });
                         this.$message({
                             message: '恭喜你，加入购物车成功',
                             type: 'success'
