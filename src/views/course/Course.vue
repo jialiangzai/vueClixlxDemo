@@ -4,7 +4,6 @@
         <!-- <courseDirection></courseDirection> -->
         <coursemain></coursemain>
         <foot :webconfig="webconfig"></foot>
-
     </div>
 
 </template>
@@ -46,3 +45,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+    
+</style>

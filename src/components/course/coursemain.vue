@@ -431,9 +431,9 @@ export default{
 }
 /* 分类开始 */
 .course {
-  padding: 20px 0;
+    padding: 20px 0;
 	width: 100%;
-	/*height: 220px;*/
+	/* height: 220px; */
 	background: #F3F5F9;
 }
 .course-main{

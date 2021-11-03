@@ -85,10 +85,7 @@ export default {
             this.$message.error('无法播放视频，请先登录');
             this.$router.go(-1)
         }
-        this.playCourse()
-
         this.playCourse(this.courseId,this.chapterId)
-
 	},
     computed: {
       player(){
@@ -103,7 +100,7 @@ export default {
         // 播放列表课程
         play(item){
             this.$router.push({path:'/course-play/'+item.courseId+'/'+item.id})
-            this.playCourse(item.courseId,item.id)
+            //this.playCourse(item.courseId,item.id)
         },
         //已进入页面播放课程
         playCourse(courseId,chapterId){

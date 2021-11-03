@@ -4,7 +4,7 @@
     <indexHeader></indexHeader>
     <navSwiper></navSwiper>
     <newGoodCourse></newGoodCourse>
-    <foot :webconfig="webconfig"></foot>
+    <foot class="coursefoot" :webconfig="webconfig"></foot>
   </div>
 </template>
 
@@ -49,4 +49,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
