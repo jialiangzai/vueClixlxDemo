@@ -97,7 +97,7 @@ import {getcourseInfo,downloadAttachment,checkAuth} from '@/common/api/courseMan
 import {createToken} from '@/common/api/token.js'
 import {addShopCar} from '@/common/api/shopcar.js'
 import {getShopCarCounter} from "@/common/api/auth";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions,mapMutations } from "vuex";
 
 export default{
   data(){
@@ -110,12 +110,12 @@ export default{
       downsource:[],
       token:'',
       memberId:'',
-      token:''
+      tokens:''
 
     }
   },
   created(){
-    this.token = sessionStorage.getItem('token')
+    this.tokens = sessionStorage.getItem('token')
     this.getcourseInfo()
   },
   computed: {
@@ -126,6 +126,7 @@ export default{
   },
   methods:{
     ...mapActions(["saveCartNumAction"]),
+    ...mapMutations(["saveLoginDialog"]),
     //跳转到订单页面
     goOrder(item){
       if(!this.token){
@@ -133,6 +134,7 @@ export default{
           message: '请先登录才能购买哦',
           type: 'error'
         });
+        this.$store.commit('saveLoginDialog', true)
       }
       let arr = new Array();
       arr.push({'number':1,"id":item.id})
@@ -169,11 +171,12 @@ export default{
     },
     //加入购物车
     addCart(){
-      if(!this.token){
+      if(!this.tokens){
         this.$message({
           message: '请先登录才能加入购物车哦',
           type: 'error'
         });
+        this.$store.commit('saveLoginDialog', true)
         return
       }
       createToken().then(res => {
@@ -203,7 +206,6 @@ export default{
     getcourseInfo(){
       getcourseInfo(this.courseId).then(res => {
         if(res.meta.code === '200'){
-            console.log(res);
           this.courseInfoArr = res.data.data
           this.courseDetail = res.data.data.bizCourseDetail
           this.courseChapters = res.data.data.bizCourseChapters

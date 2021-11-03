@@ -124,6 +124,7 @@ export default {
   margin-top: 10px;
   position: relative;
   cursor: pointer;
+  border-bottom: 1px solid rgba(112, 112, 112, 0.3);
 }
 .item-dot {
   width: 5px;

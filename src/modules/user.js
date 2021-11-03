@@ -10,6 +10,7 @@ export default {
 		},
 		isLogin: JSON.parse(sessionStorage.getItem('isLogin')) || false,
         cartNum: 0,
+        loginDialog:false
 	},
 	getters:{
 		avatar:state => state.userInfo.avatar
@@ -26,6 +27,9 @@ export default {
 		},
         saveCartNum(state,payload){
             state.cartNum = payload
+        },
+        saveLoginDialog(state,payload){
+            state.loginDialog = payload
         }
 	},
 	actions:{

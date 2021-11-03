@@ -142,7 +142,7 @@ import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
 import {queryCourse} from '@/common/api/courseManage.js'
 import {getShopCarCounter} from "@/common/api/auth";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions,mapMutations } from "vuex";
 export default{
     data() {
         return{
@@ -180,6 +180,7 @@ export default{
             memberId:'',
             courseId:'',
             token:'',
+            tokens:'',
             selectedConditions:[],
             active:false,
             active2:false,
@@ -189,6 +190,7 @@ export default{
         }
     },
     created() {
+        this.tokens = sessionStorage.getItem('token')
         let keywords = this.$route.query.keywords
         if(keywords){
             this.queryParams.entity.courseName = keywords
@@ -205,7 +207,7 @@ export default{
     },
     methods:{
         ...mapActions(["saveCartNumAction"]),
-
+        ...mapMutations(["saveLoginDialog"]),
         // 关闭已选择条件
         closeSelectedCondition(type, item, idx){
             this.selectedConditions.splice(idx, 1)
@@ -242,6 +244,14 @@ export default{
         },
         //加入购物车
         addCart(item){
+            if(!this.tokens){
+                this.$message({
+                    message: '请先登录才能加入购物车哦',
+                    type: 'error'
+                });
+                this.$store.commit('saveLoginDialog', true)
+                return
+            }
             createToken().then(res => {
                 this.token = res.data.token
                 this.memberId = this.userInfo.id

@@ -67,7 +67,7 @@ import http from '../../common/api/requests'
 import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
 import {getShopCarCounter} from "@/common/api/auth";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions,mapMutations } from "vuex";
 
 export default {
 	data() {
@@ -85,12 +85,14 @@ export default {
                     firstCategory:''
                 }
             },
-            token:''
+            token:'',
+            tokens:''
 
 
 		}
 	},
 	created() {
+        this.tokens = sessionStorage.getItem('token')
 		this.getFirstCategory()
 		this.getSliders()
 	},
@@ -102,11 +104,20 @@ export default {
     },
 	methods: {
         ...mapActions(["saveCartNumAction"]),
+        ...mapMutations(["saveLoginDialog"]),
         goCourseInfo(item){
             this.$router.push('/course-info/' + item.id)
         },
         //加入购物车
         addCart(item){
+            if(!this.tokens){
+                this.$message({
+                    message: '请先登录才能加入购物车哦',
+                    type: 'error'
+                });
+                this.$store.commit('saveLoginDialog', true)
+                return
+            }
             createToken().then(res => {
                 this.token = res.data.token
                 this.memberId = this.userInfo.id
