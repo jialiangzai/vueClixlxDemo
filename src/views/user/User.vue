@@ -7,7 +7,7 @@
           <div class="top-main">
             <img :src=" userInfo.avatar" alt="" v-if="userInfo.avatar" />
             <img :src="avatorImg" alt="" v-else>
-            <p class="avator-name">{{userInfo.nickName}}</p>
+            <p class="avator-name">{{userInfo.username}}</p>
             <p class="avator-id">ID: {{userInfo.sysCode }}</p>
           </div>
         </div>
@@ -40,6 +40,7 @@
 
 <script>
 import Header from "@/components/index/header.vue";
+import {Decrypt , Encrypt} from '@/utils/aes.js'
 import {mapState} from 'vuex'
 export default {
   data() {
@@ -74,6 +75,18 @@ export default {
   },
   components: {
     Header,
+  },
+  created() {
+    // 获取当前路由信息 判断当前路由 是否 等于 选中路由
+    let curpath = this.$route.path
+    let curIndex = this.navList.findIndex(item=>{
+      return item.linkUrl === curpath
+    })
+    this.navCurrent = curIndex
+
+    let code = Encrypt('123456');
+    console.log(code)
+
   },
   methods: {
     goChange(index){

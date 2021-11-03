@@ -15,3 +15,11 @@ export function sendFindPasswordCaptcha({mobile}) {
   })
 }
 
+// 发送修改手机号验证码
+
+export function sendModifyMobileCaptcha({mobile}) {
+  return http.$axios({
+    url: 'api/sms/sendModifyMobileCaptcha?mobile='+mobile,
+    method: 'GET'
+  })
+}

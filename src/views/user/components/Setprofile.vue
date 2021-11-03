@@ -2,29 +2,30 @@
   <div class="setprofile">
     <el-tabs v-model="activeName" @tab-click="handleClick" class="profile-tabs">
       <el-tab-pane label="基本信息" name="first" class="profile-pane">
+        <div class="changeInfo" @click="showBasisBtn">修改信息</div>
         <el-form
-          ref="form"
-          :model="form"
+          ref="basisForm"
+          :model="basisForm"
           label-width="100px"
           style="width: 500px"
         >
           <el-form-item label="姓名" prop="realName">
             <el-input
-              v-model="form.realName"
+              v-model="basisForm.realName"
               :disabled="isDis"
               placeholder="无"
             ></el-input>
           </el-form-item>
           <el-form-item label="昵称" prop="nickName">
             <el-input
-              v-model="form.nickName"
+              v-model="basisForm.nickName"
               placeholder="无"
               :disabled="isDis"
             ></el-input>
           </el-form-item>
           <el-form-item label="证件类型" prop="certificateType">
             <el-select
-              v-model="form.certificateType"
+              v-model="basisForm.certificateType"
               placeholder="无"
               :disabled="isDis"
             >
@@ -39,20 +40,20 @@
           </el-form-item>
           <el-form-item label="证件号码" prop="certificateNumber">
             <el-input
-              v-model="form.certificateNumber"
+              v-model="basisForm.certificateNumber"
               placeholder="无"
               :disabled="isDis"
             ></el-input>
           </el-form-item>
           <el-form-item label="性别" prop="gender">
-            <el-radio-group v-model="form.gender" :disabled="isDis">
+            <el-radio-group v-model="basisForm.gender" :disabled="isDis">
               <el-radio label="1">男生</el-radio>
               <el-radio label="2">女生</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="最高学历" prop="highestEducation">
             <el-select
-              v-model="form.highestEducation"
+              v-model="basisForm.highestEducation"
               placeholder="无"
               :disabled="isDis"
             >
@@ -68,14 +69,15 @@
           </el-form-item>
           <el-form-item label="年龄" prop="age">
             <el-input
-              v-model="form.age"
+              v-model="basisForm.age"
               placeholder="无"
               :disabled="isDis"
+              type="number"
             ></el-input>
           </el-form-item>
           <el-form-item label="出生日期" prop="birthday">
             <el-date-picker
-              v-model="form.birthday"
+              v-model="basisForm.birthday"
               type="date"
               placeholder="无"
               :disabled="isDis"
@@ -84,24 +86,28 @@
           </el-form-item>
           <el-form-item label="户口所在地" prop="residenceAddress">
             <el-input
-              v-model="form.residenceAddress"
+              v-model="basisForm.residenceAddress"
               placeholder="无"
               :disabled="isDis"
             ></el-input>
           </el-form-item>
           <el-form-item label="签名" prop="personalSignature">
             <el-input
-              v-model="form.personalSignature"
+              v-model="basisForm.personalSignature"
               placeholder="无"
               :disabled="isDis"
             ></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="goNext">下一页</el-button>
+          <el-form-item v-show="basisOpen">
+            <el-row>
+              <el-col :span="12"><el-button @click="cancel">取消</el-button></el-col>
+              <el-col :span="12"><el-button type="primary" @click="basisSubmit">确认</el-button></el-col>
+            </el-row>
           </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="联系信息" name="second" class="profile-pane">
+        <div class="changeInfo" @click="showBasisBtn">修改信息</div>
         <el-form
           ref="form"
           :model="form"
@@ -185,7 +191,6 @@
         </el-form>
       </el-tab-pane>
     </el-tabs>
-    <div class="changeInfo" @click="showBtn">修改信息</div>
 
     <!-- <el-dialog title="更新用户信息" :visible.sync="updateOpen">
       <el-form :model="updateForm">
@@ -342,8 +347,17 @@ export default {
   data() {
     return {
       activeName: "first",
+      basisForm:{},
       form: {},
       isDis: true,
+      basisOpen: false,
+      rules: {
+        certificateNumber: [
+          { required: true, message: '请输入数字', trigger: 'blur' },
+          { pattern: /^\d$/, message: '只能输入数字' }
+        ]
+      }
+
     };
   },
   computed: {
@@ -352,6 +366,7 @@ export default {
     }),
   },
   created() {
+    this.basisForm = this.userInfo;
     this.form = this.userInfo;
     // this.getList()
   },
@@ -373,9 +388,46 @@ export default {
       });
     },
     handleClick() {},
-    goNext() {
-      this.activeName = "second";
-    },
+    basisSubmit(){
+      //遍历所有的form表单 过滤特殊字符
+      for (var item in this.basisForm) {
+        if (item !== "avatar" && item !== 'birthday' && this.basisForm[item]) {
+          this.basisForm[item] = this.filterStr(this.basisForm[item]);
+        }
+      }
+      // 时间格式化
+      if(this.basisForm.birthday) {
+        this.basisForm.birthday = this.dateFormat(this.basisForm.birthday, 'yyyy-MM-dd')
+      }
+      // 添加id
+      this.basisForm.id = this.userInfo.id
+      // console.log(this.basisForm)
+      createToken().then((res) => {
+        // console.log(res.data.res)
+        if (res.meta.code === "200") {
+          updateUserInfo({
+            token: res.data.token,
+            ...this.basisForm
+          }).then((ress) => {
+            if (ress.meta.code === "200") {
+              this.getList();
+              this.isDis = true;
+              this.$message({
+                message: "更新信息成功",
+                type: "success",
+              });
+            }else {
+              console.log(ress)
+              this.$message({
+                message: "更新信息失败",
+                type: "error",
+              });
+            }
+          });
+        }
+      });
+
+       },
     onSubmit() {
       //遍历所有的form表单 过滤特殊字符
       for (var item in this.form) {
@@ -419,13 +471,37 @@ export default {
       }
       return specialStr;
     },
+    showBasisBtn(){
+      this.isDis = false;
+      this.basisOpen = true
+    },
     showBtn() {
-      // this.updateOpen = true;
+      // showBasisBtn
       this.isDis = false;
     },
     cancel() {
       this.isDis = true;
-      this.form = this.userInfo;
+      this.basisOpen = false;
+      this.basisForm = this.userInfo;
+      this.form = this.userInfo
+      this.form = this.userInfo
+    },
+    // 时间格式化
+    dateFormat(datetime, fmt){
+      datetime = new Date(datetime)
+      var o = {
+        "M+": datetime.getMonth() + 1, //月份
+        "d+": datetime.getDate(), //日
+        "h+": datetime.getHours(), //小时
+        "m+": datetime.getMinutes(), //分
+        "s+": datetime.getSeconds(), //秒
+        "q+": Math.floor((datetime.getMonth() + 3) / 3), //季度
+        "S": datetime.getMilliseconds() //毫秒
+      };
+      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
+      for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+      return fmt;
     },
   },
 };
@@ -438,6 +514,7 @@ export default {
 .profile-tabs {
   width: 100%;
   height: 800px;
+  padding-top: 20px;
 }
 .profile-pane {
   width: 100%;

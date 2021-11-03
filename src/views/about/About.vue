@@ -20,7 +20,7 @@
                   v-else
                 />
                 <div class="banner-my">
-                  <div class="banner-name">{{ userInfo.nickName }}</div>
+                  <div class="banner-name">{{ userInfo.username }}</div>
                   <div class="banner-introduce">
                     <p>{{ userInfo && userInfo.gender == 1 ? "男" : "女" }}</p>
                     <p>
@@ -137,9 +137,15 @@ export default {
     foot,
   },
     created() {
+    // 获取当前路由信息 判断当前路由 是否 等于 选中路由
+    let curpath = this.$route.path
+      let curIndex = this.aboutList.findIndex(item=>{
+        return item.link === curpath
+      })
+      this.current = curIndex
     this.__init()
   },
- 
+
   methods: {
       async __init(){
       let res = await webConfig()

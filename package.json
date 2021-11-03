@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.23.0",
     "cropperjs": "^1.5.12",
+    "crypto-js": "^4.1.1",
     "element-ui": "^2.15.6",
     "iscroll": "^5.2.0",
     "prerender-spa-plugin": "^3.2.1",

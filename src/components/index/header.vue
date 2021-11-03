@@ -98,7 +98,7 @@
               <img class="avator" :src="avatorImg" alt="" v-else />
               <div class="avator-info">
                 <p>
-                  {{ userInfo.nickName }}
+                  {{ userInfo.username }}
                 </p>
               </div>
             </div>
@@ -184,17 +184,10 @@
               <div
                 class="sendcaptcha"
                 @click="sendCaptch"
-                :class="isSend ? 'send' : ''"
+                :class="phoneSend ? 'send' : ''"
               >
-                {{ captcha }}
+                {{ Phonecaptcha }}
               </div>
-            </el-form-item>
-            <el-form-item prop="password" class="captcha">
-              <el-input
-                type="password"
-                v-model="registerForm.password"
-                placeholder="请输入密码"
-              ></el-input>
             </el-form-item>
             <el-form-item>
               <el-checkbox v-model="checked" class="privacy"
@@ -272,7 +265,7 @@
                 ></el-input>
                 <div
                   class="sendcaptcha"
-                  @click="sendCaptch"
+                  @click="sendLoginCode"
                   :class="isSend ? 'send' : ''"
                 >
                   {{ captcha }}
@@ -321,6 +314,7 @@ import {
   getInfo,
   getShopCarCounter,
 } from "@/common/api/auth";
+import  {Encrypt} from '@/utils/aes.js';
 import { Loading } from "element-ui";
 import { mapState, mapActions, mapMutations } from "vuex";
 export default {
@@ -434,6 +428,10 @@ export default {
         },
       ],
       keywords: "",
+      phonetimer: null,
+      registerTiemr: null,
+      Phonecaptcha:'短信验证码',
+      phoneSend: false
     };
   },
   computed: {
@@ -462,7 +460,7 @@ export default {
 			// 	this.$refs['phoneForm'].resetFields();
 			// 	this.$refs['identifyForm'].resetFields();
 			// });
-			 
+
 			 this.phoneForm = {}
 			 this.registerForm = {}
 			 this.identifyForm = {}
@@ -470,7 +468,7 @@ export default {
 		},
 		// 点击开始学习
 		goStudy(){
-			this.isregister = true
+			this.isregister = false
 			this.regiterSuccess = false
 		},
 		// 注册成功弹出
@@ -520,7 +518,7 @@ export default {
               spinner: "el-icon-loading",
               background: "rgba(0, 0, 0, 0.7)",
             });
-
+            this.registerForm.mobile = Encrypt(this.registerForm.mobile)
             register(this.registerForm)
               .then((res) => {
                 if (res.meta.code == "200") {
@@ -590,6 +588,8 @@ export default {
             spinner: "el-icon-loading",
             background: "rgba(0, 0, 0, 0.7)",
           });
+          this.phoneForm.username = Encrypt(this.phoneForm.username)
+          this.phoneForm.password = Encrypt(this.phoneForm.password)
           loginByJson(this.phoneForm)
             .then((res) => {
               if (res.meta.code === "10006") {
@@ -651,6 +651,7 @@ export default {
             background: "rgba(0, 0, 0, 0.7)",
           });
           // alert('submit!');
+          this.identifyForm.mobile = Encrypt(this.identifyForm.mobile)
           loginByMobile(this.identifyForm)
             .then((res) => {
               if (res.meta.code === "10006") {
@@ -703,21 +704,49 @@ export default {
         }
       });
     },
-    // 发送验证码
-    sendCaptch() {
-      if (this.registerForm.mobile || this.identifyForm.mobile) {
-        let mobile = this.registerForm.mobile || this.identifyForm.mobile;
-
+    // 发送注册验证码
+    sendCaptch(){
+      if(this.registerForm.mobile) {
+        let mobile = this.registerForm.mobile;
+        // this.isSend = true;
+        this.phoneSend = true
+        this.Phonecaptcha = "重新发送60秒";
+        this.sendCode(mobile);
+        let time = 60;
+        clearInterval(this.phonetimer);
+        console.log(1)
+        this.phonetimer = setInterval(() => {
+          time--;
+          if (time <= 0) {
+            clearInterval(this.phonetimer);
+            time = 60;
+            this.captcha = "发送验证码";
+            this.isSend = false;
+          } else {
+            this.Phonecaptcha = `重新发送${time}秒`;
+          }
+        }, 1000);
+      }else {
+        this.$message({
+          message: "请先填写手机号哟",
+          type: "warning",
+        });
+      }
+    },
+    // 登录验证码3
+   sendLoginCode() {
+      if(this.identifyForm.mobile) {
+        let mobile = this.identifyForm.mobile;
         this.isSend = true;
         this.captcha = "重新发送60秒";
         this.sendCode(mobile);
         let time = 60;
         let timer;
-        clearInterval(timer);
-        timer = setInterval(() => {
+        clearInterval(this.registerTiemr);
+        this.registerTiemr = setInterval(() => {
           time--;
           if (time <= 0) {
-            clearInterval(timer);
+            clearInterval(this.registerTiemr);
             time = 60;
             this.captcha = "发送验证码";
             this.isSend = false;

@@ -3,7 +3,7 @@ export default {
 	state:{
 		userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {
 			avatar: '/image/common/avator.png',
-			nickName: '小鹿线-默认',
+			username: '小鹿线-默认',
 			gender: 1,
 			city: '北京',
 			id:1,

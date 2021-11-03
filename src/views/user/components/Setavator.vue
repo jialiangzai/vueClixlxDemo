@@ -186,6 +186,10 @@ export default {
                 token: res.data.token,
               }).then((res) => {
                 if (res.meta.code == "200") {
+                  this.$message({
+                    message: "上传头像成功",
+                    type: "success",
+                  });
                   this.getUerInfo({
                     token,
                   });

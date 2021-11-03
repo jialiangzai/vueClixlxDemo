@@ -108,3 +108,19 @@ export function createToken(){
     method: 'POST'
   })
 }
+
+// 修改手机号
+
+export function modifyMobile({token,...params}){
+  return http.$axios({
+    url: 'api/member/modifyMobile',
+    method: 'POST',
+    data: {
+      ...params
+    },
+    headers: {
+      'Authorization': sessionStorage.getItem('token'),
+      'token':token
+    }
+  })
+}
