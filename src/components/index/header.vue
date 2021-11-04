@@ -103,9 +103,9 @@
               </div>
             </div>
             <div class="u-i-i-bottom">
-              <div v-for="item in avatorList" :key="item.id">
+              <div v-for="(item,index) in avatorList" :key="item.id">
                 <router-link :to="item.linkUrl">
-                  <div class="info-item">
+                  <div class="info-item" :class="courseColor === index ? 'course-color': ''" @mouseenter="changeColor(index)" @mouseleave="deleteColor()">
                     <img :src="item.imgUrl" alt="" />
                     <p>{{ item.title }}</p>
                   </div>
@@ -331,6 +331,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      courseColor: -1, // 鼠标移上显示颜色
       crtType:"usernamePasswordLogin",
       regiterSuccess: false, // 对话框
       checked: false, // 同意协议
@@ -459,6 +460,7 @@ export default {
       "saveCartNumAction",
     ]),
     ...mapMutations(["saveLoginDialog"]),
+    // 行为验证码
     success(e){
       switch (this.crtType){
         // 用户名登录
@@ -978,6 +980,13 @@ export default {
       this.$router.push({
         path: '/cart'
       })
+    },
+    // 划过头像显示
+    changeColor(index){
+      this.courseColor = index
+    },
+    deleteColor(){
+        this.courseColor = -1
     }
   },
   watch: {
@@ -999,6 +1008,9 @@ export default {
 </script>
 
 <style scoped>
+.course-color {
+  color: #3689ff !important;
+}
 .container {
 	font-size: 12px;
 font-family: Microsoft YaHei;
@@ -1286,10 +1298,14 @@ margin-top: 10px;
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #333333;
+  display: flex;
+  flex-direction: column;
+  /*align-items: center;*/
 }
+/*有会员了之后高度微调*/
 .avator-info p {
-  height: 40px;
-  line-height: 40px;
+  height: 60px;
+  line-height: 60px;
   cursor: pointer;
 }
 .u-i-i-bottom {
@@ -1310,9 +1326,9 @@ margin-top: 10px;
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #333333;
-  background: rgba(248, 250, 252, 1);
   border-radius: 3px;
   cursor: pointer;
+  background-color: rgba(0,0,0,.1) !important;
 }
 .info-item img {
   width: 14px;

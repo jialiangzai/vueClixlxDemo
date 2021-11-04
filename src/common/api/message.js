@@ -27,10 +27,11 @@ export function getMess({id,token}){
 }
 
 // 删除收藏
-export function deleteMess({id,token}){
+export function deleteMess({ids,token}){
   return http.$axios({
-    url: '/api/message/delete?ids='+id,
-    method: 'GET',
+    url: '/api/message/delete',
+    method: 'POST',
+    data: ids,
     headers: {
       'Authorization': sessionStorage.getItem('token'),
       'token': token
