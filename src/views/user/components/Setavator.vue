@@ -244,7 +244,7 @@ export default {
     },
     cancel() {
       this.options = {
-        img: "/image/common/avator.png", //裁剪图片的地址
+        img:this.userInfo.avatar ? this.userInfo.avatar : '/image/common/avator.png', //裁剪图片的地址
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度

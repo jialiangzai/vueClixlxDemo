@@ -1420,10 +1420,11 @@ margin-top: 10px;
 .active::after{
   content: '' !important;
   position: absolute !important;
-  bottom: -37px !important;
+  bottom: -38px !important;
   left: -15px;
   width: 70px;
   height: 2px;
   background-color: #3689ff;
+  border-radius: 5px  !important;
 }
 </style>
