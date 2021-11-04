@@ -7,7 +7,7 @@
           <div class="top-main">
             <img :src=" userInfo.avatar" alt="" v-if="userInfo.avatar" />
             <img :src="avatorImg" alt="" v-else>
-            <p class="avator-name">{{userInfo.username}}</p>
+            <p class="avator-name">{{userInfo.nickName ? userInfo.nickName : '小鹿线-默认'}}</p>
             <p class="avator-id">ID: {{userInfo.sysCode }}</p>
           </div>
         </div>

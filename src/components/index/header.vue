@@ -98,7 +98,7 @@
               <img class="avator" :src="avatorImg" alt="" v-else />
               <div class="avator-info">
                 <p>
-                  {{ userInfo.username }}
+                  {{ userInfo.nickName ? userInfo.nickName : nickname}}
                 </p>
               </div>
             </div>
@@ -126,13 +126,13 @@
             <img src="/image/header/car.png" alt="" />
             <p class="car-empy">购物车空空如也</p>
             <p>快去选购你喜欢的课程吧</p>
-            <p class="course-center">课程中心</p>
+            <p class="course-center" @click="goCourse">课程中心</p>
           </div>
           <div class="shopcar-bottom">
             <p>我的订单</p>
             <div class="car">
               <img src="/image/header/car-select.png" alt="" />
-              <p class="course-center">我的购物车</p>
+              <p class="course-center" @click="goShopCart">我的购物车</p>
             </div>
           </div>
         </div>
@@ -329,7 +329,7 @@ export default {
       // isLogin: false,
       isUserInfo: false,
       avatorImg: "/image/common/avator.png",
-      username: "小鹿线-默认",
+      nickname: "小鹿线-默认",
       // userInfo: null,
       loginNav: [
         {
@@ -364,16 +364,7 @@ export default {
             message: "请输入验证码",
             trigger: "blur",
           },
-        ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          {
-            min: 6,
-            max: 30,
-            message: "长度在 6 到 30个字符",
-            trigger: "blur",
-          },
-        ],
+        ]
       }, // 注册
       phoneForm: {}, // 账号登陆
       phoneRules: {
@@ -399,7 +390,7 @@ export default {
             message: "目前只支持中国大陆的手机号码",
           },
         ],
-        captcha: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
       },
       avatorList: [
         {
@@ -518,8 +509,11 @@ export default {
               spinner: "el-icon-loading",
               background: "rgba(0, 0, 0, 0.7)",
             });
-            this.registerForm.mobile = Encrypt(this.registerForm.mobile)
-            register(this.registerForm)
+            let mobile = Encrypt(this.registerForm.mobile)
+            register({
+              mobile,
+              captcha:this.registerForm.captcha
+            })
               .then((res) => {
                 if (res.meta.code == "200") {
                   this.$message({
@@ -588,9 +582,12 @@ export default {
             spinner: "el-icon-loading",
             background: "rgba(0, 0, 0, 0.7)",
           });
-          this.phoneForm.username = Encrypt(this.phoneForm.username)
-          this.phoneForm.password = Encrypt(this.phoneForm.password)
-          loginByJson(this.phoneForm)
+          let username = Encrypt(this.phoneForm.username)
+          let password = Encrypt(this.phoneForm.password)
+          loginByJson({
+            username,
+            password
+          })
             .then((res) => {
               if (res.meta.code === "10006") {
                 // 存储token
@@ -651,8 +648,12 @@ export default {
             background: "rgba(0, 0, 0, 0.7)",
           });
           // alert('submit!');
-          this.identifyForm.mobile = Encrypt(this.identifyForm.mobile)
-          loginByMobile(this.identifyForm)
+         let mobile = Encrypt(this.identifyForm.mobile)
+
+          loginByMobile({
+            mobile,
+            captcha:this.identifyForm.captcha
+          })
             .then((res) => {
               if (res.meta.code === "10006") {
                 // 存储token
@@ -706,60 +707,78 @@ export default {
     },
     // 发送注册验证码
     sendCaptch(){
-      if(this.registerForm.mobile) {
-        let mobile = this.registerForm.mobile;
-        // this.isSend = true;
-        this.phoneSend = true
-        this.Phonecaptcha = "重新发送60秒";
-        this.sendCode(mobile);
-        let time = 60;
-        clearInterval(this.phonetimer);
-        console.log(1)
-        this.phonetimer = setInterval(() => {
-          time--;
-          if (time <= 0) {
-            clearInterval(this.phonetimer);
-            time = 60;
-            this.captcha = "发送验证码";
-            this.isSend = false;
-          } else {
-            this.Phonecaptcha = `重新发送${time}秒`;
-          }
-        }, 1000);
-      }else {
+      let reg = /^1[3456789]\d{9}$/
+      if(!reg.test(this.registerForm.mobile)){
         this.$message({
-          message: "请先填写手机号哟",
-          type: "warning",
-        });
+          message: '手机号输入错误，请检查',
+          type: 'warning'
+        })
+      }else {
+        if(this.registerForm.mobile) {
+          let mobile = this.registerForm.mobile;
+          // this.isSend = true;
+          this.phoneSend = true
+          this.Phonecaptcha = "重新发送60秒";
+          this.sendCode(mobile);
+          let time = 60;
+          clearInterval(this.phonetimer);
+          console.log(1)
+          this.phonetimer = setInterval(() => {
+            time--;
+            if (time <= 0) {
+              clearInterval(this.phonetimer);
+              time = 60;
+              this.captcha = "发送验证码";
+              this.isSend = false;
+            } else {
+              this.Phonecaptcha = `重新发送${time}秒`;
+            }
+          }, 1000);
+        }else {
+          this.$message({
+            message: "请先填写手机号哟",
+            type: "warning",
+          });
+        }
       }
+
     },
     // 登录验证码3
    sendLoginCode() {
-      if(this.identifyForm.mobile) {
-        let mobile = this.identifyForm.mobile;
-        this.isSend = true;
-        this.captcha = "重新发送60秒";
-        this.sendCode(mobile);
-        let time = 60;
-        let timer;
-        clearInterval(this.registerTiemr);
-        this.registerTiemr = setInterval(() => {
-          time--;
-          if (time <= 0) {
-            clearInterval(this.registerTiemr);
-            time = 60;
-            this.captcha = "发送验证码";
-            this.isSend = false;
-          } else {
-            this.captcha = `重新发送${time}秒`;
-          }
-        }, 1000);
-      } else {
+      let reg = /^1[3456789]\d{9}$/
+      if(!reg.test(this.identifyForm.mobile)){
         this.$message({
-          message: "请先填写手机号哟",
-          type: "warning",
-        });
+          message: '手机号输入错误，请检查',
+          type: 'warning'
+        })
+      }else {
+        if(this.identifyForm.mobile) {
+          let mobile = this.identifyForm.mobile;
+          this.isSend = true;
+          this.captcha = "重新发送60秒";
+          this.sendCode(mobile);
+          let time = 60;
+          let timer;
+          clearInterval(this.registerTiemr);
+          this.registerTiemr = setInterval(() => {
+            time--;
+            if (time <= 0) {
+              clearInterval(this.registerTiemr);
+              time = 60;
+              this.captcha = "发送验证码";
+              this.isSend = false;
+            } else {
+              this.captcha = `重新发送${time}秒`;
+            }
+          }, 1000);
+        } else {
+          this.$message({
+            message: "请先填写手机号哟",
+            type: "warning",
+          });
+        }
       }
+
     },
     // 发送请求
     sendCode(mobile) {
@@ -878,6 +897,19 @@ export default {
     copySearch() {
       this.keywords = this.$route.query.keywords;
     },
+    // 去课程页
+    goCourse(){
+      // 去课程页
+      this.$router.push({
+        path: '/course'
+      })
+    },
+    //去购物车
+    goShopCart(){
+      this.$router.push({
+        path: '/cart'
+      })
+    }
   },
   watch: {
     $route: {

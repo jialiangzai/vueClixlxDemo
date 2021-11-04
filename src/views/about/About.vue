@@ -20,7 +20,7 @@
                   v-else
                 />
                 <div class="banner-my">
-                  <div class="banner-name">{{ userInfo.username }}</div>
+                  <div class="banner-name">{{ userInfo.nickName ? userInfo.nickName : '小鹿线-默认' }}</div>
                   <div class="banner-introduce">
                     <p>{{ userInfo && userInfo.gender == 1 ? "男" : "女" }}</p>
                     <p>

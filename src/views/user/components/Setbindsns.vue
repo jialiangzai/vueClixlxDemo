@@ -55,26 +55,45 @@
         :before-close="handlePhoneClose">
       <div class="phoneDialog">
         <div class="tip">为保障您的账号安全和收费课程的正常学习，小鹿希望您能为帐号绑定手机号，更换手机号后请及时换绑。（1个手机号只能绑定1个小鹿线帐号）</div>
-        <el-form ref="form" :model="phoneForm" label-width="80px">
+        <el-form ref="phoneForm" :model="phoneForm" label-width="80px" :rules="phoneRules">
           <el-form-item label="手机号">
             <el-col :span="24"><el-input v-model="phoneForm.mobile" placeholder="请输入手机号"></el-input></el-col>
           </el-form-item>
           <el-form-item label="验证码">
             <el-row>
-              <el-col :span="16"><el-input v-model="phoneForm.captcha" placeholder="请输入验证码"></el-input></el-col>
+              <el-col :span="16"><el-input v-model="phoneForm.captcha" placeholder="请输入验证码"  @keyup.enter.native="onPhoneSubmit('phoneRules')"></el-input></el-col>
               <el-col :span="8"><el-button class="sendCode" @click="sendCodes">{{captcha}}</el-button></el-col>
             </el-row>
           </el-form-item>
           <el-form-item>
             <el-row>
-              <el-col :span="12"><el-button type="primary" @click="onSubmit">确认</el-button></el-col>
-              <el-col :span="12"><el-button>取消</el-button></el-col>
+              <el-col :span="24"><el-button type="primary" @click="onPhoneSubmit('phoneRules')" class="phoneSubmit">确认</el-button></el-col>
             </el-row>
           </el-form-item>
         </el-form>
       </div>
     </el-dialog>
-
+    <!--  修改密码对话框  -->
+    <el-dialog
+        title="修改密码"
+        :visible.sync="pswOpen"
+        width="400px"
+        :before-close="handlePswClose">
+      <div>
+        <el-form ref="pswForm" :model="pswForm" label-width="80px">
+          <el-form-item label="密码">
+            <el-input show-password v-model="pswForm.firstword" placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码">
+            <el-input show-password v-model="pswForm.password" placeholder="请输入密码" @keyup.enter.native="onPswSubmit"></el-input>
+          </el-form-item>
+<!--          <el-form-item>-->
+<!--            <el-button type="primary" @click="onPswSubmit">确认</el-button>-->
+<!--            <el-button>取消</el-button>-->
+<!--          </el-form-item>-->
+        </el-form>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -92,10 +111,33 @@ import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      phoneOpen:false,
-      phoneForm: {},
-      sendTimer: null,
-      captcha: '发送验证码'
+      phoneOpen:false, // 修改手机号对话框
+      phoneForm: {},// 修改手机号表单
+      phoneRules: {
+        mobile: [
+          {
+            required: true,
+            message: "请输入手机号",
+            trigger: "blur",
+          },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: "目前只支持中国大陆的手机号码",
+          },
+        ],
+        captcha: [
+          {
+            required: true,
+            message: "请输入验证码",
+            trigger: "blur",
+          },
+        ]
+      },
+      sendTimer: null, // 修改手机号 发送
+      captcha: '发送验证码',
+      pswOpen: false,
+      pswForm: {},
+
     };
   },
   computed:{
@@ -113,32 +155,40 @@ export default {
     // 修改手机号绑定
     changePhone(){
       this.phoneOpen = true
+      this.phoneForm = {}
     },
     sendCodes(){
-      if(this.phoneForm.mobile){
-      let mobile = Encrypt(this.phoneForm.mobile);
-
-      this.captcha = "重新发送60秒";
-      console.log(this.phoneForm)
-      this.sendCode(mobile);
-      let time = 60;
-      clearInterval(this.sendTimer);
-      this.sendTimer = setInterval(() => {
-        time--;
-        if (time <= 0) {
+      let reg = /^1[3456789]\d{9}$/
+      if(!reg.test(this.phoneForm.mobile)){
+        this.$message({
+          message: '手机号输入错误，请检查',
+          type: 'warning'
+        })
+      }else {
+        if(this.phoneForm.mobile){
+          let mobile = Encrypt(this.phoneForm.mobile);
+          this.captcha = "重新发送60秒";
+          this.sendCode(mobile);
+          let time = 60;
           clearInterval(this.sendTimer);
-          time = 60;
-          this.captcha = "发送验证码";
-          this.isSend = false;
+          this.sendTimer = setInterval(() => {
+            time--;
+            if (time <= 0) {
+              clearInterval(this.sendTimer);
+              time = 60;
+              this.captcha = "发送验证码";
+              this.isSend = false;
+            } else {
+              this.captcha = `重新发送${time}秒`;
+            }
+          }, 1000);
         } else {
-          this.captcha = `重新发送${time}秒`;
-        }
-      }, 1000);
-    } else {
-      this.$message({
-        message: "请先填写手机号哟",
-        type: "warning",
-      });
+          this.$message({
+            message: "请先填写手机号哟",
+            type: "warning",
+          });
+      }
+
     }
     },
     // 发送请求
@@ -166,38 +216,78 @@ export default {
             });
           });
     },
-    onSubmit(){
-        if(this.phoneForm.mobile){
-          this.phoneForm.mobile = Encrypt(this.phoneForm.mobile)
-          this.phoneForm.userId = this.userInfo.id
-          createToken().then(res=>{
-            let token = res.data.token
-            modifyMobile({
-              token:token,
-              ...this.phoneForm
-            }).then(res=>{
-              console.log(res)
-              if(res.meta.code === '200'){
-                this.$message({
-                  title: '修改成功，请重新登录',
-                  icon:'none'
-                })
-               this.goLogout()
-                this.phoneOpen = false
-              }
+    onPhoneSubmit(formName){
+      this.$refs[formName].validate((valid) => {
+        if(valid){
+          if(this.phoneForm.mobile){
+            let mobile = Encrypt(this.phoneForm.mobile)
+            let userId = this.userInfo.id
+            let captcha = this.phoneForm.captcha
+            createToken().then(res=>{
+              let token = res.data.token
+              modifyMobile({
+                token:token,
+                mobile: mobile,
+                userId:userId,
+                captcha: captcha
+              }).then(res=>{
+                console.log(res)
+                if(res.meta.code === '200'){
+                  this.$message({
+                    message:'修改成功，重新登录',
+                    type: 'success'
+                  })
+                  this.goLogout()
+                  this.phoneOpen = false
+                }
+              })
             })
+          }else {
+            this.$message({
+              message: '请填写手机号',
+              type: 'warning'
+            })
+          }
+        }else {
+          this.$message({
+            message: '未通过验证',
+            type: 'warning'
           })
         }
+      })
+
     },
     handlePhoneClose(){
       this.phoneOpen = false
+      this.phoneForm = {}
+      this.$refs.phoneForm.resetFields()
     },
     // 修改密码
     changePwd(){
-      if(this.userInfo.username){
+      // this.pswOpen = true
+      if(!this.userInfo.username){
         this.$message({
-          title: '请先设置用户名',
-          icon: 'error'
+          message: "用户名为空，请先设置用户名",
+          type: "warning",
+        })
+      }else {
+        this.pswForm = {}
+        this.pswOpen = true
+      }
+    },
+    handlePswClose(){
+      this.pswOpen = false
+    },
+    onPswSubmit(){
+      if(this.pswForm.firstword === this.pswForm.password){
+        this.$message({
+          message: '输入正确',
+          type: 'success'
+        })
+      }else {
+        this.$message({
+          message: '两次密码不一样，请重新输入',
+          type: 'warning'
         })
       }
     },
@@ -235,6 +325,9 @@ export default {
 </script>
 
 <style scoped>
+.phoneSubmit {
+  margin-left: 300px;
+}
 .sendCode {
   width: 100%;
   border:none;
@@ -313,5 +406,6 @@ export default {
   padding: 5px 20px;
   border: 1px solid rgba(112, 112, 112, 1);
   border-radius: 15px;
+  cursor: pointer;
 }
 </style>
