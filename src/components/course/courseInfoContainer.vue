@@ -4,18 +4,18 @@
       <div class="info-container">
         <ul class="route">
           <li class="route-item">课程</li>
-          <li class="route-item">·</li>
+          <li class="route-item"><i class="el-icon-arrow-right"></i></li>
           <li class="route-item">{{courseInfoArr.isMember === 0 ? '免费课' : '会员课程'}}</li>
-          <li class="route-item">·</li>
+          <li class="route-item"><i class="el-icon-arrow-right"></i></li>
           <li class="route-item">{{courseInfoArr.courseName}}</li>
         </ul>
         <div class="name">{{courseInfoArr.courseName}}</div>
         <div class="info">
           <div class="Avat">
-            <img src="image/Avat62.png" alt="">
+            <img :src=" courseTeacher !== null ? courseTeacher.teacherAvatar :'/image/Avat62.png'" alt="">
           </div>
           <ul class="teacherName">
-            <li class="name-item">{{courseInfoArr.lecturerName}}</li>
+            <li class="name-item">{{ courseTeacher !== null ? courseTeacher.teacherName : 'Aimi'}}</li>
             <li class="name-item">金牌讲师</li>
           </ul>
           <ul class="access">
@@ -37,8 +37,14 @@
    
     <div class="info-nav">
         <div class="nav-container">
-            <span class="chapter-item " @click="change1" :class="activeChange === 1 ? 'active':''">章节</span>
-            <span class="chapter-item " @click="change2" :class="activeChange === 2 ? 'active':''">下载资料</span>
+            <div class="chapter-item" @click="change1">
+                <div :class="activeChange === 1 ? 'active1':''">章节</div>
+                <div class="line"  :class="activeChange === 1 ? 'active2':''"></div>
+            </div>
+            <div class="chapter-item" @click="change2" >
+                <div :class="activeChange === 2 ? 'active1':''">下载资料</div>
+                <div class="line" :class="activeChange === 2 ? 'active2':''"></div>
+            </div>
         </div>
     </div>
     <div class="course"  v-if="activeChange === 1">
@@ -63,11 +69,11 @@
                     @mouseenter="mourseHover(j)"
                     @mouseleave="mourseOut(j)">
                         <div class="video-itemIcon">
-                            <i class="el-icon-video-camera-solid"></i>
+                            <i class="el-icon-video-camera"></i>
                         </div>
                         <div class="item-name">
-                            <span class="shipin">视频:</span>
-                            <span>{{j.chapterName}}</span>
+                            <span class="shipin">视频：</span>
+                            <span class="chapterName">{{j.chapterName}}</span>
                         </div>
                         <button class="btn-learn" v-if="j.isShow" @click="goPlay(courseInfoArr.id,j.id)">
                         开始学习
@@ -93,6 +99,7 @@ import {
 	getcourseInfo,
 	downloadAttachment,
 	checkAuth,
+    checkAuthWithChapterId,
 	playCourse,
 } from '@/common/api/courseManage.js'
 import { createToken } from '@/common/api/token.js'
@@ -113,7 +120,8 @@ export default {
 			memberId: '',
 			tokens: '',//登录的token
 			activeName: 'first',
-            activeChange:1
+            activeChange:1,
+            courseTeacher:{}
 		}
 	},
 	created() {
@@ -145,17 +153,11 @@ export default {
 				})
 				this.$store.commit('saveLoginDialog', true)
 			}else{
-                if(item.discountPrice === 0){
-                    this.$router.push('/confirmOrder')
-                }else{
-                    
-                }
-                /* let arr = new Array()
+                let arr = new Array()
                 arr.push({ number: 1, id: item.id })
                 sessionStorage.setItem('selectedArr', JSON.stringify(arr))
-                this.$router.push('/confirmOrder') */
+                this.$router.push('/confirmOrder')
             }
-			
 		},
 		//下载资料
 		downloadSource(item) {
@@ -228,10 +230,12 @@ export default {
 		getcourseInfo() {
 			getcourseInfo(this.courseId).then((res) => {
 				if (res.meta.code === '200') {
+                    console.log(res);
 					this.courseInfoArr = res.data.data
 					this.courseDetail = res.data.data.bizCourseDetail
 					this.courseChapters = res.data.data.bizCourseChapters
 					this.downsource = res.data.data.bizCourseAttachments
+                    this.courseTeacher = res.data.data.bizCourseTeacher
 					switch (this.courseInfoArr.courseLevel) {
 						case 1:
 							this.courseInfoArr.courseLevel = '初级'
@@ -258,20 +262,21 @@ export default {
 		goPlay(courseId, chapterId) {
             if (!this.tokens) {
 				this.$message({
-					message: '请先登录才能加入购物车哦',
+					message: '请先登录才能学习该课程哦',
 					type: 'error',
 				})
 				this.$store.commit('saveLoginDialog', true)
 				return
 			}else{
-                playCourse(courseId, chapterId).then((res) => {
-                    if (res.meta.code === '70001') {
+                checkAuthWithChapterId(courseId, chapterId).then((res) => {
+                    let hasAuth = res.data.data.hasAuth;
+                    if (!hasAuth) {
                         this.$message({
                             message: '购买该课程后才能开始学习哦',
                             type: 'error',
                         })
-                        return
-                    } else if (res.meta.code === '200') {
+                        return;
+                    } else{
                         this.$router.push({
                             path: '/course-play/' + courseId + '/' + chapterId,
                         })
@@ -300,12 +305,14 @@ export default {
 }
 .nav-container{
     width: 1200px;
-    margin:0 auto
+    margin:0 auto;
+    color:#333333;
+    display: flex;
 }
-.nav-container .active{
+/* .chapter-item  .active{
     color: #388FFF;
-    border-bottom: 2px solid #388FFF;
-}
+    
+} */
 /* 背景部分开始 */
 .courseInfoTop .info-container {
 	margin: 0 auto;
@@ -330,6 +337,17 @@ export default {
 .info {
 	display: flex;
 	/*margin-left: 50px;*/
+}
+.info .Avat{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.info .Avat img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
 }
 .teacherName {
 	margin: 8px 0 0 8px;
@@ -368,6 +386,20 @@ export default {
 	line-height: 80px;
 	margin-right: 50px;
     cursor: pointer;
+    position: relative;
+}
+.chapter-item .active1{
+    color:#388FFF ;
+
+}
+.chapter-item  .active2{
+    position: absolute;
+    width: 70%;
+    top: 63px;
+    left: 7px;
+    height: 4px;
+    background: #388FFF;
+    border-radius: 2px;
 }
 
 /* 导航栏结束 */
@@ -383,6 +415,7 @@ export default {
 .desc {
 	padding: 20px;
 	color: #474747;
+    line-height: 35px;
 }
 .btn {
 	float: right;
@@ -438,13 +471,20 @@ export default {
 	background: rgba(53, 133, 255, 0.2);
 	border-radius: 8px;
 	color: #388fff !important;
+    border: 1px solid #3585FF;
 }
 .video-item .shipin {
-	/*margin: 0 10px;*/
+	color: #333333;
+    font-weight: bold;
 }
-.video-itemIcon,
-.item-name {
+.video-item .chapterName{
+    font-size: 16px;
+    font-weight: 400;
+    color: #333333;
+}
+.video-itemIcon,.item-name {
 	float: left;
+    padding-left:10px;
 }
 .btn-learn {
 	margin: 5px 5px 0 0;

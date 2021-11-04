@@ -20,7 +20,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="choose">
+                <div class="choose" v-if="totalPrice !== 0">
                     <el-divider></el-divider>
                     <h3>支付方式 <span class="pay" v-if="payment">{{payment.description}}</span></h3>
                     <div class="choosebg">
@@ -57,7 +57,7 @@ export default{
             setArr:[],
             courseInfo:[],
             payment: {},
-            totalPrice:'',
+            totalPrice:null,
             orderNumber: "",
             qrCode:'',
             timeInterVal: "",
@@ -128,26 +128,47 @@ export default{
             })
         },
         toPayment(){
-            if(!this.payment.code){
+            if(!this.payment.code && this.totalPrice !== 0){
                 this.$message({
                     message: '请选择支付方式',
                     type: 'error'
                 })
-            }
-            if(this.payment.code === 'alipayment'){
-                let data = {courses: this.setArr, payModes: this.payment.code}
-                zfbpay(data).then(res => {
-                    this.qrCode = res.data.payurl
-                    this.orderNumber = res.data.orderNumber;
-                    this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
-                })
-            }else if(this.payment.code === 'wxpayment'){
-                let data = {courses: this.setArr, payModes: this.payment.code}
-                wxpay(data).then(res => {
-                    this.qrCode = res.data.payurl
-                    this.orderNumber = res.data.orderNumber
-                    this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
-                })
+            }else{
+                if(this.payment.code === 'alipayment'){
+                    let data = {courses: this.setArr, payModes: this.payment.code}
+                    zfbpay(data).then(res => {
+                        this.qrCode = res.data.payurl
+                        this.orderNumber = res.data.orderNumber;
+                        this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
+                    })
+                }else if(this.payment.code === 'wxpayment'){
+                    let data = {courses: this.setArr, payModes: this.payment.code}
+                    wxpay(data).then(res => {
+                        this.qrCode = res.data.payurl
+                        this.orderNumber = res.data.orderNumber
+                        this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
+                    })
+                }else{
+                    let data = {courses: this.setArr, payModes: this.payment.code}
+                    zfbpay(data).then(res => {
+                        this.qrCode = res.data.payurl
+                        this.orderNumber = res.data.orderNumber;
+                        if(res.meta.code === "200"){
+                            this.$confirm('订单支付成功！', '提示信息', {
+                                confirmButtonText: '个人中心',
+                                cancelButtonText: '返回首页',
+                                type: 'success'
+                            }).then(() => {
+                                this.$router.push('/about/order')
+                            }).catch(() => {
+                                this.$router.push('/')
+                            });
+                            this.isFinished = true
+                            sessionStorage.removeItem("selectedArr");
+                            this.removeShopCartCourses()
+                        }
+                    })
+                }
             }
         },
         //鼠标弹起时触发

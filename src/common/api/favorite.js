@@ -19,7 +19,7 @@ export function getFavoriteList({pageSize,pageNum,token,entity}) {
   })
 }
 // 添加收藏 
-export function addFavorite({ courseId }) {
+export function addFavorite({ courseId,token }) {
   return http.$axios({
     url: '/api/favorite/addFavorite',
     method: 'POST',
@@ -27,15 +27,21 @@ export function addFavorite({ courseId }) {
       courseId,
     },
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': sessionStorage.getItem('token'),
+      'token': token
     }
   })
 }
 
-export function deleteFavorite({ id,token }) {
+//取消收藏
+export function deleteFavorite({memberId,courseId,token }) {
   return http.$axios({
-    url: '/api/favorite/deleteFavorite?id=' + id,
+    url: '/api/favorite/deleteFavorite',
     method: 'GET',
+    params:{
+        memberId,
+        courseId,
+    },
     headers: {
       'Authorization': sessionStorage.getItem('token'),
       'token': token

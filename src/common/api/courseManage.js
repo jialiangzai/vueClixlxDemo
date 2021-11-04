@@ -71,6 +71,18 @@ export function checkAuth(courseId){
     })
 }
 
+//检查是否有权限
+export function checkAuthWithChapterId(courseId,chapterId){
+    return http.$axios({
+        url:'/api/course/checkAuth',
+        method:'GET',
+        params:{courseId,chapterId},
+        headers: {
+            'Authorization': sessionStorage.getItem('token')
+        }
+    })
+}
+
 
 //获取学习时长
 export function updateStudyHour(data,token){
