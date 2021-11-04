@@ -27,18 +27,24 @@ export function logout() {
 }
 
 // 修改密码
-export function modifyPassword(params){
+export function modifyPassword({token,...params}){
   return http.$axios({
     url: '/api/member/modifyPassword',
     method: 'POST',
-    data: params
+    data: {
+      ...params
+    },
+    headers: {
+      'Authorization': sessionStorage.getItem('token'),
+      'token':token
+    }
   })
 }
 
 // 手机号验证码注册
 export function register(params){
   return http.$axios({
-    url: '//api/member/register',
+    url: '/api/member/register',
     method: 'POST',
     data: params
   })
@@ -47,7 +53,7 @@ export function register(params){
 // 找回密码
 export function findPassword(params){
   return http.$axios({
-    url: '//api/member/findPassword',
+    url: '/api/member/findPassword',
     method: 'POST',
     data: params
   })
@@ -116,6 +122,23 @@ export function modifyMobile({token,...params}){
     url: '/api/member/modifyMobile',
     method: 'POST',
     data: {
+      ...params
+    },
+    headers: {
+      'Authorization': sessionStorage.getItem('token'),
+      'token':token
+    }
+  })
+}
+
+
+// 修改用户名
+
+export function modifyUsername({token,...params}){
+  return http.$axios({
+    url: '/api/member/modifyUsername',
+    method: 'POST',
+    data:{
       ...params
     },
     headers: {
