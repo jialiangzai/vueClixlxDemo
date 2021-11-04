@@ -2,6 +2,7 @@
   <div class="setavator">
     <div class="setavator-header">
       <p>设置头像</p>
+      <img :src="avatar" style="opacity: 0">
     </div>
     <div class="setavator-container">
       <el-row style="margin: 10px">
@@ -95,6 +96,7 @@ import { mapState, mapActions } from "vuex";
 import { uploadFileWithBlob, uploadFile } from "@/common/api/common";
 import { updateUserInfo } from "@/common/api/user";
 import { createToken } from "@/common/api/token";
+import {Loading} from "_element-ui@2.15.6@element-ui";
 
 export default {
   components: { VueCropper },
@@ -128,7 +130,9 @@ export default {
       userInfo: (state) => state.user.userInfo,
     }),
     avatar() {
-      return (this.options.img = this.userInfo.avatar);
+      if(!this.$store.getters.avatar){
+        this.options.img = '/image/common/avator.png'
+      }
     },
   },
   methods: {
@@ -172,7 +176,12 @@ export default {
         formData.append("file", data);
         // formData.append("id", this.userInfo.id);
         // console.log(formData)
-
+        var basisiloading = Loading.service({
+          lock: true,
+          text: "Loading",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
         uploadFileWithBlob(formData).then((res) => {
           // console.log(res)
           this.imgUrl = res.data.url;
@@ -190,6 +199,10 @@ export default {
                     message: "上传头像成功",
                     type: "success",
                   });
+                  this.$nextTick(() => {
+                    // 以服务的方式调用的 Loading 需要异步关闭
+                    basisiloading.close();
+                  });
                   this.getUerInfo({
                     token,
                   });
@@ -197,6 +210,10 @@ export default {
                   this.$message({
                     message: "上传头像失败，请重新上传",
                     type: "error",
+                  });
+                  this.$nextTick(() => {
+                    // 以服务的方式调用的 Loading 需要异步关闭
+                    basisiloading.close();
                   });
                 }
               });

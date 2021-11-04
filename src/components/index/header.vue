@@ -179,7 +179,7 @@
                 v-model="registerForm.captcha"
                 style="width: 150px"
                 placeholder="请输入短信验证码"
-                @keyup.enter.native="submitRegisterForm('registerForm')"
+                @keyup.enter.native="showVerify('registerForm')"
               ></el-input>
               <div
                 class="sendcaptcha"
@@ -201,7 +201,7 @@
               <el-button
                 type="primary"
                 class="regiterBtn"
-                @click="submitRegisterForm('registerForm')"
+                @click="showVerify('registerForm')"
                 >立即注册</el-button
               >
             </el-form-item>
@@ -228,14 +228,14 @@
                   v-model="phoneForm.password"
                   placeholder="请输入密码"
                   show-password
-                  @keyup.enter.native="submitPhoneForm('phoneForm')"
+                  @keyup.enter.native="showVerify('phoneForm')"
                 ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button
                   type="primary"
                   class="regiterBtn"
-                  @click="submitPhoneForm('phoneForm')"
+                  @click="showVerify('phoneForm')"
                   >立即登录</el-button
                 >
               </el-form-item>
@@ -261,7 +261,7 @@
                   v-model="identifyForm.captcha"
                   style="width: 150px"
                   placeholder="请输入短信验证码"
-                  @keyup.enter.native="submitIdentifyForm('identifyForm')"
+                  @keyup.enter.native="showVerify('identifyForm')"
                 ></el-input>
                 <div
                   class="sendcaptcha"
@@ -275,7 +275,7 @@
                 <el-button
                   type="primary"
                   class="regiterBtn"
-                  @click="submitIdentifyForm('identifyForm')"
+                  @click="showVerify('identifyForm')"
                   >登录</el-button
                 >
               </el-form-item>
@@ -287,6 +287,7 @@
         </div>
       </div>
     </el-dialog>
+    <!--  注册成功弹出  -->
     <el-dialog
       :visible.sync="regiterSuccess"
       width="300px"
@@ -301,10 +302,20 @@
         <div class="start-study" @click="goStudy">去登录</div>
       </div>
     </el-dialog>
+<!--    行为验证-->
+    <Verify
+        ref="verify"
+        :captcha-type="'blockPuzzle'"
+        :img-size="{width:'400px',height:'200px'}"
+        @success="success"
+        @error="error"
+    />
+
   </div>
 </template>
 
 <script>
+import  Verify from '../verifition/Verify'
 import { sendRegisterOrLoginCaptcha } from "@/common/api/sms";
 import {
   loginByJson,
@@ -320,6 +331,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      crtType:"usernamePasswordLogin",
       regiterSuccess: false, // 对话框
       checked: false, // 同意协议
       active: "1",
@@ -437,6 +449,9 @@ export default {
     this.getCarNum();
     this.copySearch();
   },
+  components:{
+    Verify
+  },
   methods: {
     ...mapActions([
       "saveUserInfoAction",
@@ -444,14 +459,44 @@ export default {
       "saveCartNumAction",
     ]),
     ...mapMutations(["saveLoginDialog"]),
+    success(e){
+      switch (this.crtType){
+        // 用户名登录
+        case "usernamePasswordLogin":
+          this.phoneForm.captchaVerification = e.captchaVerification
+          this.submitPhoneForm('phoneForm')
+          break;
+        // 手机号登录
+        case "mobileCaptchaLogin":
+          this.identifyForm.captchaVerification = e.captchaVerification
+          this.submitIdentifyForm('identifyForm')
+          break;
+        // 注册
+        case "registerLogin":
+          this.registerForm.captchaVerification = e.captchaVerification
+          this.submitRegisterForm('registerForm')
+          break;
+      }
+    },
+    error(e){
+      console.log(e)
+      this.$message({
+        message: '验证失败，请重新验证',
+        type: 'error'
+      })
+    },
+    showVerify(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$refs.verify.show()
+        }else {
+          console.log('识别')
+        }
+      })
+
+    },
 		// 清空表单
 		goReset(){
-			// this.$nextTick(()=>{
-			// 	this.$refs['registerForm'].resetFields();
-			// 	this.$refs['phoneForm'].resetFields();
-			// 	this.$refs['identifyForm'].resetFields();
-			// });
-
 			 this.phoneForm = {}
 			 this.registerForm = {}
 			 this.identifyForm = {}
@@ -461,10 +506,14 @@ export default {
 		goStudy(){
 			this.isregister = false
 			this.regiterSuccess = false
+      //this.loginDialog = true
+      // this.$store.commit("saveLoginDialog", true);
 		},
 		// 注册成功弹出
 		handleRegiterClose(){
 			this.regiterSuccess = false
+      // this.$store.commit("saveLoginDialog", false);
+      //this.loginDialog = false
 		},
     //点击图标返回首页
     goHome() {
@@ -492,11 +541,15 @@ export default {
     },
     // 打开对话框
     goLogin() {
+      this.goReset()
       this.$store.commit("saveLoginDialog", true);
     },
     // 关闭对话框
     handleClose() {
+      this.goReset()
       this.$store.commit("saveLoginDialog", false);
+      clearInterval(this.phonetimer);
+      clearInterval(this.registerTiemr);
     },
     // 确认注册
     submitRegisterForm(formName) {
@@ -510,9 +563,11 @@ export default {
               background: "rgba(0, 0, 0, 0.7)",
             });
             let mobile = Encrypt(this.registerForm.mobile)
+            let captchaVerification = this.registerForm.captchaVerification
             register({
               mobile,
-              captcha:this.registerForm.captcha
+              captcha:this.registerForm.captcha,
+              captchaVerification
             })
               .then((res) => {
                 if (res.meta.code == "200") {
@@ -584,9 +639,11 @@ export default {
           });
           let username = Encrypt(this.phoneForm.username)
           let password = Encrypt(this.phoneForm.password)
+          let captchaVerification = this.phoneForm.captchaVerification
           loginByJson({
             username,
-            password
+            password,
+            captchaVerification
           })
             .then((res) => {
               if (res.meta.code === "10006") {
@@ -649,10 +706,11 @@ export default {
           });
           // alert('submit!');
          let mobile = Encrypt(this.identifyForm.mobile)
-
+          let captchaVerification = this.identifyForm.captchaVerification
           loginByMobile({
             mobile,
-            captcha:this.identifyForm.captcha
+            captcha:this.identifyForm.captcha,
+            captchaVerification
           })
             .then((res) => {
               if (res.meta.code === "10006") {
@@ -841,15 +899,26 @@ export default {
     backLogin() {
       this.isregister = false;
 			this.goReset()
+      if(this.loginCurrent === 1){
+        this.crtType = "mobileCaptchaLogin"
+      }else {
+        this.crtType = "usernamePasswordLogin";
+      }
     },
     // 去快速注册页面
     backRegiter() {
       this.isregister = true;
 			this.goReset()
+      this.crtType = "registerLogin"
     },
     // 登陆页面 切换
     gochange(index) {
 			this.goReset()
+      if(index === 1) {
+        this.crtType = "mobileCaptchaLogin"
+      }else if(index === 0){
+        this.crtType = "usernamePasswordLogin";
+      }
       // this.registerForm = {};
       // console.log(this.$refs.registerForm);
       this.loginCurrent = index;
@@ -943,6 +1012,7 @@ margin-top: 10px;
   flex-direction: column;
   justify-content: center;
  align-items: center;
+  z-index: 3000;
 }
 .tip-img {
 	display: flex;
