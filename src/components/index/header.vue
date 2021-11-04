@@ -919,7 +919,7 @@ export default {
           this.active = "1";
         } else if (to.fullPath === "/course") {
           this.active = "2";
-        } else if (to.fullPath === "/memeber") {
+        } else if (to.fullPath === "/member") {
           this.active = "3";
         }
         this.copySearch();
@@ -979,6 +979,8 @@ margin-top: 10px;
 }
 .active {
   font-weight: bold;
+  color: #3481ff;
+  /* color: #3689ff; */
 }
 * {
   list-style: none;
@@ -1036,6 +1038,7 @@ margin-top: 10px;
   /* height: 100%; */
   color: black;
 }
+
 .content-nav ul li a {
   font-size: 18px;
   font-family: MicrosoftYaHei;
@@ -1124,9 +1127,7 @@ margin-top: 10px;
   height: 2px;
   /* background-color: red; */
 }
-.active {
-  color: #3689ff;
-}
+
 .active span {
   background-color: rgba(54, 137, 255, 1);
 }
@@ -1341,5 +1342,18 @@ margin-top: 10px;
   width: 13px;
   height: 13px;
   margin-right: 5px;
+}
+.active {
+  position: relative;
+  color: #3689ff !important;
+}
+.active::after{
+  content: '' !important;
+  position: absolute !important;
+  bottom: -37px !important;
+  left: -15px;
+  width: 70px;
+  height: 2px;
+  background-color: #3689ff;
 }
 </style>

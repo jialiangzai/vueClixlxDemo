@@ -22,9 +22,12 @@
                             </div>
                             <div class="right">
                                 <div class="courseName">{{item.courseName}}</div>
-                                <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
+                                <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                                 <div class="buy">
-                                    <div class="learn">免费学习</div>
+                                    <div class="buy-free">
+                                        <div class="learn">免费学习</div>
+                                        <img src="../../assets/image/about/free.png" alt="">
+                                    </div>
                                     <div class="car" @click="addCart(item)">
                                         <div class="cart-image">
                                             <img src="/image/cart16.png" alt="">
@@ -38,9 +41,9 @@
                 </div>
             </div>
           </li>
-          <li>
+          <!-- <li>
             <router-link to="/course" title="全部课程" > 全部课程 </router-link>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="sliders">
@@ -266,12 +269,14 @@ export default {
 	position: absolute;
 	top: 0;
 	left: 220px;
-	background: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255);
 	z-index: 65535;
-	min-width: 700px;
+	min-width: 800px;
 	height: 460px;
+    /* height: 100%; */
 	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
+	/* border-bottom-right-radius: 10px; */
+    box-sizing: border-box;
 }
 .sliders {
 	width: 1060px;
@@ -285,18 +290,21 @@ export default {
 .detail-main{
     cursor: pointer;
     height: 100%;
-    margin: 0 10px;
+    /* margin: 0 10px; */
+    position: relative;
 }
 .detail-list{
     width: 100%;
     display: flex;
     margin-top:10px;
+    padding-left: 20px;
     color: #333333;
     font-weight: 400;
     font-size: 14px;
 }
 .detail-desc {
     padding-top: 20px;
+    padding-left: 20px;
 	height: 26px;
 	font-size: 16px;
 	font-weight: bold;
@@ -327,25 +335,34 @@ export default {
 /* 分类详情结束 */
 /* 下侧课程开始 */
 .detail-class{
+    position: absolute;
+    bottom: 0;
+    right: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    width: 700px;
-    height: 250px;
-    margin-top: 30px;
+    /* width: 700px; */
+    width: 100%;
+    /* height: 250px; */
+    height: 300px;
+    padding: 20px 20px;
+    /* margin-top: 30px; */
+    background-color: #F3F5F6;
+    box-sizing: border-box;
 }
 .course-card{
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     align-items: center;
-    width: 340px;
-    height: 150px;
-    background: #F3F5F6;
-    border-radius: 10px;
+    width: 370px;
+    height: 120px;
+    box-sizing: border-box;
+    /* background: cyan; */
+    /* border-radius: 10px; */
 }
 .course-image{
 	position: relative;
-    width:200px ;
+    width: 170px;
     height: 100%;
     cursor: pointer;
 }
@@ -353,11 +370,12 @@ export default {
     width: 100%;
     height: 100%;
 }
-
-
+/* .right{
+    background-color: cyan;
+} */
 .courseName{
-    width: 150px;
-    height: 35px;
+    width: 100%;
+    height: 100%;
     margin: 5px 0 0 5px;
 	font-weight: bold;
 	font-size: 13px;
@@ -373,9 +391,20 @@ export default {
     color: #808080;
 }
 .buy{
+    width: 200px;
     display: flex;
-    margin: 40px 0 0 5px;
+    margin: 30px 0 0 5px;
     justify-content: space-between;
+    box-sizing: border-box;
+}
+.buy-free{
+    display: flex;
+    align-items: center;
+}
+.buy-free img{
+    width: 12px;
+    height: 12px;
+    margin-left: 10px;
 }
 .buy .learn{
     color: #3586FF;
