@@ -324,6 +324,7 @@ import {
   logout,
   getInfo,
   getShopCarCounter,
+  createToken
 } from "@/common/api/auth";
 import  {Encrypt} from '@/utils/aes.js';
 import { Loading } from "element-ui";
@@ -659,16 +660,15 @@ export default {
                 // 存储到access中
                 sessionStorage.setItem("token", accessToken);
                 sessionStorage.setItem("isLogin", JSON.stringify(true));
-                // 获取用户信息
-                this.getUserInfo({
-                  token: accessToken,
-                });
                 this.getCarNum();
                 this.saveLoginAction();
                 this.$message({
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
+                // 获取用户信息
+                this.getUserInfo();
+                // window.location.reload()
               } else {
                 this.$message({
                   message: res.meta.msg,
@@ -679,6 +679,8 @@ export default {
                   phoneloading.close();
                 });
                 this.$store.commit("saveLoginDialog", false);
+
+
               }
             })
             .catch((err) => {
@@ -722,10 +724,6 @@ export default {
                 sessionStorage.setItem("token", accessToken);
                 sessionStorage.setItem("isLogin", JSON.stringify(true));
                 // 获取个人信息
-                this.getUserInfo({
-                  token: accessToken,
-                });
-                this.saveLoginAction();
                 // 获取购物车数据
                 this.getCarNum();
                 //  this.saveIsLoginAction(true)
@@ -733,11 +731,13 @@ export default {
                   // 以服务的方式调用的 Loading 需要异步关闭
                   identLoading.close();
                 });
+                this.getUserInfo();
                 this.$store.commit("saveLoginDialog", false);
                 this.$message({
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
+                // window.location.reload()
               } else {
                 this.$message({
                   message: res.meta.msg,
@@ -748,6 +748,10 @@ export default {
                   identLoading.close();
                 });
                 this.$store.commit("saveLoginDialog", false);
+                this.saveLoginAction();
+
+
+
               }
             })
             .catch((err) => {
@@ -867,20 +871,26 @@ export default {
     },
     // 获取个人信息
     getUserInfo(params) {
-      getInfo(params)
-        .then((res) => {
-          // this.saveUserInfoActions()
-          if (res.meta.code == "200") {
-            sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-            this.saveUserInfoAction();
-          } else {
-            this.$message({
-              message: res.meta.msg,
-              type: "error",
-            });
-          }
+      createToken().then(ress=>{
+        getInfo({
+          token:ress.data.token
         })
-        .catch((err) => {});
+            .then((res) => {
+              // this.saveUserInfoActions()
+              if (res.meta.code == "200") {
+                sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+                this.saveUserInfoAction();
+                // window.location.reload()
+              } else {
+                this.$message({
+                  message: res.meta.msg,
+                  type: "error",
+                });
+              }
+            })
+            .catch((err) => {});
+      })
+
     },
     // 获取购物车数据
     getCarNum() {
