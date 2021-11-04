@@ -5,7 +5,7 @@ import http from './requests';
 // uploadFile
 export function uploadFileWithBlob(params){
   return http.$axios({
-    url: 'api/upload/uploadFileWithBlob',
+    url: '/api/upload/uploadFileWithBlob',
     method: 'POST',
     data: params
   })
@@ -13,7 +13,7 @@ export function uploadFileWithBlob(params){
 
 export function uploadFile(params){
   return http.$axios({
-    url: 'api/upload/uploadFilew',
+    url: '/api/upload/uploadFilew',
     method: 'POST',
     data: params
   })

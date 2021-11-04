@@ -5,7 +5,7 @@ import http from './requests';
 // 更新头像
 export function updateUserInfo({token,...params}){
   return http.$axios({
-    url: 'api/member/update',
+    url: '/api/member/update',
     method: 'POST',
     data: {
       ...params

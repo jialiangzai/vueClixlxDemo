@@ -2,7 +2,7 @@ import http from './requests'
 
 export function getNewCourse(params){
     return http.$axios({
-        url:'api/course/mostNew',
+        url:'/api/course/mostNew',
         method:'POST',
         data:params
     })
@@ -10,7 +10,7 @@ export function getNewCourse(params){
 
 export function getHotCourse(params){
     return http.$axios({
-        url:'api/course/mostHeat',
+        url:'/api/course/mostHeat',
         method:'POST',
         data:params
     })
@@ -19,7 +19,7 @@ export function getHotCourse(params){
 //查询课程
 export function queryCourse(params){
     return http.$axios({
-        url:'api/course/search',
+        url:'/api/course/search',
         method:'POST',
         data:params
     })
@@ -28,7 +28,7 @@ export function queryCourse(params){
 //课程详情
 export function getcourseInfo(courseId){
     return http.$axios({
-        url:'api/course/getDetail',
+        url:'/api/course/getDetail',
         method:'GET',
         params:{courseId}
     })
@@ -37,7 +37,7 @@ export function getcourseInfo(courseId){
 //播放课程
 export function playCourse(courseId,chapterId){
     return http.$axios({
-        url:'api/player/play',
+        url:'/api/player/play',
         method:'GET',
         params:{courseId,chapterId},
         headers: {
@@ -49,7 +49,7 @@ export function playCourse(courseId,chapterId){
 //下载资料
 export function downloadAttachment(courseId,attachmentId){
     return http.$axios({
-        url:'api/course/downloadAttachment',
+        url:'/api/course/downloadAttachment',
         method:'GET',
         params:{courseId,attachmentId},
         responseType: "blob",
@@ -62,7 +62,7 @@ export function downloadAttachment(courseId,attachmentId){
 //检查是否有权限
 export function checkAuth(courseId){
     return http.$axios({
-        url:'api/course/checkAuth',
+        url:'/api/course/checkAuth',
         method:'GET',
         params:{courseId},
         headers: {
@@ -75,7 +75,7 @@ export function checkAuth(courseId){
 //获取学习时长
 export function updateStudyHour(data,token){
     return http.$axios({
-        url:'api/member/updateStudyHour',
+        url:'/api/member/updateStudyHour',
         method:'POST',
         data,
         headers: {

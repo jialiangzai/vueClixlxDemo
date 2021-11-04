@@ -95,9 +95,8 @@ const routes = [
 //   routes,
 //   mode: 'hash',
 // });
-
 const router = new Router({
-  mode: "hash",
+  mode: "history",
   // base: process.env.BASE_URL,
   routes,
 });

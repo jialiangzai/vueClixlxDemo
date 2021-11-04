@@ -3,7 +3,7 @@ import http from './requests';
 // 查询收藏商品
 export function getByMemberId(params) {
   return http.$axios({
-    url: 'api/message/getByMemberId',
+    url: '/api/message/getByMemberId',
     method: 'POST',
     data: params,
     headers: {
@@ -17,7 +17,7 @@ export function getByMemberId(params) {
 
 export function getMess({id,token}){
   return http.$axios({
-    url: 'api/message/get?id='+id,
+    url: '/api/message/get?id='+id,
     method: 'GET',
     headers: {
       'Authorization': sessionStorage.getItem('token'),
@@ -29,7 +29,7 @@ export function getMess({id,token}){
 // 删除收藏
 export function deleteMess({id,token}){
   return http.$axios({
-    url: 'api/message/delete?ids='+id,
+    url: '/api/message/delete?ids='+id,
     method: 'GET',
     headers: {
       'Authorization': sessionStorage.getItem('token'),
@@ -41,7 +41,7 @@ export function deleteMess({id,token}){
 // 标记已读
 export function makeRead({ids,token}){
   return http.$axios({
-    url: 'api/message/makeRead',
+    url: '/api/message/makeRead',
     method: 'POST',
     data: ids,
     headers: {

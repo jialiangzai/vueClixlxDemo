@@ -30,7 +30,7 @@
                         <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                         <div class="coursePrice">
                             <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                            <div class="price">¥ {{item.salePrice}}</div>
+                            <div class="price">¥ {{item.discountPrice}}</div>
                             <div class="addCart" @click="addCart(item)">
                                 <i class="el-icon-shopping-cart-1 cart"></i>
                                 <span class="cart-text">加入购物车</span>
@@ -76,7 +76,7 @@
                         <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                         <div class="coursePrice">
                             <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                            <div class="price">¥ {{item.salePrice}}</div>
+                            <div class="price">¥ {{item.discountPrice}}</div>
                             <div class="addCart" @click="addCart(item)">
                                 <i class="el-icon-shopping-cart-1 cart"></i>
                                 <span class="cart-text">加入购物车</span>
@@ -87,16 +87,16 @@
             </ul>
         </div>
     </div>
-    <!-- <div class="course-list-container"> -->
+    <div class="course-list-container">
         <!-- 都在看好书标题开始 -->
-        <!-- <h1 class="contentTitle">
+         <h1 class="contentTitle">
             <div class="txt">
                 <div class="txt-top">都在看好书</div>
                 <div class="txt-bottom"></div>
             </div>
-        </h1> -->
+        </h1> 
         <!-- 都在看好书标题结束 -->
-        <!-- <div class="book">
+         <div class="book">
             <ul class="courseUl">
                 <li class="goodBook" v-for="i in 4" :key="i">
                     <div class="goodBookInfo">
@@ -113,8 +113,8 @@
                     </div>
                 </li>
             </ul>
-        </div>   -->
-    <!-- </div> -->
+        </div>   
+    </div> 
 </div>
 </template>
 

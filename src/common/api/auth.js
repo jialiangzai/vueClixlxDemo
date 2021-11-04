@@ -3,7 +3,7 @@ import http from './requests';
 // 手机 加 密码登陆
 export function loginByJson (params){
   return http.$axios({
-    url: 'api/u/loginByJson',
+    url: '/api/u/loginByJson',
     method: 'POST',
     data: params
   })
@@ -12,7 +12,7 @@ export function loginByJson (params){
 // 手机验证码登陆
 export function loginByMobile(params){
   return http.$axios({
-    url: 'api/u/loginByMobile',
+    url: '/api/u/loginByMobile',
     method: 'POST',
     data: params
   })
@@ -21,7 +21,7 @@ export function loginByMobile(params){
 // 退出登陆
 export function logout() {
   return http.$axios({
-    url: 'api/u/logout',
+    url: '/api/u/logout',
     method: 'GET'
   })
 }
@@ -29,7 +29,7 @@ export function logout() {
 // 修改密码
 export function modifyPassword(params){
   return http.$axios({
-    url: 'api/member/modifyPassword',
+    url: '/api/member/modifyPassword',
     method: 'POST',
     data: params
   })
@@ -38,7 +38,7 @@ export function modifyPassword(params){
 // 手机号验证码注册
 export function register(params){
   return http.$axios({
-    url: 'api/member/register',
+    url: '//api/member/register',
     method: 'POST',
     data: params
   })
@@ -47,7 +47,7 @@ export function register(params){
 // 找回密码
 export function findPassword(params){
   return http.$axios({
-    url: 'api/member/findPassword',
+    url: '//api/member/findPassword',
     method: 'POST',
     data: params
   })
@@ -57,7 +57,7 @@ export function findPassword(params){
 
 export function resetPassword(params) {
   return http.$axios({
-    url: 'api/member/resetPassword',
+    url: '/api/member/resetPassword',
     method: 'POST',
     data: params
   })
@@ -66,7 +66,7 @@ export function resetPassword(params) {
 // 获取个人信息
 export function getInfo({token}) {
   return http.$axios({
-    url: 'api/member/getInfo?token='+token,
+    url: '/api/member/getInfo?token='+token,
     method: 'GET',
     headers: {
       'Authorization': sessionStorage.getItem('token')
@@ -78,7 +78,7 @@ export function getInfo({token}) {
 
 export function getShopCarCounter(){
   return http.$axios({
-    url: 'api/shopcar/getShopCarCounter',
+    url: '/api/shopcar/getShopCarCounter',
     method: 'GET',
     headers: {
       'Authorization': sessionStorage.getItem('token')
@@ -90,7 +90,7 @@ export function getShopCarCounter(){
 // 修改头像
 export function updatePortrait(params){
   return http.$axios({
-    url: 'api/member/updatePortrait',
+    url: '/api/member/updatePortrait',
     method: 'POST',
     data: params,
     headers: {
@@ -104,7 +104,7 @@ export function updatePortrait(params){
 
 export function createToken(){
   return http.$axios({
-    url: 'api/token/createToken',
+    url: '/api/token/createToken',
     method: 'POST'
   })
 }
@@ -113,7 +113,7 @@ export function createToken(){
 
 export function modifyMobile({token,...params}){
   return http.$axios({
-    url: 'api/member/modifyMobile',
+    url: '/api/member/modifyMobile',
     method: 'POST',
     data: {
       ...params

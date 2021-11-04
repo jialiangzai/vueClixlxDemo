@@ -4,7 +4,7 @@ import http from './requests';
 // 查询订单
 export function settlement(params){
   return http.$axios({
-    url: 'api/order/settlement',
+    url: '/api/order/settlement',
     method: 'POST',
     data: params,
     headers: {
@@ -16,7 +16,7 @@ export function settlement(params){
 //微信结算
 export function wxpay(params){
     return http.$axios({
-      url: 'api/pay/wxpay/createOrder',
+      url: '/api/pay/wxpay/createOrder',
       method: 'POST',
       data: params,
       headers: {
@@ -29,7 +29,7 @@ export function wxpay(params){
   //支付宝结算
 export function zfbpay(params){
     return http.$axios({
-      url: 'api/pay/alipay/createOrder',
+      url: '/api/pay/alipay/createOrder',
       method: 'POST',
       data: params,
       headers: {
@@ -42,7 +42,7 @@ export function zfbpay(params){
 //支付宝
 export function queryOrderWithAli(orderNumber){
     return http.$axios({
-      url: 'api/pay/alipay/queryOrder',
+      url: '/api/pay/alipay/queryOrder',
       method: 'GET',
       params: orderNumber,
       headers: {
@@ -53,7 +53,7 @@ export function queryOrderWithAli(orderNumber){
 
 export function queryOrderWithWX(orderNumber){
     return http.$axios({
-      url: 'api/pay/wxpay/queryOrder',
+      url: '/api/pay/wxpay/queryOrder',
       method: 'GET',
       params: orderNumber,
       headers: {

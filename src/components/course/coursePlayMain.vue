@@ -107,10 +107,10 @@ export default {
             this.memberid = this.userInfo.id
             playCourse(courseId,chapterId).then(res => {
                 if(res.meta.code === '200'){
+                    console.log(res);
                     this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
                     this.chapterInfo = res.data.chapterInfo
                     this.chapters = res.data.courseInfo.bizCourseChapters
-                    this.playerOptions.poster = res.data.courseInfo.courseCover
                     this.courseInfo = res.data.courseInfo
                     this.duration = res.data.playInfo.playInfoList[0].duration
                 }else if(res.meta.code === '70001'){
@@ -164,14 +164,15 @@ export default {
 
 <style scoped>
 .main {
-	width: 1200px;
+  width: 100%;
   margin: 0 auto;
   margin-bottom: 121px;
   /*background-color: #00ac06;*/
 }
 .name {
 	padding: 20px 0px;
-	width: 193px;
+	width: 1200px;
+    margin: 0 auto;
 	height: 26px;
 	font-size: 20px;
 	font-family: Microsoft YaHei;
@@ -181,14 +182,14 @@ export default {
 	opacity: 1;
 }
 .play {
-	height: 521px;
+    width: 100%;
 	display: flex;
 	background: #1c1f21;
 }
 /* 视频播放开始 */
 .play-left {
 	width: 1100px;
-	height: 500px;
+	height: 618.75px;
 	margin: 0 0 0 20px;
 	background: #000;
 }
@@ -205,8 +206,8 @@ export default {
 /* 播放列表开始 */
 .play-right {
 	color: #ffffff;
-  width: 300px;
-	height: 506px;
+    width: 300px;
+	height: 618.75px;
 	overflow: scroll;
 	position: relative;
 }

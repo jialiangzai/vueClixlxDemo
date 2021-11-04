@@ -109,7 +109,7 @@
                                 <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                                 <div class="coursePrice">
                                     <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                                    <div class="price">¥ {{item.salePrice}}</div>
+                                    <div class="price">¥ {{item.discountPrice}}</div>
                                     <div class="addCart" @click="addCart(item)">
                                         <i class="el-icon-shopping-cart-1 cart"></i>
                                         <span class="cart-text">加入购物车</span>
@@ -599,7 +599,7 @@ export default{
 	width: 100%;
 	height: 260px;
 	background: #ffffff;
-	box-shadow: 1px 1px 10px rgba(27, 39, 94, 0.4);
+	box-shadow: 2px 4px 4px rgba(27, 39, 94, 0.1);
 	opacity: 1;
     overflow: hidden;
 	border-radius: 8px;

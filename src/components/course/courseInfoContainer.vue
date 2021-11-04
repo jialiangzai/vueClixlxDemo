@@ -111,7 +111,7 @@ export default {
 			downsource: [],
 			token: '',
 			memberId: '',
-			tokens: '',
+			tokens: '',//登录的token
 			activeName: 'first',
             activeChange:1
 		}
@@ -138,21 +138,28 @@ export default {
         },
 		//跳转到订单页面
 		goOrder(item) {
-			if (!this.token) {
+			if (!this.tokens) {
 				this.$message({
 					message: '请先登录才能购买哦',
 					type: 'error',
 				})
 				this.$store.commit('saveLoginDialog', true)
-			}
-			let arr = new Array()
-			arr.push({ number: 1, id: item.id })
-			sessionStorage.setItem('selectedArr', JSON.stringify(arr))
-			this.$router.push('/confirmOrder')
+			}else{
+                if(item.discountPrice === 0){
+                    this.$router.push('/confirmOrder')
+                }else{
+                    
+                }
+                /* let arr = new Array()
+                arr.push({ number: 1, id: item.id })
+                sessionStorage.setItem('selectedArr', JSON.stringify(arr))
+                this.$router.push('/confirmOrder') */
+            }
+			
 		},
 		//下载资料
 		downloadSource(item) {
-			if (!this.token) {
+			if (!this.tokens) {
 				this.$message({
 					message: '购买该课程后才能下载资料哦',
 					type: 'error',
@@ -463,26 +470,6 @@ export default {
 	display: flex;
 	justify-content: space-between;
 }
-/deep/ .el-tabs__item {
-	margin-left: 50px;
-	font-size: 22px;
-	height: 66px;
-	font-weight: bold;
-	line-height: 80px;
-}
-
-/deep/ .el-tabs__nav-wrap::after {
-	z-index: 0;
-	height: -2px !important;
-	background-color: #ffffff;
-}
-/deep/ .el-tabs__item:last-child {
-	margin-left: 0 !important;
-}
-/deep/ .el-tabs__active-bar {
-	margin-left: 50px;
-}
-
 .down {
 	margin: 10px auto;
 	width: 1200px;

@@ -3,7 +3,7 @@ import http from './requests';
 // 查询收藏
 export function getFavoriteList({pageSize,pageNum,token,entity}) {
   return http.$axios({
-    url: 'api/favorite/getByMemberId',
+    url: '/api/favorite/getByMemberId',
     method: 'POST',
     data: {
       pageNum,
@@ -21,7 +21,7 @@ export function getFavoriteList({pageSize,pageNum,token,entity}) {
 // 添加收藏 
 export function addFavorite({ courseId }) {
   return http.$axios({
-    url: 'api/favorite/addFavorite',
+    url: '/api/favorite/addFavorite',
     method: 'POST',
     data: {
       courseId,
@@ -34,7 +34,7 @@ export function addFavorite({ courseId }) {
 
 export function deleteFavorite({ id,token }) {
   return http.$axios({
-    url: 'api/favorite/deleteFavorite?id=' + id,
+    url: '/api/favorite/deleteFavorite?id=' + id,
     method: 'GET',
     headers: {
       'Authorization': sessionStorage.getItem('token'),
