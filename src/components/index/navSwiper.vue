@@ -4,7 +4,7 @@
     <div class="navSwiperContent">
       <div class="navigation">
         <ul>
-          <li v-for="(item, index) in categorys" :key="item.id" v-if="index < 8" @mouseenter="mourseHover(item,index)" @mouseleave="mourseOut(index)">
+          <li v-for="(item, index) in categorys" :key="item.id" @mouseenter="mourseHover(item,index)" @mouseleave="mourseOut(index)">
             <router-link to="/" :title="item.categoryName" > {{ item.categoryName }} <i class="el-icon-arrow-right"></i></router-link>
             <div class="category-detail" v-if="categorysDetail[index]">
                 <div class="detail-main" >
@@ -12,7 +12,7 @@
                     <div class="detail-list">
                         <div class="list-know">知识点:</div>
                         <div class="list-ul">
-                            <router-link to="/course" class="list-item" v-for="(item,index) in tagarr" :key="index" >{{item.tagName}}</router-link>
+                            <a href="javascript:;" @click="goDetail(item.tagName)" class="list-item" v-for="(item,index) in tagarr" :key="index" >{{item.tagName}}</a>
                         </div>
                     </div>
                     <div class="detail-class">
@@ -71,6 +71,7 @@ import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
 import {getShopCarCounter} from "@/common/api/auth";
 import { mapState, mapActions,mapMutations } from "vuex";
+import {Encrypt} from '@/utils/aes'
 
 export default {
 	data() {
@@ -111,6 +112,11 @@ export default {
         goCourseInfo(item){
             this.$router.push('/course-info/' + item.id)
         },
+        goDetail(tagName){
+            let tag = Encrypt(tagName)
+            this.$router.push('/course?tagName='+tag)
+        },
+
         //加入购物车
         addCart(item){
             if(!this.tokens){

@@ -15,7 +15,10 @@
             <img :src=" courseTeacher !== null ? courseTeacher.teacherAvatar :'/image/Avat62.png'" alt="">
           </div>
           <ul class="teacherName">
-            <li class="name-item">{{ courseTeacher !== null ? courseTeacher.teacherName : 'Aimi'}}</li>
+            <li class="name-item">
+                {{ courseTeacher !== null ? courseTeacher.teacherName : ''}}
+                <img src="/image/teacherStart.png" alt="">
+            </li>
             <li class="name-item">金牌讲师</li>
           </ul>
           <ul class="access">
@@ -59,8 +62,8 @@
                 </div>
             </div>
             <div class="video" v-for="(item,index) in courseChapters" :key="index">
-            <div class="chapterName">{{item.chapterName}}</div>
-            <div class="chapterDesc">{{item.description}}</div>
+                <div class="chapterName">{{item.chapterName}}</div>
+                <div class="chapterDesc">{{item.description}}</div>
                 <ul class="videos">
                     <li
                     class="video-item"
@@ -163,30 +166,42 @@ export default {
 		downloadSource(item) {
 			if (!this.tokens) {
 				this.$message({
-					message: '购买该课程后才能下载资料哦',
+					message: '请先登录才能才能下载资料哦',
 					type: 'error',
 				})
+				this.$store.commit('saveLoginDialog', true)
 				return
 			} else {
-				checkAuth(item.courseId).then((res) => {
-					downloadAttachment(item.courseId, item.id).then((res) => {
-						const blob = new Blob([res])
-						let fileName = item.attachmentName
-						let fileUrl = item.attachmentUrl
-						const extName = fileUrl.substring(
-							fileUrl.lastIndexOf('.')
-						)
-						fileName = fileName + extName
-						const link = document.createElement('a')
-						link.download = fileName
-						link.style.display = 'none'
-						link.href = URL.createObjectURL(blob)
-						document.body.appendChild(link)
-						link.click()
-						URL.revokeObjectURL(link.href)
-						document.body.removeChild(link)
-					})
-				})
+                checkAuth(item.courseId).then((res) => {
+                    let hasAuth = res.data.data.hasAuth;
+                    if (!hasAuth) {
+                        this.$message({
+                            message: '购买该课程后才能下载资料哦',
+                            type: 'error',
+                        })
+                        return;
+                    } else{
+                        checkAuth(item.courseId).then((res) => {
+                            downloadAttachment(item.courseId, item.id).then((res) => {
+                                const blob = new Blob([res])
+                                let fileName = item.attachmentName
+                                let fileUrl = item.attachmentUrl
+                                const extName = fileUrl.substring(
+                                    fileUrl.lastIndexOf('.')
+                                )
+                                fileName = fileName + extName
+                                const link = document.createElement('a')
+                                link.download = fileName
+                                link.style.display = 'none'
+                                link.href = URL.createObjectURL(blob)
+                                document.body.appendChild(link)
+                                link.click()
+                                URL.revokeObjectURL(link.href)
+                                document.body.removeChild(link)
+                            })
+                        })
+                    }
+                })
 			}
 		},
 		//加入购物车
@@ -339,8 +354,8 @@ export default {
 	/*margin-left: 50px;*/
 }
 .info .Avat{
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
 }
 .info .Avat img{
@@ -351,6 +366,10 @@ export default {
 }
 .teacherName {
 	margin: 8px 0 0 8px;
+}
+.name-item img{
+    width: 14px;
+    height: 14px;
 }
 .access {
 	margin: 15px 0 0 100px;
@@ -384,7 +403,7 @@ export default {
     font-size: 20px;
     font-weight: bold;
 	line-height: 80px;
-	margin-right: 50px;
+	margin-right: 70px;
     cursor: pointer;
     position: relative;
 }
@@ -396,7 +415,7 @@ export default {
     position: absolute;
     width: 70%;
     top: 63px;
-    left: 7px;
+    left:calc(30% / 2);
     height: 4px;
     background: #388FFF;
     border-radius: 2px;
@@ -411,6 +430,7 @@ export default {
 	background: #ffffff;
 	border-radius: 8px;
 	overflow: hidden;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.09);
 }
 .desc {
 	padding: 20px;
@@ -448,6 +468,8 @@ export default {
 	background: #ffffff;
 	border-radius: 8px;
 	overflow: hidden;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.09);
+
 }
 .video .chapterName {
 	font-weight: bold;
@@ -509,6 +531,7 @@ export default {
 	padding: 5px ;
 	display: flex;
 	justify-content: space-between;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.09);
 }
 .down {
 	margin: 10px auto;

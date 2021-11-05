@@ -45,18 +45,22 @@
                         </div>
              
                         <div class="course-container" >
-                            <div class="courseName">{{courseInfo.courseName}}</div>
+                            <div class="courseName"  :title="courseInfo.courseName">{{courseInfo.courseName}}</div>
                             <div class="courseDesc">{{courseDetail.description}}</div>
                             <div class="courseImg">
                                 <img :src="courseDetail.courseCover" alt="">
                             </div>
+                            <div class="teacherRecommend">讲师介绍</div>
                             <div class="teacher">
                                 <div class="teacherAvt">
                                     <img :src="courseTeacher !== null ? courseTeacher.teacherAvatar:''" alt="">
                                 </div>
-                                <div class="teacherName">{{courseTeacher !== null ? courseTeacher.teacherName:''}}</div>
+                                <div class="teacherInfo">
+                                    <div class="teacherName">{{courseTeacher !== null ? courseTeacher.teacherName:''}}</div>
+                                    <div class="teacherTag">{{courseTeacher !== null ? courseTeacher.tags:'标签点击就不就'}}</div>
+
+                                </div>
                             </div>
-                            <div class="teacherTag">{{courseTeacher !== null ? courseTeacher.tags:''}}</div>
                             <div class="teacherReacher">{{courseTeacher !== null ? courseTeacher.research:''}}</div>
                         </div>
                     </el-tab-pane>
@@ -67,12 +71,12 @@
                         </div>
                         <div class="chapter-container">
                             <dl class="list" v-for="(item,index) in chapters" :key="index">
-                                <dt>{{item.chapterName}}</dt>
+                                <dt  :title="item.chapterName">{{item.chapterName}}</dt>
                                 <dd :class="chapterInfo.id === child.id ? 'active' : ''"  v-for="child in item.children" :key="child.id" @click="play(child)">
                                     <div class="video-itemIcon" :ref="renderMaps(child)">
                                         <i class="el-icon-video-camera"></i>
                                     </div>
-                                    <div class="item-name">
+                                    <div class="item-name" :title="child.chapterName">
                                         视频：{{child.chapterName}}
                                     </div>
                                 </dd>
@@ -155,6 +159,7 @@ export default {
             this.$message.error('无法播放视频，请先登录');
             this.$router.go(-1)
         }
+
         this.playCourse(this.courseId,this.chapterId)
 	},
     computed: {
@@ -200,7 +205,9 @@ export default {
         },
         //学习下一小节
         nextCourse(){
-            this.playCourse(this.nextChapter.courseId,this.nextChapter.id)
+            this.$router.replace({path: '/course-play/' + this.nextChapter.courseId + '/' + this.nextChapter.id})
+            this.$router.go(0)
+            /* this.playCourse(this.nextChapter.courseId,this.nextChapter.id) */
             this.isEnded=false
         },
         //点击按钮返回首页
@@ -217,7 +224,7 @@ export default {
         },
         // 播放列表课程
         play(item){
-            this.$router.push({path:'/course-play/'+item.courseId+'/'+item.id})
+            this.$router.replace({path:'/course-play/'+item.courseId+'/'+item.id})
             this.playCourse(item.courseId,item.id)
         },
         //已进入页面播放课程
@@ -225,7 +232,14 @@ export default {
             this.memberid = this.userInfo.id
             playCourse(courseId,chapterId).then(res => {
                 if(res.meta.code === '200'){
-                    this.playerOptions.sources[0].src = res.data.playInfo.playInfoList[0].playURL
+                    let playInfoList = res.data.playInfo.playInfoList;
+                    for(let i = 0;i < playInfoList.length;i++){
+                        let playInfo = playInfoList[i];
+                        if(playInfo.format === "mp4"){
+                            this.playerOptions.sources[0].src = playInfo.playURL
+                            break
+                        }
+                    }
                     this.chapterInfo = res.data.chapterInfo
                     this.playerOptions.poster = res.data.chapterInfo.chapterLitpic
                     this.chapters = res.data.courseInfo.bizCourseChapters
@@ -296,35 +310,40 @@ export default {
     }
 }
 </script>
-<style>
-/* .video-player{
-    height: 100% !important;
-    overflow: hidden;
-} */
-.el-tabs__item{
+
+<style scoped>
+>>>.el-tabs__item{
     padding: unset !important;
-    width: 80px;
-    height: 100px;
+    width: 80px !important;
+    height: 100px !important;
 }
-.el-tabs__nav-wrap::after{
+>>>.el-tabs__nav-wrap::after{
     background: unset !important;
 }
-.el-tabs__active-bar.is-right{width: 0 !important;}
-.el-tabs__item.is-active .tabpanel-title{
+>>>.el-tabs__active-bar.is-right{width: 0 !important;}
+>>>.el-tabs__item.is-active .tabpanel-title{
     background: #25282A !important;
 }
-.el-tabs__item.is-active .tabpanel-title .icon,.el-tabs__item.is-active .tabpanel-title .text{
+>>>.el-tabs__item.is-active .tabpanel-title .icon,.el-tabs__item.is-active .tabpanel-title .text{
     color: #ffffff;
 }
-.el-tabs__nav.is-right{
+>>>.el-tabs__nav.is-right{
     padding: 20px 0;
     background: #1C1F21 !important;
 }
-.el-tabs--right,.el-tabs__content,.el-tab-pane{
+>>>.el-tabs--right,>>>.el-tabs__content,>>>.el-tab-pane{
     height: 100%;
 }
-</style>
-<style scoped>
+>>>.vjs-custom-skin > .video-js .vjs-big-play-button {
+  background-color: rgba(0,0,0,0.45);
+  position: absolute;
+  bottom: 60px;
+  left: 20px;
+  font-size: 3.5em;
+  line-height: 2em !important;
+  margin-left: unset;
+  top: unset;
+}
 .main {
   width: 100%;
   margin: 0 auto;
@@ -414,8 +433,13 @@ export default {
 	color: #ffffff;
 	opacity: 1;
     padding-bottom: 10px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
 }
 .list dd {
+    width: 100%;
 	height: 30px;
 	line-height: 30px;
 	padding: 2px 5px;
@@ -427,11 +451,18 @@ export default {
 	color: #ffffff;
 }
 .list dd .video-itemIcon{
+    height: 30px;
     margin-right: 10px;
     font-size: 18px;
+    float: left;
 }
-.video-itemIcon, .item-name {
-	float: left;
+.list dd .item-name{
+    float: left;
+    width: calc(100% - 35px);
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
 }
 /* 播放列表结束 */
 .video-player{
@@ -513,28 +544,40 @@ export default {
     color: #a8a9ab;
 }
 .course-container .courseName{
-    font-size: 24px;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: bold;
 }
 .course-container .courseDesc{
-    font-size: 16px;
+    line-height: 25px;
+    font-size: 13px;
     margin: 20px 0;
+    letter-spacing: 1px;
+    text-align: justify;
 }
 .course-container .courseImg{
+    width: 100%;
     height: 150px;
+    border-radius: 8px;
 }
 .course-container .courseImg img{
     width: 100%;
     height: 100%;
+    border-radius: 8px;
+
 }
 .course-container .teacher{
     display: flex;
     text-align: center;
-    justify-content: space-around
+    justify-content:flex-start
 }
 .course-container .teacher .teacherAvt{
     margin: 10px 0;
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
 }
 .course-container .teacher .teacherAvt img{
@@ -542,17 +585,31 @@ export default {
     height: 100%;
     border-radius: 50%;
 }
+.course-container .teacherRecommend{
+    margin:15px 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+.course-container .teacher .teacherInfo{
+    display: flex;
+    flex-direction: column;
+    margin: 15px 10px;
+    text-align: left;
+}
 .course-container .teacher .teacherName{
-    font-size: 20px;
-    margin-top: 45px;
+    font-weight: bold;
+    font-size: 16px;
 }
 .course-container .teacherTag{
-    font-size: 16px;
-    margin: 20px 0;
+    text-align: left;
+    font-size: 13px;
 }
 .course-container .teacherReacher{
-    font-size: 16px;
-    margin: 20px 0;
+    width: 100%;
+    font-size: 13px;
+    letter-spacing: 1px;
+    line-height: 25px;
+    text-align: justify;
 }
 /* 课程结束 */
 
