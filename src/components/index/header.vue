@@ -20,7 +20,7 @@
               <router-link
                 to="/"
                 style="cursor: pointer"
-                :class="active === '1' ? 'active' : ''"
+                :class="actives === '1' ? 'actives' : ''"
                 >首 页</router-link
               >
             </li>
@@ -28,7 +28,7 @@
               <router-link
                 to="/course"
                 style="cursor: pointer"
-                :class="active === '2' ? 'active' : ''"
+                :class="actives === '2' ? 'actives' : ''"
                 >课 程</router-link
               >
             </li>
@@ -36,7 +36,7 @@
               <router-link
                 to="/member"
                 style="cursor: pointer"
-                :class="active === '3' ? 'active' : ''"
+                :class="actives === '3' ? 'actives' : ''"
                 >会 员</router-link
               >
             </li>
@@ -1005,11 +1005,11 @@ export default {
       immediate: true,
       handler(to, from) {
         if (to.fullPath === "/home") {
-          this.active = "1";
+          this.actives = "1";
         } else if (to.fullPath === "/course") {
-          this.active = "2";
+          this.actives = "2";
         } else if (to.fullPath === "/member") {
-          this.active = "3";
+          this.actives = "3";
         }
         this.copySearch();
       },
@@ -1142,7 +1142,7 @@ margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 752px;
+  width: 650px;
 }
 .content-search {
   display: flex;
@@ -1440,11 +1440,11 @@ margin-top: 10px;
   height: 13px;
   margin-right: 5px;
 }
-.active {
+.actives {
   position: relative;
   color: #3689ff !important;
 }
-.active::after{
+.actives::after{
   content: '' !important;
   position: absolute !important;
   bottom: -38px !important;
