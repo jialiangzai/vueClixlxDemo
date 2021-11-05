@@ -283,7 +283,19 @@
             </el-form>
             <div class="backLogin" @click="backRegiter">快速注册</div>
           </div>
-				 <div class="container">登录即同意进入小鹿线官网</div>
+
+          <div class="third-party-login">
+            <div class="login-weixin">
+              <i class="fa fa-weixin" aria-hidden="true" @click="goWeixin"></i>
+            </div>
+            <div class="login-qq">
+              <i class="fa fa-qq" aria-hidden="true"></i>
+            </div>
+            <div class="login-weibo">
+              <i class="fa fa-weibo" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="container">登录即同意进入小鹿线官网</div>
         </div>
       </div>
     </el-dialog>
@@ -324,10 +336,11 @@ import {
   logout,
   getInfo,
   getShopCarCounter,
-  createToken
+  createToken,
+  getAccessToken
 } from "@/common/api/auth";
 import  {Loading} from 'element-ui'
-import  {Encrypt} from '@/utils/aes.js';
+import  {Encrypt,Decrypt} from '@/utils/aes.js';
 
 import { mapState, mapActions, mapMutations } from "vuex";
 export default {
@@ -462,6 +475,10 @@ export default {
       "saveCartNumAction",
     ]),
     ...mapMutations(["saveLoginDialog"]),
+    // 微信登录
+    goWeixin(){
+      window.location.href = 'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
+    },
     // 行为验证码
     success(e){
       switch (this.crtType){
@@ -483,7 +500,6 @@ export default {
       }
     },
     error(e){
-      console.log(e)
       this.$message({
         message: '验证失败，请重新验证',
         type: 'error'
@@ -539,9 +555,7 @@ export default {
     },
     // 去我的课程s
     goAbout() {
-      this.$router.push({
-        path: "/about",
-      });
+      this.$router.push('/about/my-course');
     },
     // 打开对话框
     goLogin() {
@@ -878,9 +892,10 @@ export default {
         })
             .then((res) => {
               // this.saveUserInfoActions()
-              if (res.meta.code == "200") {
+              if (res.meta.code === "200") {
                 sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
                 this.saveUserInfoAction();
+                this.$router.push('/user/setbindsns')
                 // window.location.reload()
               } else {
                 this.$message({
@@ -1019,6 +1034,44 @@ export default {
 </script>
 
 <style scoped>
+.third-party-login{
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin:10px auto 0;
+}
+.third-party-login i {
+  font-size: 20px;
+}
+.third-party-login div {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #E5FFE1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.third-party-login .login-qq {
+  background-color: #EDF5FF;
+}
+.third-party-login .login-weibo {
+  background-color: #FFF2F5;
+}
+.third-party-login .fa-qq{
+   color: #368AFE;
+  cursor: pointer;
+ }
+.third-party-login .fa-weixin{
+   color: #09BB07;
+  cursor: pointer;
+ }
+.third-party-login .fa-weibo{
+  color: #D81E06;
+  cursor: pointer;
+}
 .course-color {
   color: #3689ff !important;
 }
@@ -1261,8 +1314,8 @@ margin-top: 10px;
 }
 .backLogin {
   width: 100%;
-  height: 40px;
-  line-height: 40px;
+  height: 30px;
+  line-height: 30px;
   text-align: center;
   font-size: 16px;
   font-family: Microsoft YaHei;
@@ -1315,8 +1368,8 @@ margin-top: 10px;
 }
 /*有会员了之后高度微调*/
 .avator-info p {
-  height: 60px;
-  line-height: 60px;
+  height: 40px;
+  line-height: 40px;
   cursor: pointer;
 }
 .u-i-i-bottom {

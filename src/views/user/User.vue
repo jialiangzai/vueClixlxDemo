@@ -84,8 +84,6 @@ export default {
     })
     this.navCurrent = curIndex
 
-    let code = Encrypt('123456');
-    console.log(code)
 
   },
   methods: {
