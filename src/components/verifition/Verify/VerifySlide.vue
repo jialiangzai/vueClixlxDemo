@@ -179,7 +179,6 @@ export default {
     this.$el.onselectstart = function() {
       return false
     }
-    console.log(this.defaultImg)
   },
   methods: {
     init() {

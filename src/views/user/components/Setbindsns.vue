@@ -10,7 +10,7 @@
           <img src="/image/user/phone.png" alt=""/>
         </div>
         <div class="item-center">
-          <p class="item-phone"><span>手机</span> {{ geTel(userInfo.mobile) }}</p>
+          <p class="item-phone"><span>手机</span> {{ userInfo.mobile ?geTel(userInfo.mobile) : '未绑定'}}</p>
           <p>可用手机号加密登录在线网校，可通过手机号找回密码</p>
         </div>
         <div class="item-btn" @click="changePhone">修改绑定</div>
@@ -43,7 +43,7 @@
           <p class="item-phone"><span>邮箱</span> 未绑定</p>
           <p>可用邮箱加密登录在线网校，可用邮箱找回密码</p>
         </div>
-        <div class="item-btn">操作</div>
+        <div class="item-btn">绑定邮箱</div>
       </div>
     </div>
 

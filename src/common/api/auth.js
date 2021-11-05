@@ -147,3 +147,12 @@ export function modifyUsername({token,...params}){
     }
   })
 }
+
+// 三方登录
+// oauth/getAccessToken
+export function getAccessToken({code}){
+  return http.$axios({
+    url: '/api/oauth/getAccessToken?code='+code,
+    method:'GET'
+  })
+}

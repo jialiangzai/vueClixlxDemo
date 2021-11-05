@@ -17,7 +17,7 @@ import Setprofile from '@/views/user/components/Setprofile.vue';
 import Setavator from '@/views/user/components/Setavator.vue';
 import Cart from '@/views/cart/Cart.vue';
 import ConfirmOrder from '@/views/cart/ConfirmOrder.vue';
-
+import  Loading from '@/views/loading/index.vue'
 
 
 Vue.use(Router);
@@ -27,6 +27,7 @@ const routes = [
   { path: '/home', component: Home ,name:'home'},
   { path: '/course', component: Course ,name:'course'},
   { path:'/course-info/:courseId',component:CourseInfo,name:'course-info'},
+  {path: '/loading',component: Loading,name: 'loading'},
   { path:'/course-play/:courseId/:chapterId',component:CoursePlay,name:'course-play',meta:{ requiresAuth : false }},
   { path: '/member', component: Member ,name:'member'},
   {
@@ -114,7 +115,7 @@ router.beforeEach((to,from,next)=>{
         }).catch(() => {
             this.$router.go(-1)
         }); */
-        return 
+        return
       /* next({
         name:'home',
         query:{redirect:'/home'}
@@ -125,7 +126,7 @@ router.beforeEach((to,from,next)=>{
   }else{
     next()
   }
- 
+
 })
 
 export default router;
