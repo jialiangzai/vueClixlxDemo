@@ -287,7 +287,6 @@ export default {
                 basisiloading.close();
               });
             }else {
-              console.log(ress)
               this.$message({
                 message: "更新信息失败",
                 type: "error",

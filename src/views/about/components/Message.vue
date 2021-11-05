@@ -145,7 +145,5 @@ export default {
 <style scoped>
 .course-tabs {
   margin-left: 20px;
-  height: 100%;
-  margin-bottom: 120px;
 }
 </style>

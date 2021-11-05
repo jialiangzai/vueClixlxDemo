@@ -510,7 +510,6 @@ export default {
         if (valid) {
           this.$refs.verify.show()
         }else {
-          console.log('识别')
         }
       })
 
@@ -801,7 +800,6 @@ export default {
           this.sendCode(mobile);
           let time = 60;
           clearInterval(this.phonetimer);
-          console.log(1)
           this.phonetimer = setInterval(() => {
             time--;
             if (time <= 0) {

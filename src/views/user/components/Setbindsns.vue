@@ -274,7 +274,6 @@ export default {
 
     },
     showVerify(formName) {
-      console.log(formName)
       if (this.phoneForm) {
         if (this.pswForm.password === this.pswForm.repassword) {
           this.$refs.verify.show()
@@ -485,7 +484,6 @@ export default {
                 id,
                 captchaVerification
               }).then(ress => {
-                console.log(ress)
                 if (ress.meta.code === '200') {
                   this.$message({
                     message: '修改密码成功',
@@ -549,8 +547,6 @@ export default {
       // this.$refs.userForm.validateField()
     },
     onUserSubmit(formName) {
-      console.log(formName)
-      console.log(this.$refs[formName])
       this.$refs[formName].validate((valid)=> {
         if (valid) {
           if (this.userForm.password === this.userForm.repassword) {

@@ -164,7 +164,7 @@ export default {
 		// 获取课程一级分类
 		async getFirstCategory() {
 			let res = await http.$axios({
-				url: 'api/course/category/getFirstCategorys',
+				url: '/api/course/category/getFirstCategorys',
 				method: 'GET',
 				header: {
 					'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ export default {
 		// 获取轮播图
 		async getSliders() {
 			let res = await http.$axios({
-				url: 'api/slider/getSliders',
+				url: '/api/slider/getSliders',
 				method: 'GET',
 				header: {
 					'Content-Type': 'application/json',
