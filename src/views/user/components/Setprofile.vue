@@ -2,7 +2,7 @@
   <div class="setprofile">
     <el-tabs v-model="activeName" @tab-click="handleClick" class="profile-tabs">
       <el-tab-pane label="基本信息" name="first" class="profile-pane">
-        <div class="changeInfo" @click="showBasisBtn">修改信息</div>
+        <div class="changeInfo" @click="showBasisBtn">修改<i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>
         <el-form
           ref="basisForm"
           :model="basisForm"
@@ -107,7 +107,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="联系信息" name="second" class="profile-pane">
-        <div class="changeInfo" @click="showInfoBtn">修改信息</div>
+        <div class="changeInfo" @click="showInfoBtn">修改<i class="fa fa-pencil-square-o" aria-hidden="true"></i></div>
         <el-form
           ref="form"
           :model="form"
@@ -428,5 +428,8 @@ export default {
   top: 0;
   right: 0;
   cursor: pointer;
+}
+.fa-pencil-square-o {
+  margin-left:5px;
 }
 </style>
