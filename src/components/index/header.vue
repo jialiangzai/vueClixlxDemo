@@ -1020,11 +1020,15 @@ export default {
     $route: {
       immediate: true,
       handler(to, from) {
-        if (to.fullPath === "/home") {
+        let newUrl = to.fullPath;
+        to.fullPath.replace(/(.*)\?/,function(a,b){
+           newUrl = b;
+        })
+        if (newUrl === "/home") {
           this.actives = "1";
-        } else if (to.fullPath === "/course") {
+        } else if (newUrl === "/course") {
           this.actives = "2";
-        } else if (to.fullPath === "/member") {
+        } else if (newUrl === "/member") {
           this.actives = "3";
         }
         this.copySearch();
