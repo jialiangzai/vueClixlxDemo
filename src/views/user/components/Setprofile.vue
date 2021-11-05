@@ -200,7 +200,6 @@ import { mapState, mapActions } from "vuex";
 import { getInfo } from "@/common/api/auth";
 import { createToken } from "@/common/api/token";
 import { updateUserInfo } from "@/common/api/user";
-import {Loading} from "_element-ui@2.15.6@element-ui";
 export default {
   data() {
     return {

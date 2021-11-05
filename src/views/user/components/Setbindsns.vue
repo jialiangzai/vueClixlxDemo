@@ -163,7 +163,6 @@ import {
   modifyUsername,
 } from "@/common/api/auth";
 import {Encrypt} from '@/utils/aes.js';
-import {Loading} from "element-ui";
 import {mapState, mapActions, mapMutations} from "vuex";
 
 export default {

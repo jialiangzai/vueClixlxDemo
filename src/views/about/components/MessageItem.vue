@@ -34,7 +34,6 @@
 <script>
 import {makeRead,deleteMess} from '@/common/api/message'
 import {createToken} from '@/common/api/token'
-import {Loading} from "_element-ui@2.15.6@element-ui";
 export default {
   props: {
     messList: {
