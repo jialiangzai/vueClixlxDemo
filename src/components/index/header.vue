@@ -895,7 +895,8 @@ export default {
               if (res.meta.code === "200") {
                 sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
                 this.saveUserInfoAction();
-                this.$router.push('/user/setbindsns')
+                this.$router.go(0);
+                //this.$router.push('/user/setbindsns')
                 // window.location.reload()
               } else {
                 this.$message({

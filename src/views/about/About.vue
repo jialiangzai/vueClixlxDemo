@@ -1,8 +1,7 @@
 <template>
   <div class="about">
     <Header></Header>
-    <div class="about-containe" >
-      <div class="about-ee">
+    <div class="about-containe"  >
         <div class="about-banner">
           <div class="banner-main">
             <div class="banner-content">
@@ -44,7 +43,7 @@
           </div>
         </div>
         <div class="about-main">
-          <div class="about-container">
+          <div class="about-container" ref="about">
             <div class="about-left">
               <div class="about-list">
                 <div
@@ -68,11 +67,10 @@
               </div>
             </div>
             <div class="about-right">
-              <router-view></router-view>
+                <router-view></router-view>
             </div>
           </div>
         </div>
-      </div>
     </div>
     <foot :webconfig="webconfig"></foot>
   </div>
@@ -89,9 +87,10 @@ export default {
   name: "About",
   data() {
     return {
+      clientHeight:0,
         avatar:'/image/common/avator.png',
-    webconfig:{},
-      aboutList: [
+        webconfig:{},
+        aboutList: [
         {
           id: 1,
           imgUrl: "/image/about/my-course.png",
@@ -255,27 +254,29 @@ export default {
 /* 主体开始 */
 .about-main {
   width: 100%;
-  /* height: 800px; */
-  height: 100%;
+   /*height: 800px;*/
+  /*height: 100%;*/
   position: relative;
   margin-top:20px;
 }
 .about-container {
   width: 1200px;
-  /* height: 800px; */
+  /*height: 800px;*/
   /* height: 800px; */
   position: absolute;
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  overflow: hidden;
 }
+.about-container::-webkit-scrollbar {display:none}
 .about-left {
   width: 200px;
-  height: 100%;
+  /*height: 100%;*/
   /* height: 1000px; */
-  /* height: 800px;
-  overflow: hidden; */
+   height: 800px;
+
 }
 
 .about-list .about-list-item {
@@ -302,11 +303,13 @@ export default {
 }
 .about-right {
   flex: 1;
-  /* height: 600px; */
-  /* border: 1px solid blue; */
+}
+.about-right::-webkit-scrollbar {display:none}
+.right-main {
+
 }
 .foot {
   position: fixed;
-  bottom: 0;
+  bottom:0;
 }
 </style>
