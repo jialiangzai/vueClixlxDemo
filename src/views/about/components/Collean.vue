@@ -92,7 +92,6 @@ export default {
           getFavoriteList(this.query)
             .then((res) => {
               if (res.meta.code === "200") {
-                // console.log(res)
                   this.totalList = res.data.pageInfo.list;
                   this.totalpage = res.data.pageInfo.total
                 } else {

@@ -232,7 +232,7 @@ border: none;
 outline: none
 }
 .i-r-bottom  .student {
-  cursor: pointer;
+    cursor: pointer;
   background: linear-gradient(
     to right,
     rgba(125, 177, 255, 1) 0%,

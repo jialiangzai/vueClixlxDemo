@@ -508,9 +508,9 @@ export default {
           this.$refs.verify.show()
         }else {
           this.$message({
-            message:'手机号非法',
-            type: 'warning'
-          })
+          message:'手机号非法',
+          type: 'warning'
+        })
         }
       }else {
         this.$message({
@@ -807,7 +807,6 @@ export default {
           this.sendCode(mobile);
           let time = 60;
           clearInterval(this.phonetimer);
-          console.log(1)
           this.phonetimer = setInterval(() => {
             time--;
             if (time <= 0) {
@@ -1026,11 +1025,15 @@ export default {
     $route: {
       immediate: true,
       handler(to, from) {
-        if (to.fullPath === "/home") {
+        let newUrl = to.fullPath;
+        to.fullPath.replace(/(.*)\?/,function(a,b){
+           newUrl = b;
+        })
+        if (newUrl === "/home") {
           this.actives = "1";
-        } else if (to.fullPath === "/course") {
+        } else if (newUrl === "/course") {
           this.actives = "2";
-        } else if (to.fullPath === "/member") {
+        } else if (newUrl === "/member") {
           this.actives = "3";
         }
         this.copySearch();

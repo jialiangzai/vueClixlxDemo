@@ -76,7 +76,6 @@ export default {
                   type: "warning",
                 });
               }
-              console.log(res)
             })
 
           }catch (e) {

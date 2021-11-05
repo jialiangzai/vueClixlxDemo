@@ -167,7 +167,6 @@ export default {
 <style scoped>
 .order-tabs {
   margin-left: 20px;
-  /* height: 800px; */
 }
 </style>
 

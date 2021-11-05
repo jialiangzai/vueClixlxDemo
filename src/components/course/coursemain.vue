@@ -478,7 +478,6 @@ export default{
         watchUrl(){
             if( this.$route.query && this.$route.query.tagName){
                 let searchKnowledge = decodeURI(this.$route.query.tagName)
-                console.log(searchKnowledge);
                 if(searchKnowledge){
                     this.queryParams.entity.tags = searchKnowledge
                 }
