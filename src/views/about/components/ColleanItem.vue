@@ -70,7 +70,7 @@ export default {
       createToken().then((res) => {
         if (res.data.token) {
           deleteFavorite({
-            courseId: item.id,
+            courseId: item.courseId,
             memberId:item.memberId,
             token: res.data.token,
           }).then((res) => {

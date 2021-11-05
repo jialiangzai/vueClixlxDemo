@@ -113,7 +113,7 @@ export default {
           this.freequery.token = res.data.token;
           getFavoriteList(this.freequery)
             .then((res) => {
-              if (res.meta.code == "200") {
+              if (res.meta.code === "200") {
                   this.freeList = res.data.pageInfo.list;
                   this.freepage = res.data.pageInfo.total
                 } else {
@@ -134,7 +134,7 @@ export default {
           this.vipquery.token = res.data.token;
           getFavoriteList(this.vipquery)
             .then((res) => {
-              if (res.meta.code == "200") {
+              if (res.meta.code === "200") {
                   this.vipList= res.data.pageInfo.list;
                   this.vippage = res.data.pageInfo.total;
                 } else {
