@@ -220,7 +220,7 @@
               <el-form-item prop="username" class="captcha">
                 <el-input
                   v-model="phoneForm.username"
-                  placeholder="请输入登录手机号/邮箱"
+                  placeholder="请输入用户名"
                 ></el-input>
               </el-form-item>
               <el-form-item prop="password" class="captcha">
@@ -615,240 +615,210 @@ export default {
 									this.regiterSuccess = true
 									this.saveLoginAction()
 									// this.$store.commit("saveLoginDialog", false);
-                  this.$nextTick(() => {
-                    // 以服务的方式调用的 Loading 需要异步关闭
-                    regiterloading.close();
-                  });
-                  this.$store.commit("saveLoginDialog", false);
-                } else if (res.meta.code == "10005") {
-                  this.$message({
-                    message: res.meta.msg,
-                    type: "info",
-                  });
-                  this.isregister = false;
-                  this.$nextTick(() => {
-                    // 以服务的方式调用的 Loading 需要异步关闭
-                    regiterloading.close();
-                  });
-                } else {
-                  this.$message({
-                    message: res.meta.msg,
-                    type: "error",
-                  });
-                  this.isregister = false;
-                  this.$nextTick(() => {
-                    // 以服务的方式调用的 Loading 需要异步关闭
-                    regiterloading.close();
-                  });
-                }
-              })
-              .catch((err) => {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  regiterloading.close();
-                });
-              });
-          } else {
-            return false;
-          }
-        });
-      } else {
-        this.$message({
-          message: "请勾选同意隐私协议",
-          type: "error",
-        });
-      }
-    },
-    // 用户名和密码登陆成功
-    submitPhoneForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          // alert('submit!');
-          var phoneloading = Loading.service({
-            lock: true,
-            text: "Loading",
-            spinner: "el-icon-loading",
-            background: "rgba(0, 0, 0, 0.7)",
-          });
-          let username = Encrypt(this.phoneForm.username)
-          let password = Encrypt(this.phoneForm.password)
-          let captchaVerification = this.phoneForm.captchaVerification
-          loginByJson({
-            username,
-            password,
-            captchaVerification
-          })
-            .then((res) => {
-              if (res.meta.code === "10006") {
-                // 存储token
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  phoneloading.close();
-                });
-                this.$store.commit("saveLoginDialog", false);
-                let accessToken = res.data.accessToken;
-                // 存储到access中
-                sessionStorage.setItem("token", accessToken);
-                sessionStorage.setItem("isLogin", JSON.stringify(true));
-                this.getCarNum();
-                this.saveLoginAction();
-                this.$message({
-                  message: "登录成功，赶紧去学习吧！",
-                  type: "success",
-                });
-                // 获取用户信息
-                this.getUserInfo();
-                // window.location.reload()
-              } else {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  phoneloading.close();
-                });
-                this.$store.commit("saveLoginDialog", false);
-
-
-              }
-            })
-            .catch((err) => {
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                phoneloading.close();
-              });
-              this.$message({
-                message: res.meta.msg,
-                type: "error",
-              });
-            });
-        } else {
-          return false;
-        }
-      });
-    },
-    // 验证码登陆
-    submitIdentifyForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          var identLoading = Loading.service({
-            lock: true,
-            text: "Loading",
-            spinner: "el-icon-loading",
-            background: "rgba(0, 0, 0, 0.7)",
-          });
-          // alert('submit!');
-         let mobile = Encrypt(this.identifyForm.mobile)
-          let captchaVerification = this.identifyForm.captchaVerification
-          loginByMobile({
-            mobile,
-            captcha:this.identifyForm.captcha,
-            captchaVerification
-          })
-            .then((res) => {
-              if (res.meta.code === "10006") {
-                // 存储token
-                let accessToken = res.data.accessToken;
-                // 存储到access中
-                sessionStorage.setItem("token", accessToken);
-                sessionStorage.setItem("isLogin", JSON.stringify(true));
-                // 获取个人信息
-                // 获取购物车数据
-                this.getCarNum();
-                //  this.saveIsLoginAction(true)
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  identLoading.close();
-                });
-                this.getUserInfo();
-                this.$store.commit("saveLoginDialog", false);
-                this.$message({
-                  message: "登录成功，赶紧去学习吧！",
-                  type: "success",
-                });
-                // window.location.reload()
-              }else if(res.meta.code === '10010'){
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  identLoading.close();
-                });
-                // 去快速注册界面
-                this.backRegiter()
-                // this.$store.commit("saveLoginDialog", false);
-                // this.saveLoginAction();
-              } else  {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  identLoading.close();
-                });
-                this.$store.commit("saveLoginDialog", false);
-                this.saveLoginAction();
-              }
-            })
-            .catch((err) => {
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                identLoading.close();
-              });
-              this.$message({
-                message: res.meta.msg,
-                type: "error",
-              });
-            });
-        } else {
-          return false;
-        }
-      });
-    },
-    // 发送注册验证码
-    sendCaptch(){
-      let reg = /^1[3456789]\d{9}$/
-      if(!reg.test(this.registerForm.mobile)){
-        this.$message({
-          message: '手机号输入错误，请检查',
-          type: 'warning'
-        })
-      }else {
-        if(this.registerForm.mobile) {
-          let mobile = this.registerForm.mobile;
-          // this.isSend = true;
-          this.phoneSend = true
-          this.Phonecaptcha = "重新发送60秒";
-          this.sendCode(mobile);
-          let time = 60;
-          clearInterval(this.phonetimer);
-          this.phonetimer = setInterval(() => {
-            time--;
-            if (time <= 0) {
-              clearInterval(this.phonetimer);
-              time = 60;
-              this.captcha = "发送验证码";
-              this.isSend = false;
-            } else {
-              this.Phonecaptcha = `重新发送${time}秒`;
-            }
-          }, 1000);
-        }else {
-          this.$message({
-            message: "请先填写手机号哟",
-            type: "warning",
-          });
-        }
-      }
-
+									this.$nextTick(() => {
+										// 以服务的方式调用的 Loading 需要异步关闭
+										regiterloading.close()
+									})
+									this.$store.commit('saveLoginDialog', false)
+								} else if (res.meta.code == '10005') {
+									this.$message({
+										message: res.meta.msg,
+										type: 'info',
+									})
+									this.isregister = false
+									this.$nextTick(() => {
+										// 以服务的方式调用的 Loading 需要异步关闭
+										regiterloading.close()
+									})
+								} else {
+									this.$message({
+										message: res.meta.msg,
+										type: 'error',
+									})
+									this.isregister = false
+									this.$nextTick(() => {
+										// 以服务的方式调用的 Loading 需要异步关闭
+										regiterloading.close()
+									})
+								}
+							})
+							.catch((err) => {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									regiterloading.close()
+								})
+							})
+					} else {
+						return false
+					}
+				})
+			} else {
+				this.$message({
+					message: '请勾选同意隐私协议',
+					type: 'error',
+				})
+			}
+		},
+		// 用户名和密码登陆成功
+		submitPhoneForm(formName) {
+			this.$refs[formName].validate((valid) => {
+				if (valid) {
+					// alert('submit!');
+					var phoneloading = Loading.service({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)',
+					})
+					let username = Encrypt(this.phoneForm.username)
+					let password = Encrypt(this.phoneForm.password)
+					let captchaVerification = this.phoneForm.captchaVerification
+					loginByJson({
+						username,
+						password,
+						captchaVerification,
+					})
+						.then((res) => {
+							if (res.meta.code === '10006') {
+								// 存储token
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									phoneloading.close()
+								})
+								this.$store.commit('saveLoginDialog', false)
+								let accessToken = res.data.accessToken
+								// 存储到access中
+								sessionStorage.setItem('token', accessToken)
+								sessionStorage.setItem(
+									'isLogin',
+									JSON.stringify(true)
+								)
+								this.getCarNum()
+								this.saveLoginAction()
+								this.$message({
+									message: '登录成功，赶紧去学习吧！',
+									type: 'success',
+								})
+								// 获取用户信息
+								this.getUserInfo()
+								// window.location.reload()
+							} else {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									phoneloading.close()
+								})
+								this.$store.commit('saveLoginDialog', false)
+							}
+						})
+						.catch((err) => {
+							this.$nextTick(() => {
+								// 以服务的方式调用的 Loading 需要异步关闭
+								phoneloading.close()
+							})
+							this.$message({
+								message: res.meta.msg,
+								type: 'error',
+							})
+						})
+				} else {
+					return false
+				}
+			})
+		},
+		// 验证码登陆
+		submitIdentifyForm(formName) {
+			this.$refs[formName].validate((valid) => {
+				if (valid) {
+					var identLoading = Loading.service({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)',
+					})
+					// alert('submit!');
+					let mobile = Encrypt(this.identifyForm.mobile)
+					let captchaVerification = this.identifyForm
+						.captchaVerification
+					loginByMobile({
+						mobile,
+						captcha: this.identifyForm.captcha,
+						captchaVerification,
+					})
+						.then((res) => {
+							if (res.meta.code === '10006') {
+								// 存储token
+								let accessToken = res.data.accessToken
+								// 存储到access中
+								sessionStorage.setItem('token', accessToken)
+								sessionStorage.setItem(
+									'isLogin',
+									JSON.stringify(true)
+								)
+								// 获取个人信息
+								// 获取购物车数据
+								this.getCarNum()
+								//  this.saveIsLoginAction(true)
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									identLoading.close()
+								})
+								this.getUserInfo()
+								this.$store.commit('saveLoginDialog', false)
+								this.$message({
+									message: '登录成功，赶紧去学习吧！',
+									type: 'success',
+								})
+								// window.location.reload()
+							} else if (res.meta.code === '10010') {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									identLoading.close()
+								})
+                                clearInterval(this.registerTiemr)
+							this.captcha = '发送验证码'
+							this.isSend = false
+								// 去快速注册界面
+								this.backRegiter()
+								// this.$store.commit("saveLoginDialog", false);
+								// this.saveLoginAction();
+							} else {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									identLoading.close()
+								})
+                                clearInterval(this.registerTiemr)
+							this.captcha = '发送验证码'
+							this.isSend = false
+								this.$store.commit('saveLoginDialog', false)
+								this.saveLoginAction()
+							}
+						})
+						.catch((err) => {
+							this.$nextTick(() => {
+								// 以服务的方式调用的 Loading 需要异步关闭
+								identLoading.close()
+							})
+							this.$message({
+								message: res.meta.msg,
+								type: 'error',
+							})
+                            clearInterval(this.registerTiemr)
 							this.captcha = '发送验证码'
 							this.isSend = false
 						})
@@ -857,6 +827,7 @@ export default {
 				}
 			})
 		},
+
 		// 发送注册验证码
 		sendCaptch() {
 			let reg = /^1[3456789]\d{9}$/
