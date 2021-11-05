@@ -377,6 +377,7 @@ export default {
 	background: #25282A;
     padding: 20px;
     height: 600px;
+    overflow: hidden;
 }
 /* 视频播放开始 */
 .play-left {
@@ -384,6 +385,7 @@ export default {
 	height: 100%;
 	background: #000;
     position: relative; 
+    overflow: hidden;
 }
 .video-js .vjs-icon-placeholder {
     width: 100%;

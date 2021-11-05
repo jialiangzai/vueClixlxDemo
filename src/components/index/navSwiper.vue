@@ -113,7 +113,7 @@ export default {
             this.$router.push('/course-info/' + item.id)
         },
         goDetail(tagName){
-            let tag = Encrypt(tagName)
+            let tag = encodeURI(tagName)
             this.$router.push('/course?tagName='+tag)
         },
 

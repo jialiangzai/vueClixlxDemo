@@ -190,11 +190,7 @@ export default{
         }
     },
     created() {
-        
-        let searchKnowledge = Decrypt(this.$route.query.tagName)
-        if(searchKnowledge){
-            this.queryParams.entity.tags = searchKnowledge
-        }
+        this.watchUrl();
         this.tokens = sessionStorage.getItem('token')
         let keywords = this.$route.query.keywords
         if(keywords){
@@ -415,9 +411,21 @@ export default{
                 }
             })
         },
+        watchUrl(){
+            if( this.$route.query && this.$route.query.tagName){
+                let searchKnowledge = decodeURI(this.$route.query.tagName)
+                console.log(searchKnowledge);
+                if(searchKnowledge){
+                    this.queryParams.entity.tags = searchKnowledge
+                }
+            }
+        }
     },
     watch:{
       '$route':function(to,from){
+
+        this.watchUrl();
+
         let query = to.query;
         this.queryParams.entity.courseName= query.keywords;
         this.queryParams.entity.tags= query.searchKnowledge;
