@@ -96,7 +96,7 @@ import { mapState, mapActions } from "vuex";
 import { uploadFileWithBlob, uploadFile } from "@/common/api/common";
 import { updateUserInfo } from "@/common/api/user";
 import { createToken } from "@/common/api/token";
-
+import  {Loading} from 'element-ui'
 export default {
   components: { VueCropper },
   props: {

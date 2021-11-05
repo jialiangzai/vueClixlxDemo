@@ -326,6 +326,7 @@ import {
   getShopCarCounter,
   createToken
 } from "@/common/api/auth";
+import  {Loading} from 'element-ui'
 import  {Encrypt} from '@/utils/aes.js';
 
 import { mapState, mapActions, mapMutations } from "vuex";

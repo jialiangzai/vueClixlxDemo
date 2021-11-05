@@ -26,7 +26,7 @@
             </div>
             <div class="i-r-right">
               <div class="i-r-bottom">
-                <div @click="goRemove(item.id)">取消收藏</div>
+                <div @click="goRemove(item)">取消收藏</div>
               </div>
             </div>
           </div>
@@ -46,7 +46,7 @@
 import { deleteFavorite } from "@/common/api/favorite";
 import { createToken } from "@/common/api/auth";
 import  {mapState} from "vuex";
-
+import  {Loading} from 'element-ui'
 export default {
   props: {
     courseList: {
@@ -60,7 +60,7 @@ export default {
     })
   },
   methods: {
-    goRemove(id) {
+    goRemove(item) {
       var readloading = Loading.service({
         lock: true,
         text: "Loading",
@@ -70,8 +70,8 @@ export default {
       createToken().then((res) => {
         if (res.data.token) {
           deleteFavorite({
-            courseId: id,
-            memberId:this.userInfo.id,
+            courseId: item.id,
+            memberId:item.memberId,
             token: res.data.token,
           }).then((res) => {
             if (res.meta.code === "200") {
