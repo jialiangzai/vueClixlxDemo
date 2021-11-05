@@ -759,7 +759,20 @@ export default {
                   type: "success",
                 });
                 // window.location.reload()
-              } else {
+              }else if(res.meta.code === '10010'){
+                this.$message({
+                  message: res.meta.msg,
+                  type: "error",
+                });
+                this.$nextTick(() => {
+                  // 以服务的方式调用的 Loading 需要异步关闭
+                  identLoading.close();
+                });
+                // 去快速注册界面
+                this.backRegiter()
+                // this.$store.commit("saveLoginDialog", false);
+                // this.saveLoginAction();
+              } else  {
                 this.$message({
                   message: res.meta.msg,
                   type: "error",
@@ -770,9 +783,6 @@ export default {
                 });
                 this.$store.commit("saveLoginDialog", false);
                 this.saveLoginAction();
-
-
-
               }
             })
             .catch((err) => {
