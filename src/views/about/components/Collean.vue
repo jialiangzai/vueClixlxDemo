@@ -92,7 +92,7 @@ export default {
           getFavoriteList(this.query)
             .then((res) => {
               if (res.meta.code === "200") {
-                console.log(res)
+                // console.log(res)
                   this.totalList = res.data.pageInfo.list;
                   this.totalpage = res.data.pageInfo.total
                 } else {
@@ -165,7 +165,5 @@ export default {
 <style scoped>
 .course-tabs {
   margin-left: 20px;
-  /* height: 800px; */
-  margin-bottom: 120px;
 }
 </style>

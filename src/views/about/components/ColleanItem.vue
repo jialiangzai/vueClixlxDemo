@@ -83,7 +83,8 @@ export default {
                 // 以服务的方式调用的 Loading 需要异步关闭
                 readloading.close();
               });
-              window.location.reload()
+              // window.location.reload()
+              this.$router.go(0);
             }else {
               this.$message({
               message: "取消收藏失败",

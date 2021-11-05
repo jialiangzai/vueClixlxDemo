@@ -179,11 +179,11 @@
                 v-model="registerForm.captcha"
                 style="width: 150px"
                 placeholder="请输入短信验证码"
-                @keyup.enter.native="showVerify('registerForm')"
+                @keyup.enter.native="submitRegisterForm('registerForm')"
               ></el-input>
               <div
                 class="sendcaptcha"
-                @click="sendCaptch"
+                @click="showVerify('registerForm')"
                 :class="phoneSend ? 'send' : ''"
               >
                 {{ Phonecaptcha }}
@@ -201,7 +201,7 @@
               <el-button
                 type="primary"
                 class="regiterBtn"
-                @click="showVerify('registerForm')"
+                @click="submitRegisterForm('registerForm')"
                 >立即注册</el-button
               >
             </el-form-item>
@@ -228,14 +228,14 @@
                   v-model="phoneForm.password"
                   placeholder="请输入密码"
                   show-password
-                  @keyup.enter.native="showVerify('phoneForm')"
+                  @keyup.enter.native="submitPhoneForm('phoneForm')"
                 ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button
                   type="primary"
                   class="regiterBtn"
-                  @click="showVerify('phoneForm')"
+                  @click=" submitPhoneForm('phoneForm')"
                   >立即登录</el-button
                 >
               </el-form-item>
@@ -261,11 +261,11 @@
                   v-model="identifyForm.captcha"
                   style="width: 150px"
                   placeholder="请输入短信验证码"
-                  @keyup.enter.native="showVerify('identifyForm')"
+                  @keyup.enter.native="submitIdentifyForm('identifyForm')"
                 ></el-input>
                 <div
                   class="sendcaptcha"
-                  @click="sendLoginCode"
+                  @click="showVerify('identifyForm')"
                   :class="isSend ? 'send' : ''"
                 >
                   {{ captcha }}
@@ -275,7 +275,7 @@
                 <el-button
                   type="primary"
                   class="regiterBtn"
-                  @click="showVerify('identifyForm')"
+                  @click="submitIdentifyForm('identifyForm')"
                   >登录</el-button
                 >
               </el-form-item>
@@ -483,19 +483,15 @@ export default {
     success(e){
       switch (this.crtType){
         // 用户名登录
-        case "usernamePasswordLogin":
-          this.phoneForm.captchaVerification = e.captchaVerification
-          this.submitPhoneForm('phoneForm')
-          break;
         // 手机号登录
         case "mobileCaptchaLogin":
           this.identifyForm.captchaVerification = e.captchaVerification
-          this.submitIdentifyForm('identifyForm')
+          this.sendLoginCode()
           break;
         // 注册
         case "registerLogin":
           this.registerForm.captchaVerification = e.captchaVerification
-          this.submitRegisterForm('registerForm')
+          this.sendCaptch()
           break;
       }
     },
@@ -506,13 +502,22 @@ export default {
       })
     },
     showVerify(formName){
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
+      if(this.registerForm.mobile || this.identifyForm.mobile){
+        let reg = /^1[3456789]\d{9}$/
+        if(reg.test(this.registerForm.mobile) || reg.test(this.identifyForm.mobile)){
           this.$refs.verify.show()
         }else {
-          console.log('识别')
+          this.$message({
+            message:'手机号非法',
+            type: 'warning'
+          })
         }
-      })
+      }else {
+        this.$message({
+          message:'手机号为空',
+          type: 'warning'
+        })
+      }
 
     },
 		// 清空表单
@@ -527,7 +532,7 @@ export default {
 			this.isregister = false
 			this.regiterSuccess = false
       //this.loginDialog = true
-      // this.$store.commit("saveLoginDialog", true);
+      this.$store.commit("saveLoginDialog", true);
 		},
 		// 注册成功弹出
 		handleRegiterClose(){
@@ -601,6 +606,7 @@ export default {
                     // 以服务的方式调用的 Loading 需要异步关闭
                     regiterloading.close();
                   });
+                  this.$store.commit("saveLoginDialog", false);
                 } else if (res.meta.code == "10005") {
                   this.$message({
                     message: res.meta.msg,
@@ -969,7 +975,7 @@ export default {
               sessionStorage.removeItem("token");
               sessionStorage.removeItem("userInfo");
               sessionStorage.removeItem("isLogin");
-              this.$router.push("/");
+              // this.$router.push("/");
               this.$router.go(0);
               this.saveUserInfoAction({
                 avatar: "/image/common/avator.png",
@@ -1113,6 +1119,7 @@ margin-top: 10px;
 	font-size: 18px;
   border-radius: 31px;
 	color: #fff;
+  cursor: pointer;
 }
 .privacy {
   font-size: 10px;

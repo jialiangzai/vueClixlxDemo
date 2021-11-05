@@ -65,17 +65,17 @@
             <el-row>
               <el-col :span="16">
                 <el-input v-model="phoneForm.captcha" placeholder="请输入验证码"
-                          @keyup.enter.native="showVerify('phoneForm')"></el-input>
+                          @keyup.enter.native="onPhoneSubmit('phoneForm')"></el-input>
               </el-col>
               <el-col :span="8">
-                <el-button class="sendCode" @click="sendCodes">{{ captcha }}</el-button>
+                <el-button class="sendCode" @click="showVerify('phoneForm')">{{ captcha }}</el-button>
               </el-col>
             </el-row>
           </el-form-item>
           <el-form-item>
             <el-row>
               <el-col :span="24">
-                <el-button type="primary" @click="showVerify('phoneForm')" class="phoneSubmit">确认</el-button>
+                <el-button type="primary" @click="onPhoneSubmit('phoneForm')" class="phoneSubmit">确认</el-button>
               </el-col>
             </el-row>
           </el-form-item>
@@ -98,12 +98,12 @@
           </el-form-item>
           <el-form-item label="确认密码" prop="repassword">
             <el-input show-password v-model="pswForm.repassword" placeholder="请输入密码"
-                      @keyup.enter.native="showVerify('pswForm')"></el-input>
+                      @keyup.enter.native="onPswSubmit('pswForm')"></el-input>
           </el-form-item>
           <el-form-item>
             <el-row>
               <el-col :span="24">
-                <el-button type="primary" @click="showVerify('phoneForm')" class="changepass">确认</el-button>
+                <el-button type="primary" @click="onPswSubmit('pswForm')" class="changepass">确认</el-button>
               </el-col>
             </el-row>
           </el-form-item>
@@ -131,7 +131,7 @@
           <el-form-item>
             <el-row>
               <el-col :span="24">
-                <el-button type="primary" @click="showVerify('userForm')" class="changepass">确认</el-button>
+                <el-button type="primary" @click="onUserSubmit('userForm')" class="changepass">确认</el-button>
               </el-col>
             </el-row>
           </el-form-item>
@@ -258,15 +258,7 @@ export default {
       switch (this.crtType) {
         case "changePhone":
           this.phoneForm.captchaVerification = e.captchaVerification
-          this.onPhoneSubmit('phoneForm');
-          break;
-        case "changePwd":
-          this.pswForm.captchaVerification = e.captchaVerification
-          this.onPswSubmit('pswForm');
-          break;
-        case 'changeUser':
-          this.userForm.captchaVerification = e.captchaVerification
-          this.onUserSubmit('userForm')
+          this.sendCodes()
           break;
       }
     },
