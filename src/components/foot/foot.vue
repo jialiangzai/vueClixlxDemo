@@ -19,7 +19,7 @@
                 </ul>
                 <div class="copy-bottom">
 <!--                    <span class="">Copyrignt© 2021 imooc.com  京ICP备  12003892号-11  京公网安备11010802030151号  营业执照</span>-->
-                    <span class="">{{webconfig.copyright}}</span><a href="https://beian.miit.gov.cn/" target="_blank">{{webconfig.icp}}</a>
+                    <span class="">{{webconfig.copyright}}</span><a class="go" href="https://beian.miit.gov.cn/" target="_blank">{{webconfig.icp}}</a>
                 </div>
             </div>
             <div class="wx">
@@ -147,5 +147,10 @@ export default{
 }
 .wx-dsc{
     margin-left: 15px;
+}
+.go{
+    color: #FFFFFF;
+    text-decoration:underline;
+    padding-left:10px
 }
 </style>

@@ -201,312 +201,302 @@
 </template>
 
 <script>
-import {
-  getFirstCategorys,
-  getSecondCategorys,
-} from "@/common/api/courseCategory.js";
-import { addShopCar } from "@/common/api/shopcar.js";
-import { createToken } from "@/common/api/token.js";
-import { queryCourse } from "@/common/api/courseManage.js";
-import { getShopCarCounter } from "@/common/api/auth";
-import { mapState, mapActions, mapMutations } from "vuex";
-export default {
-  data() {
-    return {
-      priceSortBy: "",
-      isFreeOrIsMember: "",
-      firstArr: [], //一级分类
-      secondArr: [], //二级分类
-      arrcourse: [], //课程信息
-      degreeArr: [],
-      queryParams: {
-        pageNum: 1,
-        pageSize: 12,
-        total: 0,
-        entity: {
-          courseName: "",
-          status: "",
-          firstCategory: "",
-          courseLevel: "",
-          secondCategory: "",
-          sortBy: "",
-          isMember: "",
-          isFree: "",
-        },
-      },
-      courseLevel: [
-        {
-          text: "初级",
-          code: "1",
-        },
-        {
-          text: "中级",
-          code: "2",
-        },
-        {
-          text: "高级",
-          code: "3",
-        },
-      ],
-      memberId: "",
-      courseId: "",
-      token: "",
-      tokens: "",
-      selectedConditions: [],
-      active: false,
-      active2: false,
-      active3: false,
-    };
-  },
-  created() {
-    this.tokens = sessionStorage.getItem("token");
-    let keywords = this.$route.query.keywords;
-    if (keywords) {
-      this.queryParams.entity.courseName = keywords;
-    }
-    this.getFirstCategorys();
-    this.getSecondCategorys();
-    this.queryCourse(this.queryParams);
-  },
-  computed: {
-    ...mapState({
-      userInfo: (state) => state.user.userInfo,
-      isLogin: (state) => state.user.isLogin,
-    }),
-  },
-  methods: {
-    ...mapActions(["saveCartNumAction"]),
-    ...mapMutations(["saveLoginDialog"]),
-    // 关闭已选择条件
-    closeSelectedCondition(type, item, idx) {
-      this.selectedConditions.splice(idx, 1);
-      this.buildingCondition(type, null);
-    },
-    // 构建已选择条件
-    buildingSelectedCondition(item) {
-      for (let i = 0; i < this.selectedConditions.length; i++) {
-        if (this.selectedConditions[i].type === item.type) {
-          this.selectedConditions.splice(i, 1);
+import {getFirstCategorys,getSecondCategorys} from '@/common/api/courseCategory.js'
+import {addShopCar} from '@/common/api/shopcar.js'
+import {createToken} from '@/common/api/token.js'
+import {queryCourse} from '@/common/api/courseManage.js'
+import {getShopCarCounter} from "@/common/api/auth";
+import { mapState, mapActions,mapMutations } from "vuex";
+import {Decrypt} from '@/utils/aes'
+export default{
+    data() {
+        return{
+            priceSortBy:'',
+            isFreeOrIsMember:'',
+            firstArr:[],//一级分类
+            secondArr:[],//二级分类
+            arrcourse:[],//课程信息
+            degreeArr:[],
+            queryParams: {
+                pageNum: 1,
+                pageSize: 12,
+                total: 0,
+                entity: {
+                    courseName: '',
+                    status: '',
+                    firstCategory: '',
+                    courseLevel:'',
+                    secondCategory: '',
+                    sortBy:'',
+                    isMember:'',
+                    isFree:'',
+                    tags:''
+                }
+            },
+            courseLevel: [{
+                text: "初级",
+                code: "1"
+            },{
+                text: "中级",
+                code: "2"
+            },{
+                text: "高级",
+                code: "3"
+            }],
+            memberId:'',
+            courseId:'',
+            token:'',
+            tokens:'',
+            selectedConditions:[],
+            active:false,
+            active2:false,
+            active3:false,
         }
-      }
-      this.selectedConditions.push(item);
     },
-    // 构建搜索条件并搜索
-    buildingCondition(type, object) {
-      if (type === "fcategory") {
-        this.queryParams.entity.firstCategory =
-          object && object.id ? object.id : "";
-        if (object && object.id) {
-          this.buildingSelectedCondition({
-            text: object.categoryName,
-            code: object.id,
-            type: "fcategory",
-          });
+    created() {
+        this.watchUrl();
+        this.tokens = sessionStorage.getItem('token')
+        let keywords = this.$route.query.keywords
+        if(keywords){
+            this.queryParams.entity.courseName = keywords
         }
-      } else if (type === "scategory") {
-        this.queryParams.entity.secondCategory =
-          object && object.id ? object.id : "";
-        if (object && object.id) {
-          this.buildingSelectedCondition({
-            text: object.categoryName,
-            code: object.id,
-            type: "scategory",
-          });
-        }
-      } else if (type === "clevel") {
-        this.queryParams.entity.courseLevel =
-          object && object.code ? object.code : "";
-        if (object && object.code) {
-          this.buildingSelectedCondition({
-            text: object.text,
-            code: object.code,
-            type: "clevel",
-          });
-        }
-      }
-      this.queryCourse(this.queryParams);
+        this.getFirstCategorys()
+        this.getSecondCategorys()
+		this.queryCourse(this.queryParams)
+	},
+    computed: {
+        ...mapState({
+            userInfo: (state) => state.user.userInfo,
+            isLogin: (state) => state.user.isLogin,
+        }),
     },
-    //加入购物车
-    addCart(item) {
-      if (!this.tokens) {
-        this.$message({
-          message: "请先登录才能加入购物车哦",
-          type: "error",
-        });
-        this.$store.commit("saveLoginDialog", true);
-        return;
-      }
-      createToken().then((res) => {
-        this.token = res.data.token;
-        this.memberId = this.userInfo.id;
-        addShopCar({
-          courseId: item.id,
-          memberId: this.memberId,
-          token: this.token,
-        }).then((res) => {
-          if (res.meta.code === "200") {
-            getShopCarCounter().then((res) => {
-              if (res.meta.code == "200") {
-                this.saveCartNumAction(res.data.counter);
-              } else {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-              }
-            });
-            this.$message({
-              message: "恭喜你，加入购物车成功",
-              type: "success",
-            });
-          }
-        });
-      });
-    },
-    //免费课程还是会员课程
-    changeFreeOrMember(e) {
-      if (e === "1") {
-        this.active = false;
-        this.active2 = false;
-        this.active3 = false;
-        this.priceSortBy = "";
-        this.queryParams.entity.isMember = "";
-        this.queryParams.entity.isFree = "1";
-        this.queryCourse(this.queryParams);
-      } else if (e === "2") {
-        this.active = false;
-        this.active2 = false;
-        this.active3 = false;
-        this.priceSortBy = "";
-        this.queryParams.entity.isFree = "";
-        this.queryParams.entity.isMember = "1";
-        this.queryCourse(this.queryParams);
-      }
-    },
-    //升降序排列
-    handlePrice() {
-      let queryParams = {
-        pageNum: 1,
-        pageSize: 12,
-        entity: {},
-      };
-      if (this.priceSortBy === "1" || this.priceSortBy === "") {
-        this.active = false;
-        this.active2 = false;
-        this.active3 = false;
-        queryParams.entity.sortBy = "price-asc";
-        this.queryCourse(queryParams);
-        this.priceSortBy = "2";
-      } else {
-        this.active = false;
-        this.active2 = false;
-        this.active3 = false;
-        queryParams.entity.sortBy = "price-desc";
-        this.queryCourse(queryParams);
-        this.priceSortBy = "1";
-      }
-    },
-
-    //点击综合
-    handleZonghe() {
-      this.active = !this.active;
-      this.active2 = false;
-      this.active3 = false;
-      let queryParams = {
-        pageNum: 1,
-        pageSize: 12,
-        entity: {},
-      };
-      this.isFreeOrIsMember = "";
-      this.priceSortBy = "";
-      this.queryCourse(queryParams);
-    },
-    //点击最新课程
-    handleNewCourse() {
-      this.active2 = !this.active2;
-      this.active = false;
-      this.active3 = false;
-      let queryParams = {
-        pageNum: 1,
-        pageSize: 12,
-        entity: {
-          sortBy: "time-desc",
+    methods:{
+        ...mapActions(["saveCartNumAction"]),
+        ...mapMutations(["saveLoginDialog"]),
+        // 关闭已选择条件
+        closeSelectedCondition(type, item, idx){
+            this.selectedConditions.splice(idx, 1)
+            this.buildingCondition(type, null)
         },
-      };
-      this.isFreeOrIsMember = "";
-      this.priceSortBy = "";
-      this.queryCourse(queryParams);
-    },
-    //最多购买
-    mostbuy() {
-      this.active3 = !this.active3;
-      this.active2 = false;
-      this.active = false;
-      let queryParams = {
-        pageNum: 1,
-        pageSize: 12,
-        entity: {
-          sortBy: "purchase-desc",
-        },
-      };
-      this.isFreeOrIsMember = "";
-      this.priceSortBy = "";
-      this.queryCourse(queryParams);
-    },
-    //获取一级分类
-    getFirstCategorys() {
-      getFirstCategorys().then((res) => {
-        if ((res.meta.code = "200")) {
-          this.firstArr = res.data.list;
-        }
-      });
-    },
-    //获取二级分类
-    getSecondCategorys(categoryId) {
-      getSecondCategorys(categoryId ? categoryId : "-1").then((res) => {
-        if ((res.meta.code = "200")) {
-          this.secondArr = res.data.list;
-        }
-      });
-    },
-    // 分页器
-    jumpPage(page) {
-      this.queryParams.pageNum = page;
-      this.queryCourse(this.queryParams);
-    },
-    //获取课程
-    queryCourse(queryParams) {
-      queryCourse(queryParams).then((res) => {
-        if ((res.meta.code = "200")) {
-          this.queryParams.total = res.data.pageInfo.total;
-          this.arrcourse = res.data.pageInfo.list;
-          this.arrcourse.forEach((item) => {
-            switch (item.courseLevel) {
-              case 1:
-                item.courseLevel = "初级";
-                break;
-              case 2:
-                item.courseLevel = "中级";
-                break;
-              case 3:
-                item.courseLevel = "高级";
-                break;
-              default:
-                item.courseLevel = "";
+        // 构建已选择条件
+        buildingSelectedCondition(item){
+            for(let i = 0;i < this.selectedConditions.length;i++){
+                if(this.selectedConditions[i].type === item.type){
+                    this.selectedConditions.splice(i, 1)
+                }
             }
-          });
+            this.selectedConditions.push(item)
+        },
+        // 构建搜索条件并搜索
+        buildingCondition(type, object){
+            if(type === "fcategory"){
+                this.queryParams.entity.firstCategory = (object && object.id) ? object.id : ""
+                if(object && object.id){
+                    this.buildingSelectedCondition({text: object.categoryName, code: object.id, type: 'fcategory'})
+                }
+            }else if(type === "scategory"){
+                this.queryParams.entity.secondCategory = (object && object.id) ? object.id : ""
+                if(object && object.id){
+                    this.buildingSelectedCondition({text: object.categoryName, code: object.id, type: 'scategory'})
+                }
+            }else if(type === 'clevel'){
+                this.queryParams.entity.courseLevel = (object && object.code) ? object.code : ""
+                if(object && object.code){
+                    this.buildingSelectedCondition({text: object.text, code: object.code, type: 'clevel'})
+                }
+            }
+            this.queryCourse(this.queryParams)
+        },
+        //加入购物车
+        addCart(item){
+            if(!this.tokens){
+                this.$message({
+                    message: '请先登录才能加入购物车哦',
+                    type: 'error'
+                });
+                this.$store.commit('saveLoginDialog', true)
+                return
+            }
+            createToken().then(res => {
+                this.token = res.data.token
+                this.memberId = this.userInfo.id
+                addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
+                    if(res.meta.code === '200'){
+                        getShopCarCounter().then((res) => {
+                            if (res.meta.code == '200') {
+                                this.saveCartNumAction(res.data.counter)
+                            } else {
+                                this.$message({
+                                message: res.meta.msg,
+                                type: "error",
+                                });
+                            }
+                        });
+                        this.$message({
+                            message: '恭喜你，加入购物车成功',
+                            type: 'success'
+                        });
+                    }
+                })
+            })
+        },
+        //免费课程还是会员课程
+        changeFreeOrMember(e){
+            if(e === "1"){
+                this.active = false
+                this.active2 = false
+                this.active3 = false
+                this.priceSortBy = ''
+                this.queryParams.entity.isMember = ''
+                this.queryParams.entity.isFree = '1'
+                this.queryCourse(this.queryParams)
+            }else if(e === "2"){
+                this.active = false
+                this.active2 = false
+                this.active3 = false
+                this.priceSortBy = ''
+                this.queryParams.entity.isFree = ''
+                this.queryParams.entity.isMember = '1'
+                this.queryCourse(this.queryParams)
+            }
+        },
+        //升降序排列
+        handlePrice(){
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {}
+            }
+            if(this.priceSortBy === '1' || this.priceSortBy === ''){
+                this.active = false
+                this.active2 = false
+                this.active3 = false
+                queryParams.entity.sortBy = 'price-asc'
+                this.queryCourse(queryParams)
+                this.priceSortBy = '2'
+            }else{
+                this.active = false
+                this.active2 = false
+                this.active3 = false
+                queryParams.entity.sortBy = 'price-desc'
+                this.queryCourse(queryParams)
+                this.priceSortBy = '1'
+            }
+        },
+        
+        //点击综合
+        handleZonghe(){
+            this.active = !this.active
+            this.active2 = false
+            this.active3 = false
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {}
+            }
+            this.isFreeOrIsMember = ""
+            this.priceSortBy = ''
+            this.queryCourse(queryParams)
+        },
+        //点击最新课程
+        handleNewCourse(){
+            this.active2 = !this.active2
+            this.active = false
+            this.active3 = false
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {
+                    sortBy:'time-desc'
+                }
+            }
+            this.isFreeOrIsMember = ""
+            this.priceSortBy = ''
+            this.queryCourse(queryParams)
+        },
+        //最多购买
+        mostbuy(){
+            this.active3 = !this.active3
+            this.active2 = false
+            this.active = false
+            let queryParams = {
+                pageNum: 1,
+                pageSize: 12,
+                entity: {
+                    sortBy:'purchase-desc'
+                }
+            }
+            this.isFreeOrIsMember = ""
+            this.priceSortBy = ''
+            this.queryCourse(queryParams)
+        },
+        //获取一级分类
+        getFirstCategorys(){
+            getFirstCategorys().then(res => {
+                if(res.meta.code = '200'){
+                    this.firstArr = res.data.list
+                }
+            })
+        },
+        //获取二级分类
+        getSecondCategorys(categoryId){
+            getSecondCategorys(categoryId ? categoryId : '-1' ).then(res => {
+                if(res.meta.code = '200'){
+                    this.secondArr = res.data.list
+                }
+            })
+        },
+        // 分页器
+        jumpPage(page) {
+            this.queryParams.pageNum = page
+            this.queryCourse(this.queryParams)
+        },
+        //获取课程
+        queryCourse(queryParams){
+            queryCourse(queryParams).then(res => {
+                if(res.meta.code = '200'){
+                    this.queryParams.total = res.data.pageInfo.total
+                    this.arrcourse = res.data.pageInfo.list
+                    this.arrcourse.forEach(item => {
+                        switch(item.courseLevel){
+                        case 1:
+                            item.courseLevel = '初级';
+                            break;
+                        case 2:
+                            item.courseLevel = '中级';
+                            break;
+                        case 3:
+                            item.courseLevel = '高级';
+                            break;
+                        default:
+                            item.courseLevel = ''
+                        }
+                    })
+                }
+            })
+        },
+        watchUrl(){
+            if( this.$route.query && this.$route.query.tagName){
+                let searchKnowledge = decodeURI(this.$route.query.tagName)
+                console.log(searchKnowledge);
+                if(searchKnowledge){
+                    this.queryParams.entity.tags = searchKnowledge
+                }
+            }
         }
-      });
     },
-  },
-  watch: {
-    $route: function (to, from) {
-      let query = to.query;
-      this.queryParams.entity.courseName = query.keywords;
-      this.queryCourse(this.queryParams);
-    },
-  },
-};
+    watch:{
+      '$route':function(to,from){
+
+        this.watchUrl();
+
+        let query = to.query;
+        this.queryParams.entity.courseName= query.keywords;
+        this.queryParams.entity.tags= query.searchKnowledge;
+        this.queryCourse(this.queryParams);
+      }
+    }
+}
 </script>
 
 

@@ -350,7 +350,7 @@ export default {
       crtType:"usernamePasswordLogin",
       regiterSuccess: false, // 对话框
       checked: false, // 同意协议
-      active: "1",
+      actives: "1",
       msg: "我是头部",
       // carNum: 0,
       isCar: false,

@@ -102,11 +102,7 @@
                 <li class="goodBook" v-for="i in 4" :key="i">
                     <div class="goodBookInfo">
                         <div class="courseBg">
-                            <img class="courseImg" src="/image/classbg.png" alt="">
-                            <div  class="courseDesc">
-                                <div>晋级TS高手</div>
-                                <div>搞定复杂项目</div>
-                            </div>
+                            <img class="courseImg" :src="goodBook[i]" alt="">
                         </div>
                         <div class="courseName">
                             晋级TypeScript高手，成为抢手的前端开发人才
@@ -146,7 +142,8 @@ export default {
             },
             token:'',
             imgUrl:'',
-            tokens:''
+            tokens:'',
+            goodBook:['/image/book1.png','/image/book2.png','/image/book3.png','/image/book4.png','/image/book5.png']
 
         }
 	},
@@ -169,40 +166,6 @@ export default {
             getImageByCode({imageCode:imgCode.global_commendcourse}).then(res => {
                 this.imgUrl = res.data.data.imageUrl;
             })
-        },
-        //加入购物车
-        addCart(item){
-            if(!this.tokens){
-                this.$message({
-                    message: '请先登录才能加入购物车哦',
-                    type: 'error'
-                });
-                this.$store.commit('saveLoginDialog', true)
-                return
-            }
-            createToken().then(res => {
-                this.token = res.data.token
-                this.memberId = this.userInfo.id
-                addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
-                    if(res.meta.code === '200'){
-                        getShopCarCounter().then((res) => {
-                            if (res.meta.code == '200') {
-                                this.saveCartNumAction(res.data.counter)
-                            } else {
-                                this.$message({
-                                message: res.meta.msg,
-                                type: "error",
-                                });
-                            }
-                        });
-                        this.$message({
-                            message: '恭喜你，加入购物车成功',
-                            type: 'success'
-                        });
-                    }
-                })
-            })
-
         },
         //获取最新课程
         getNewCourse(){
@@ -524,8 +487,5 @@ export default {
 }
 
 /* 都在看好书结束 */
-.addCart{
-    margin-top: 3px;
-    color: #FF3D17;
-}
+
 </style>

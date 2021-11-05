@@ -1,7 +1,7 @@
 <template>
     <div class="courseplay">
         <router-view></router-view>
-        <indexHeader></indexHeader>
+       <!--  <indexHeader></indexHeader> -->
         <coursePlayMain></coursePlayMain>
         <Foot :webconfig='webconfig'></Foot>
 
@@ -20,6 +20,9 @@ export default {
         return{
             webconfig:{}
         }
+    },
+    beforeCreate(){
+        document.documentElement.scrollTop = 0;
     },
   metaInfo: {
     title: '鹿线课堂',
