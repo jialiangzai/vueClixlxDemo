@@ -337,7 +337,8 @@ export default {
 .commendCourseContent .commendLeft{
     width: 285px;
     height: 580px;
-	margin: 0 20px 20px 0;
+	  margin: 0 20px 20px 0;
+    cursor: not-allowed;
 }
 .commendCourseContent .commendLeft img{
     width: 100%;

@@ -378,7 +378,7 @@ export default {
 .course-image{
 	  /*position: relative;*/
     width: 100%;
-    height: 110px;
+    height: 90px;
     cursor: pointer;
 }
 .course-image img{
@@ -391,7 +391,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 110px;
+    height: 90px;
     padding: 5px;
     box-sizing: border-box;
 }
@@ -400,7 +400,7 @@ export default {
     /*height: 100%;*/
     /*margin: 20px 0 0 5px;*/
 	  font-weight: bold;
-	  font-size: 14px;
+	  font-size: 12px;
 	  color: #333333;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -409,13 +409,13 @@ export default {
 }
 .courseDegree{
     /*margin: 30px 0 0 5px;*/
-    font-size: 14px;
+    font-size: 12px;
     color: #808080;
 }
 .coursePrice{
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 12px;
 }
 .coursePriceZero{
   display: flex;
@@ -423,7 +423,7 @@ export default {
   align-items: center;
 }
 .pricePri{
-  font-size: 14px;
+  font-size: 12px;
 }
 .price{
   margin-left: 5px;
@@ -438,7 +438,7 @@ export default {
   border-radius: 6px;
 }
 .coursePricePri{
-  font-size: 14px;
+  font-size: 12px;
 }
 .buy{
     width: 200px;
@@ -458,18 +458,18 @@ export default {
 }
 .buy .learn{
     color: #3586FF;
-    font-size: 14px;
+    font-size: 12px;
 }
 .buy .car{
     display: flex;
     margin-right: 5px;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .buy .addcart{
     margin-left: 2px;
     color: #FF3D17;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
 }
 /* 下侧课程结束 */
