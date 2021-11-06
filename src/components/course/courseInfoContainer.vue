@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-   
+
     <div class="info-nav">
         <div class="nav-container">
             <div class="chapter-item" @click="change1">
@@ -61,7 +61,7 @@
                     <button class="btn-item"  @click="addCart()">加入购物车</button>
                 </div>
             </div>
-              
+
             <div class="video" v-for="(item,index) in courseChapters" :key="index">
                 <div class="chapterName">{{item.chapterName}}</div>
                 <div class="chapterDesc">{{item.description}}</div>
@@ -75,7 +75,7 @@
                         <div class="video-itemIcon">
                             <i class="el-icon-video-camera"></i>
                         </div>
-                      
+
                         <div class="item-name">
                             <span class="shipin">视频：</span>
                             <span class="chapterName">{{j.chapterName}}</span>
@@ -131,7 +131,7 @@ export default {
 		}
 	},
 	created() {
-		this.tokens = sessionStorage.getItem('token')
+		this.tokens = localStorage.getItem('token')
 		this.getcourseInfo()
 	},
 	computed: {
@@ -277,7 +277,7 @@ export default {
 			j.isShow = false
 		},
 		goPlay(courseId, chapterId,publicType) {
-            if (!this.tokens) {
+      if (!this.tokens) {
 				this.$message({
 					message: '请先登录才能学习该课程哦',
 					type: 'error',
@@ -331,7 +331,7 @@ export default {
 }
 /* .chapter-item  .active{
     color: #388FFF;
-    
+
 } */
 /* 背景部分开始 */
 .courseInfoTop .info-container {
@@ -389,7 +389,7 @@ export default {
 /* 导航栏开始 */
 .info-nav {
 	width: 100%;
-    
+
 	background: #ffffff;
 	box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
 }

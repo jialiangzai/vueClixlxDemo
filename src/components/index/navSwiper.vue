@@ -31,10 +31,10 @@
                                         </div>
                                         <div class="coursePrice" v-else-if="item.isMember == 1">
                                             <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
-                                            <div class="price">¥ {{item.discountPrice}}</div>
+                                            <div class="price">¥{{item.discountPrice}}</div>
                                         </div>
                                         <div class="coursePricePri" v-else>
-                                            <div class="pricePri">¥ {{item.discountPrice}}</div>
+                                            <div class="pricePri">¥{{item.discountPrice}}</div>
                                         </div>
                                     </div>
                                     <div class="car" @click="addCart(item)">
@@ -359,27 +359,26 @@ export default {
     /* width: 700px; */
     width: 100%;
     /* height: 250px; */
-    height: 300px;
+    height: 270px;
     padding: 20px 20px;
     /* margin-top: 30px; */
-    /*background-color: #F3F5F6;*/
+    background-color: #F3F5F6;
     box-sizing: border-box;
-  background-color: cyan;
 }
 .course-card{
     display: flex;
     margin-bottom: 20px;
     align-items: center;
     width: 370px;
-    height: 120px;
+    height: 110px;
     box-sizing: border-box;
-     background: red;
+     /*background: red;*/
     /* border-radius: 10px; */
 }
 .course-image{
-	position: relative;
-    width: 210px;
-    height: 122px;
+	  /*position: relative;*/
+    width: 100%;
+    height: 110px;
     cursor: pointer;
 }
 .course-image img{
@@ -388,29 +387,63 @@ export default {
     border-radius: 6px;
 }
 .right{
-    margin-left:6px;
+    /*margin-left:6px;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 110px;
+    padding: 5px;
+    box-sizing: border-box;
 }
 .courseName{
     width: 100%;
-    height: 100%;
-    margin: 5px 0 0 5px;
-	font-weight: bold;
-	font-size: 13px;
-	color: #333333;
+    /*height: 100%;*/
+    /*margin: 20px 0 0 5px;*/
+	  font-weight: bold;
+	  font-size: 14px;
+	  color: #333333;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
 }
 .courseDegree{
-    margin: 30px 0 0 5px;
-    font-size: 12px;
+    /*margin: 30px 0 0 5px;*/
+    font-size: 14px;
     color: #808080;
+}
+.coursePrice{
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.coursePriceZero{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pricePri{
+  font-size: 14px;
+}
+.price{
+  margin-left: 5px;
+  color: red;
+}
+.courseMember{
+  /*color: red;*/
+  color: #FFFFFF;
+  padding: 2px;
+  box-sizing: border-box;
+  background: red;
+  border-radius: 6px;
+}
+.coursePricePri{
+  font-size: 14px;
 }
 .buy{
     width: 200px;
     display: flex;
-    margin: 30px 0 0 5px;
+    /*margin: 30px 0 0 5px;*/
     justify-content: space-between;
     box-sizing: border-box;
 }
@@ -425,17 +458,18 @@ export default {
 }
 .buy .learn{
     color: #3586FF;
-    font-size: 13px;
+    font-size: 14px;
 }
 .buy .car{
     display: flex;
     margin-right: 5px;
+    font-size: 14px;
 }
 
 .buy .addcart{
     margin-left: 2px;
     color: #FF3D17;
-    font-size: 13px;
+    font-size: 14px;
     cursor: pointer;
 }
 /* 下侧课程结束 */
