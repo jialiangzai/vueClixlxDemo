@@ -25,14 +25,28 @@
                                 <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                                 <div class="buy">
                                     <div class="buy-free">
-                                        <div class="learn">免费学习</div>
-                                        <img src="../../assets/image/about/free.png" alt="">
+                                        
+
+                                        <div class="coursePriceZero" v-if="item.discountPrice == 0">
+                                            <div class="learn">免费学习</div>
+                                            <img src="../../assets/image/about/free.png" alt="">
+                                        </div>
+
+                                        <div class="coursePrice" v-else-if="item.isMember == 1">
+                                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
+                                            <div class="price">¥ {{item.discountPrice}}</div>
+                                        </div>
+                                        <div class="coursePricePri" v-else>
+                                            <div class="pricePri">¥ {{item.discountPrice}}</div>
+                                        </div>
+
+
                                     </div>
                                     <div class="car" @click="addCart(item)">
                                         <div class="cart-image">
                                             <img src="/image/cart16.png" alt="">
                                         </div>
-                                        <span class="addcart">加购物车</span>
+                                        <span class="addcart">加入购物车</span>
                                     </div>
                                 </div>
                             </div>
@@ -368,17 +382,18 @@ export default {
 }
 .course-image{
 	position: relative;
-    width: 170px;
-    height: 100%;
+    width: 210px;
+    height: 122px;
     cursor: pointer;
 }
 .course-image img{
     width: 100%;
     height: 100%;
+    border-radius: 6px;
 }
-/* .right{
-    background-color: cyan;
-} */
+.right{
+    margin-left:6px;
+} 
 .courseName{
     width: 100%;
     height: 100%;

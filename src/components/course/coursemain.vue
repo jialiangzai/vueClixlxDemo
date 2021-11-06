@@ -150,7 +150,11 @@
               :key="index"
             >
               <div class="courseInfo">
+
                 <router-link :to="{ path: '/course-info/' + item.id }">
+                  <div class="memberlogo" v-if="item.isMember == 1 && item.discountPrice != 0">
+                      <img src="../../assets/image/member/vipLogo.png" alt="">
+                  </div>
                   <div class="courseBg">
                     <img class="courseImg" :src="item.courseCover" alt="" />
                   </div>
@@ -161,14 +165,18 @@
                   {{ item.purchaseCounter + item.purchaseCnt }}人购买
                 </div>
                 <div class="coursePrice">
-                  <div class="courseMemberbg" v-if='item.isMember == 1'>
-                      <span class="courseMember">会员免费</span>
-                      <img src="../../assets/image/member/kings.png" alt="">
-                  </div>
-                  <div class="coursePriceZero" v-else-if="item.discountPrice == 0">
+
+                  <div class="coursePriceZero" v-if="item.discountPrice == 0">
                         <div class="pricefree">免费学习</div>
                         <img src="../../assets/image/about/free.png" alt="">
                   </div>
+
+                  <div class="courseMemberbg" v-else-if='item.isMember == 1'>
+                      <span class='price'>¥ {{ item.discountPrice }}</span>
+                      <span class="courseMember">会员免费</span>
+                      <img src="../../assets/image/member/kings.png" alt="">
+                  </div>
+                  
                   <div class="price" v-else>¥ {{ item.discountPrice }}</div>
 
                   <div class="addCart" @click="addCart(item)">
@@ -486,7 +494,9 @@ export default{
     },
     watch:{
       '$route':function(to,from){
+
         this.watchUrl();
+
         let query = to.query;
         this.queryParams.entity.courseName= query.keywords;
         this.queryParams.entity.tags= query.searchKnowledge;
@@ -679,6 +689,7 @@ export default{
   margin: 20px 0 0 0;
 }
 .courseInfo {
+  position: relative;
   width: 100%;
   height: 260px;
   background: #ffffff;
@@ -733,33 +744,44 @@ export default{
   position: relative;
   left: 0px;
   top: 2px;
-  width: 80px;
+  width: 150px;
   height: 25px;
   color: red;
   font-weight: 700;
+  line-height: 25px;
 }
 .courseMemberbg img{
-    position: relative;
-    left: 60px;
-    top: 4px;
     width: 15px;
     height: 10px;
+    padding-left:5px;
 }
 .coursePriceZero{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 72px;
-	font-size: 14px;
-    font-weight: 700;
-	margin-top: 2px;
-    padding: 0 1px;
-    color: rgba(53, 134, 255, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 72px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 2px;
+  padding: 0 1px;
+  color: rgba(53, 134, 255, 1);
 }
 .courseMember {
-  position: absolute;
+  padding-left:15px;
+  /*position: absolute;
   line-height: 25px;
-  left: 0px;
+  left: 0px;*/
+}
+.memberlogo{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 999;
+    margin: 5px 5px 0 0;
+}
+.memberlogo img{
+    width: 40px;
+    height: 20px;
 }
 .price {
   line-height: 29px;

@@ -21,7 +21,7 @@
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in newCourses" :key="index" >
                     <div class="courseInfo">
-                        <div class="memberlogo" v-if="item.isMember == 1">
+                        <div class="memberlogo" v-if="item.isMember == 1 && item.discountPrice != 0">
                             <img src="../../assets/image/member/vipLogo.png" alt="">
                         </div>
                         <router-link :to="{path:'/course-info/' + item.id}">
@@ -31,13 +31,15 @@
                         </router-link>
                         <div class="courseName">{{item.courseName}}</div>
                         <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人报名</div>
-                        <div class="coursePrice" v-if="item.isMember == 1">
-                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
-                            <div class="price">¥ {{item.discountPrice}}</div>
-                        </div>
-                        <div class="coursePriceZero" v-else-if="item.discountPrice == 0">
+
+                        <div class="coursePriceZero" v-if="item.discountPrice == 0">
                             <div class="pricefree">免费学习</div>
                             <img src="../../assets/image/about/free.png" alt="">
+                        </div>
+
+                        <div class="coursePrice" v-else-if="item.isMember == 1">
+                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
+                            <div class="price">¥ {{item.discountPrice}}</div>
                         </div>
                         <div class="coursePricePri" v-else>
                             <div class="pricePri">¥ {{item.discountPrice}}</div>
@@ -73,17 +75,31 @@
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
                     <div class="courseInfo">
+                        <div class="memberlogo" v-if="item.isMember == 1 && item.discountPrice != 0">
+                            <img src="../../assets/image/member/vipLogo.png" alt="">
+                        </div>
                         <router-link :to="{path:'/course-info/' + item.id}">
                             <div class="courseBg">
                                 <img class="courseImg" :src="item.courseCover" alt="">
                             </div>
                         </router-link>
                         <div class="courseName">{{item.courseName}}</div>
-                        <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
-                        <div class="coursePricePri">
+                        <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人报名</div>
+
+                        <div class="coursePriceZero" v-if="item.discountPrice == 0">
+                            <div class="pricefree">免费学习</div>
+                            <img src="../../assets/image/about/free.png" alt="">
+                        </div>
+
+                        <div class="coursePrice" v-else-if="item.isMember == 1">
+                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
+                            <div class="price">¥ {{item.discountPrice}}</div>
+                        </div>
+                        <div class="coursePricePri" v-else>
                             <div class="pricePri">¥ {{item.discountPrice}}</div>
                         </div>
                     </div>
+
                 </li>
             </ul>
         </div>
