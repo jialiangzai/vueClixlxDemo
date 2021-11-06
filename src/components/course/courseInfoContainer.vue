@@ -161,7 +161,7 @@ export default {
 			}else{
                 let arr = new Array()
                 arr.push({ number: 1, id: item.id })
-                sessionStorage.setItem('selectedArr', JSON.stringify(arr))
+                localStorage.setItem('selectedArr', JSON.stringify(arr))
                 this.$router.push('/confirmOrder')
             }
 		},

@@ -156,7 +156,7 @@ export default {
         }
 	},
 	created() {
-        let token = sessionStorage.getItem("token");
+        let token = localStorage.getItem("token");
         if(!token){
             this.$message.error('无法播放视频，请先登录');
             this.$router.go(-1)
