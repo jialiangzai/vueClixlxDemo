@@ -1,8 +1,8 @@
-import http from './requests';
-
+import request from './requests';
+import {Decrypt} from '@/utils/aes'
 // 查询收藏
 export function getFavoriteList({pageSize,pageNum,token,entity}) {
-  return http.$axios({
+  return request({
     url: '/api/favorite/getByMemberId',
     method: 'POST',
     data: {
@@ -12,7 +12,7 @@ export function getFavoriteList({pageSize,pageNum,token,entity}) {
     },
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': sessionStorage.getItem('token'),
+      'Authorization': Decrypt(localStorage.getItem('token')),
       'token': token
     }
 
@@ -20,14 +20,14 @@ export function getFavoriteList({pageSize,pageNum,token,entity}) {
 }
 // 添加收藏 
 export function addFavorite({ courseId,token }) {
-  return http.$axios({
+  return request({
     url: '/api/favorite/addFavorite',
     method: 'POST',
     data: {
       courseId,
     },
     headers: {
-      'Authorization': sessionStorage.getItem('token'),
+      'Authorization': Decrypt(localStorage.getItem('token')),
       'token': token
     }
   })
@@ -35,7 +35,7 @@ export function addFavorite({ courseId,token }) {
 
 //取消收藏
 export function deleteFavorite({memberId,courseId,token }) {
-  return http.$axios({
+  return request({
     url: '/api/favorite/deleteFavorite',
     method: 'GET',
     params:{
@@ -43,7 +43,7 @@ export function deleteFavorite({memberId,courseId,token }) {
         courseId,
     },
     headers: {
-      'Authorization': sessionStorage.getItem('token'),
+      'Authorization': Decrypt(localStorage.getItem('token')),
       'token': token
     }
   })

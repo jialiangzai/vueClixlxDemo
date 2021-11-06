@@ -60,8 +60,8 @@ export default {
                 this.$store.commit("saveLoginDialog", false);
                 let accessToken = res.data.accessToken;
                 // 存储到access中
-                sessionStorage.setItem("token", accessToken);
-                sessionStorage.setItem("isLogin", JSON.stringify(true));
+                localStorage.setItem("token", accessToken);
+                localStorage.setItem("isLogin", JSON.stringify(true));
                 this.getCarNum();
                 this.saveLoginAction();
                 this.$message({
@@ -95,7 +95,7 @@ export default {
             .then((res) => {
               // this.saveUserInfoActions()
               if (res.meta.code === "200") {
-                sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+                // sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
                 this.saveUserInfoAction();
                 this.$router.push('/user/setbindsns')
                 // window.location.reload()
@@ -112,7 +112,7 @@ export default {
     },
     // 获取购物车数据
     getCarNum() {
-      if (sessionStorage.getItem("token")) {
+      if (localStorage.getItem("token")) {
         getShopCarCounter().then((res) => {
           if (res.meta.code === "200") {
             this.saveCartNumAction(res.data.counter);
@@ -130,9 +130,6 @@ export default {
 </script>
 
 <style scoped>
-.loading {
-
-}
 .loading-container {
   min-height: 700px;
   position: relative;

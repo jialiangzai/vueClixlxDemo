@@ -95,7 +95,7 @@
                 <div class="txt-top">都在看好书</div>
                 <div class="txt-bottom"></div>
             </div>
-        </h1> 
+        </h1>
         <!-- 都在看好书标题结束 -->
          <div class="book">
             <ul class="courseUl">
@@ -110,19 +110,16 @@
                     </div>
                 </li>
             </ul>
-        </div>   
-    </div> 
+        </div>
+    </div>
 </div>
 </template>
 
 <script>
-import {getNewCourse,getHotCourse} from '@/common/api/courseManage.js'
-import {addShopCar} from '@/common/api/shopcar.js'
-import {createToken} from '@/common/api/token.js'
+import {getHotCourse, getNewCourse} from '@/common/api/courseManage.js'
 import {getImageByCode} from '@/common/api/picture.js'
 import imgCode from '@/common/globalImages.js'
-import {getShopCarCounter} from "@/common/api/auth";
-import { mapState, mapActions,mapMutations } from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
 	data() {
@@ -148,7 +145,7 @@ export default {
         }
 	},
     created(){
-        this.tokens = sessionStorage.getItem('token')
+        this.tokens = localStorage.getItem('token')
         this.getNewCourse()
         this.getHotCourse()
         this.getImageByCode()
@@ -164,6 +161,7 @@ export default {
         ...mapMutations(["saveLoginDialog"]),
         getImageByCode(){
             getImageByCode({imageCode:imgCode.global_commendcourse}).then(res => {
+                console.log(res)
                 this.imgUrl = res.data.data.imageUrl;
             })
         },

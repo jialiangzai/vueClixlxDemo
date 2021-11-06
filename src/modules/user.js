@@ -1,26 +1,26 @@
-// 保存用户状态的数据
+
 export default {
 	state:{
-		userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {
+		userInfo: {
 			avatar: '/image/common/avator.png',
 			nickname: '小鹿线-默认',
 			gender: 1,
 			city: '北京',
 			id:1,
 		},
-		isLogin: JSON.parse(sessionStorage.getItem('isLogin')) || false,
-        cartNum: 0,
-        loginDialog:false
+		isLogin: JSON.parse(localStorage.getItem('isLogin'))  || false,
+    cartNum: 0,
+    loginDialog:false
 	},
 	getters:{
 		avatar:state => state.userInfo.avatar
 	},
 	mutations:{
 		saveUserInfo(state,payload){
-			state.userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || payload
+			state.userInfo = payload
 		},
 		saveLogin(state,payload) {
-			state.isLogin = JSON.parse(sessionStorage.getItem('isLogin')) || false
+			state.isLogin = payload
 		},
 		saveAvator(state,payload){
 			state.userInfo.avatar = payload

@@ -61,6 +61,7 @@
                     <button class="btn-item"  @click="addCart()">加入购物车</button>
                 </div>
             </div>
+              
             <div class="video" v-for="(item,index) in courseChapters" :key="index">
                 <div class="chapterName">{{item.chapterName}}</div>
                 <div class="chapterDesc">{{item.description}}</div>
@@ -74,11 +75,13 @@
                         <div class="video-itemIcon">
                             <i class="el-icon-video-camera"></i>
                         </div>
+                      
                         <div class="item-name">
                             <span class="shipin">视频：</span>
                             <span class="chapterName">{{j.chapterName}}</span>
+                            <span class="free" v-if="j.publicType === 2">试看</span>
                         </div>
-                        <button class="btn-learn" v-if="j.isShow" @click="goPlay(courseInfoArr.id,j.id)">
+                        <button class="btn-learn" v-if="j.isShow" @click="goPlay(courseInfoArr.id,j.id,j.publicType)">
                         开始学习
                         </button>
                         <div class="clearfloat"></div>
@@ -273,7 +276,7 @@ export default {
 		mourseOut(j) {
 			j.isShow = false
 		},
-		goPlay(courseId, chapterId) {
+		goPlay(courseId, chapterId,publicType) {
             if (!this.tokens) {
 				this.$message({
 					message: '请先登录才能学习该课程哦',
@@ -284,13 +287,14 @@ export default {
 			}else{
                 checkAuthWithChapterId(courseId, chapterId).then((res) => {
                     let hasAuth = res.data.data.hasAuth;
-                    if (!hasAuth) {
+                    if (hasAuth === false && publicType === 1) {
                         this.$message({
                             message: '购买该课程后才能开始学习哦',
                             type: 'error',
                         })
+
                         return;
-                    } else{
+                    } else {
                         this.$router.push({
                             path: '/course-play/' + courseId + '/' + chapterId,
                         })
@@ -474,6 +478,11 @@ export default {
 	font-weight: bold;
 	font-size: 20px;
 	color: #333333;
+}
+.video .free{
+    padding-left:20px ;
+    font-size: 14px;
+    color:#388fff ;
 }
 .chapterDesc {
 	margin: 10px 0;

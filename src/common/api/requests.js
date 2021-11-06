@@ -1,35 +1,43 @@
-// 引入请求数据的插件
-import axios from 'axios';
-import store from '../../store'
-import router from '../../router'
 
-export default {
-    common: {
-        method: 'GET',
-        data: {},
-        params: {},
-        headers: {}
-    },
-    $axios (options = {}) {
-        options.method = options.method || this.common.method;
-        options.data = options.data || this.common.data;
-        options.params = options.params || this.common.params;
-        options.headers = options.headers || this.common.headers
+import axios from 'axios'
+import { Notification, MessageBox, Message } from 'element-ui'
 
-        // 判断登陆状态
-        // if (options.headers.token) {
-        // 	options.headers.token = store.state.user.token
-        //     if (!options.headers.token) {
-        //         router.push('/about')
-        //     }
-        // }
+axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+const service = axios.create()
 
-        return axios(options).then(v => {
-            let data = v.data
-            return new Promise((res, rej) => {
-                if (!v) return rej();
-                res(data)
-            })
-        })
+service.interceptors.request.use(req=>{
+    //console.log(req)
+    return req
+},error => {
+    Promise.reject(error)
+})
+
+// 响应拦截器
+service.interceptors.response.use(res => {
+    // 未设置状态码则默认成功状态
+    // console.log(res)
+    const code = res.data.meta.code
+    // 获取错误信息
+    if (code === '50002') {
+      MessageBox.confirm('登录状态已过期，请重新登录', '系统提示', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(() => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('isLogin')
+        window.location.href = '/home'
+
+      }).catch(() => {});
+      return Promise.reject('error')
+    } else {
+      return res.data
     }
-}
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+
+export default service

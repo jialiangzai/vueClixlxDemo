@@ -103,7 +103,7 @@ const router = new Router({
 });
 
 router.beforeEach((to,from,next)=>{
-  let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+  let userInfo = localStorage.getItem('isLogin')
   if( to.matched.some(record => record.meta.requiresAuth) ){
     if( !userInfo ){
        /*  this.$confirm('未登录，请您登录', '提示信息', {

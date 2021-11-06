@@ -1,7 +1,7 @@
-import http from './requests';
+import request from './requests';
 
 export function webConfig(){
-    return http.$axios({
+    return request({
         url: '/api/setting/get',
     })
 }

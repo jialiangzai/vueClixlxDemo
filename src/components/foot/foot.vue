@@ -42,27 +42,40 @@
 <script>
 import {getImageByCode} from '@/common/api/picture.js'
 import imgCode from '@/common/globalImages.js'
+import {webConfig} from '@/common/api/webConfig.js'
 
 
 export default{
-    props:{
-      webconfig:{
-        type:Object,
-        default:{}
-      }
-    },
     data(){
         return{
-            guanfangwx:'',
-            teacherwx:''
+          guanfangwx:'',
+          teacherwx:'',
+          webconfig:{
+            id: "",//主键
+            keywords: "",//站点关键字
+            ext03: "",//扩展字段3
+            ext02: "",//扩展字段2
+            title: "",//网站标题
+            logo: "",//网站LOGO
+            ext01: "",//扩展字段1
+            icp: "",//备案号
+            copyright: "",//网站版权信息
+            website: "",//网址
+            description: ""//网站描述
+          }
         }
     },
     created(){
         this.getImageByCodeGuanfangwx()
         this.getImageByCodeTeacherwx()
+        this.__init()
 
     },
     methods:{
+        async __init(){
+      let res = await webConfig()
+      this.webconfig = res.data.data
+    },
         getImageByCodeGuanfangwx(){
             getImageByCode({imageCode:imgCode.global_guanfangcode}).then(res => {
                 this.guanfangwx = res.data.data.imageUrl;
