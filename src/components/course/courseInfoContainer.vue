@@ -309,7 +309,9 @@ export default {
 <style scoped>
 .courseContainer {
 	width: 100%;
+	height: 100%;
 	background: #f8fafc;
+	overflow: hidden;
 }
 .main {
 	margin: 40px auto;
@@ -375,11 +377,12 @@ export default {
     height: 14px;
 }
 .access {
-	margin: 15px 0 0 100px;
+	margin: 0 0 0 100px;
 	display: flex;
 }
 .access .access-item {
 	margin-right: 10px;
+	line-height: 60px;
 }
 /* 背景部分结束 */
 
@@ -493,7 +496,7 @@ export default {
 	height: 40px;
 	line-height: 40px;
 	padding: 5px 0;
-	margin: 0 0 10px 0;
+	/*margin: 0 0 10px 0;*/
 	border-radius: 8px;
 }
 .video-item:hover {
@@ -501,7 +504,6 @@ export default {
 	background: rgba(53, 133, 255, 0.2);
 	border-radius: 8px;
 	color: #388fff !important;
-    border: 1px solid #3585FF;
 }
 .video-item .shipin {
 	color: #333333;
