@@ -11,7 +11,7 @@
                 <div class="i-r-left">
                   <div class="i-r-l-title">
                     <p class="tip" v-if="item.discountPrice === 0">免费课</p>
-                    <p class="tip vip" v-if="item.isMember === 1">会员课程</p>
+                    <p class="tip vip" v-if="item.discountPrice !== 0 && item.isMember === 1">会员课程</p>
                     <p class="title" @click="goStu(item.id)">{{item.courseName}}</p>
                   </div>
                   <div class="i-r-l-center">
