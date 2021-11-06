@@ -24,15 +24,15 @@
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img :src="guanfangwx" alt="">
+                    <img :src="guanfangwx.imgUrl" alt="">
                 </div>
-                <div class="wx-dsc">官方账号</div>
+                <div class="wx-dsc">{{guanfangwx.imageName}}</div>
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img :src="teacherwx" alt="">
+                    <img :src="teacherwx.imgUrl" alt="">
                 </div>
-                <div class="wx-dsc">指导老师</div>
+                <div class="wx-dsc">{{teacherwx.imageName}}</div>
             </div>
 
         </div>
@@ -42,35 +42,49 @@
 <script>
 import {getImageByCode} from '@/common/api/picture.js'
 import imgCode from '@/common/globalImages.js'
-import {webConfig} from '@/common/api/webConfig.js'
 
 
 export default{
+    props:{
+      webconfig:{
+        type:Object,
+        default:{}
+      }
+    },
     data(){
         return{
-            guanfangwx:'',
-            teacherwx:''
+            guanfangwx:{
+                imageName:'',
+                imgUrl:''
+            },
+            teacherwx:{
+                imageName:'',
+                imgUrl:''
+            }
         }
     },
     created(){
         this.getImageByCodeGuanfangwx()
         this.getImageByCodeTeacherwx()
-        this.__init()
 
     },
     methods:{
-        async __init(){
-      let res = await webConfig()
-      this.webconfig = res.data.data
-    },
         getImageByCodeGuanfangwx(){
             getImageByCode({imageCode:imgCode.global_guanfangcode}).then(res => {
-                this.guanfangwx = res.data.data.imageUrl;
+                    let data = res.data.data;
+                    this.guanfangwx = {
+                        imageName:data.imageName,
+                        imgUrl:data.imageUrl
+                    }
             })
         },
         getImageByCodeTeacherwx(){
             getImageByCode({imageCode:imgCode.global_teachercode}).then(res => {
-                this.teacherwx = res.data.data.imageUrl;
+                    let data = res.data.data;
+                    this.teacherwx = {
+                        imageName:data.imageName,
+                        imgUrl:data.imageUrl
+                    }
             })
         },
     }
@@ -146,7 +160,7 @@ export default{
     height: 100%;
 }
 .wx-dsc{
-    margin-left: 15px;
+    margin:15px;
 }
 .go{
     color: #FFFFFF;
