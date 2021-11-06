@@ -72,7 +72,7 @@
         </div>
       </div>
     </div>
-    <foot :webconfig="webconfig"></foot>
+    <foot></foot>
   </div>
 </template>
 

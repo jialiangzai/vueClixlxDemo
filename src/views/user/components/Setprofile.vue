@@ -241,8 +241,8 @@ export default {
           }).then((mess) => {
             //console.log(ress)
             // this.form = ress.data.data
-            sessionStorage.setItem("userInfo", JSON.stringify(mess.data.data));
-            this.saveUserInfoAction();
+            // sessionStorage.setItem("userInfo", JSON.stringify(mess.data.data));
+            this.saveUserInfoAction(mess.data.data);
           });
         }
       });

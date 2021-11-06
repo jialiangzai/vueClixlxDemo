@@ -15,6 +15,7 @@
     "crypto-js": "^4.1.1",
     "element-ui": "^2.15.6",
     "iscroll": "^5.2.0",
+    "js-cookie": "^3.0.1",
     "prerender-spa-plugin": "^3.2.1",
     "register-service-worker": "^1.0.0",
     "vue": "^2.6.14",

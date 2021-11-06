@@ -1,11 +1,12 @@
-import http from './requests'
+import request from './requests'
+import {Decrypt} from '@/utils/aes'
 
 export function createToken(){ 
-  return http.$axios({
+  return request({
     url: '/api/token/createToken',
     method: 'POST',
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': Decrypt(localStorage.getItem('token'))
     }
   })
 }

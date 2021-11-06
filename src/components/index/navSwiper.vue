@@ -66,7 +66,7 @@
 import {queryCourse} from '@/common/api/courseManage.js'
 import {queryCourseTag} from '@/common/api/courseTag.js'
 import courseType from './courseType.vue'
-import http from '../../common/api/requests'
+import request from '../../common/api/requests'
 import {addShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
 import {getShopCarCounter} from "@/common/api/auth";
@@ -163,7 +163,7 @@ export default {
 		},
 		// 获取课程一级分类
 		async getFirstCategory() {
-			let res = await http.$axios({
+			let res = await request({
 				url: '/api/course/category/getFirstCategorys',
 				method: 'GET',
 				header: {
@@ -179,7 +179,7 @@ export default {
 		},
 		// 获取轮播图
 		async getSliders() {
-			let res = await http.$axios({
+			let res = await request({
 				url: '/api/slider/getSliders',
 				method: 'GET',
 				header: {

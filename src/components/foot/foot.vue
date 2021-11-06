@@ -42,15 +42,10 @@
 <script>
 import {getImageByCode} from '@/common/api/picture.js'
 import imgCode from '@/common/globalImages.js'
+import {webConfig} from '@/common/api/webConfig.js'
 
 
 export default{
-    props:{
-      webconfig:{
-        type:Object,
-        default:{}
-      }
-    },
     data(){
         return{
             guanfangwx:'',
@@ -60,9 +55,14 @@ export default{
     created(){
         this.getImageByCodeGuanfangwx()
         this.getImageByCodeTeacherwx()
+        this.__init()
 
     },
     methods:{
+        async __init(){
+      let res = await webConfig()
+      this.webconfig = res.data.data
+    },
         getImageByCodeGuanfangwx(){
             getImageByCode({imageCode:imgCode.global_guanfangcode}).then(res => {
                 this.guanfangwx = res.data.data.imageUrl;

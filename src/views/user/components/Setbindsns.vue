@@ -670,11 +670,11 @@ export default {
 						type: 'success',
 						message: '退出成功!',
 					})
-					sessionStorage.removeItem('token')
-					sessionStorage.removeItem('userInfo')
-					sessionStorage.removeItem('isLogin')
+					localStorage.removeItem('token')
+					//sessionStorage.removeItem('userInfo')
+					localStorage.removeItem('isLogin')
 					this.$router.push('/')
-					this.$router.go(0)
+					// this.$router.go(0)
 					this.saveUserInfoAction({
 						avatar: '/image/common/avator.png',
 						nickName: '小鹿线-默认',

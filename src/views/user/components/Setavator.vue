@@ -225,8 +225,8 @@ export default {
       getInfo(params)
         .then((res) => {
           if (res.meta.code == "200") {
-            sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-            this.saveUserInfoAction();
+            // sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
+            this.saveUserInfoAction(res.data.data);
           } else {
             this.$message({
               message: "获取用户信息失败，请联系管理员",

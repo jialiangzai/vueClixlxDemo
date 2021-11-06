@@ -223,7 +223,7 @@
                   placeholder="请输入用户名"
                 ></el-input>
               </el-form-item>
-              <el-form-item prop="password" class="captcha">
+              <el-form-item prop="password" class="captcha identify">
                 <el-input
                   v-model="phoneForm.password"
                   placeholder="请输入密码"
@@ -256,7 +256,7 @@
                   placeholder="请输入注册手机号码"
                 ></el-input>
               </el-form-item>
-              <el-form-item prop="captcha" class="captcha">
+              <el-form-item prop="captcha" class="captcha identify">
                 <el-input
                   v-model="identifyForm.captcha"
                   style="width: 150px"
@@ -341,11 +341,14 @@ import {
 } from '@/common/api/auth'
 import { Loading } from 'element-ui'
 import { Encrypt, Decrypt } from '@/utils/aes.js'
-
+// cookie 
+import Cookies from "js-cookie";
 import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
 	data() {
 		return {
+			rememberMe: false, // 是否点击了记住我 用户名密码登录记住我
+			identifiyRememberMe: false, // 手机号登录记住我
 			courseColor: -1, // 鼠标移上显示颜色
 			crtType: 'usernamePasswordLogin',
 			regiterSuccess: false, // 对话框
@@ -394,7 +397,11 @@ export default {
 					},
 				],
 			}, // 注册
-			phoneForm: {}, // 账号登陆
+			phoneForm: {
+				username:'',
+				password:'',
+				rememberMe: false
+			}, // 账号登陆
 			phoneRules: {
 				username: [
 					{
@@ -407,7 +414,11 @@ export default {
 					{ required: true, message: '请输入密码', trigger: 'blur' },
 				],
 			}, // 账号
-			identifyForm: {}, // 验证码登陆
+			identifyForm: {
+				mobile:'',
+				captcha:'',
+				identifiyRememberMe:false,
+			}, // 验证码登陆
 			identifyRules: {
 				mobile: [
 					{
@@ -470,8 +481,14 @@ export default {
 		}),
 	},
 	created() {
-		this.getCarNum()
-		this.copySearch()
+		if(localStorage.getItem('token')){
+				// 获取购车数据
+		this.getCarNum();
+		this.getUserInfo()
+		}
+
+		// 获取搜索框数据
+		this.copySearch();
 	},
 	components: {
 		Verify,
@@ -535,9 +552,17 @@ export default {
 		},
 		// 清空表单
 		goReset() {
-			this.phoneForm = {}
+			this.phoneForm = {
+				username:'',
+				password:'',
+				rememberMe: false
+			}
 			this.registerForm = {}
-			this.identifyForm = {}
+			this.identifyForm = {
+				mobile:'',
+				captcha:'',
+				identifiyRememberMe:false,
+			}
 		},
 		// 点击开始学习
 		goStudy() {
@@ -692,21 +717,18 @@ export default {
 								this.$store.commit('saveLoginDialog', false)
 								let accessToken = res.data.accessToken
 								// 存储到access中
-								sessionStorage.setItem('token', accessToken)
-								sessionStorage.setItem(
-									'isLogin',
-									JSON.stringify(true)
-								)
-								this.getCarNum()
+								localStorage.setItem('token',Encrypt(accessToken))
+								localStorage.setItem('isLogin',JSON.stringify(true))
 								this.saveLoginAction()
+								this.getCarNum()
+								this.getUserInfo()
 								this.$message({
 									message: '登录成功，赶紧去学习吧！',
 									type: 'success',
 								})
-								// 获取用户信息
-								this.getUserInfo()
+								this.$router.go(0)
 								// window.location.reload()
-							} else {
+							}else {
 								this.$message({
 									message: res.meta.msg,
 									type: 'error',
@@ -733,6 +755,7 @@ export default {
 				}
 			})
 		},
+		// 验证是否点击7天登录
 		// 验证码登陆
 		submitIdentifyForm(formName) {
 			this.$refs[formName].validate((valid) => {
@@ -757,12 +780,12 @@ export default {
 								// 存储token
 								let accessToken = res.data.accessToken
 								// 存储到access中
-								sessionStorage.setItem('token', accessToken)
-								sessionStorage.setItem(
-									'isLogin',
-									JSON.stringify(true)
-								)
+								// setToken(accessToken)
+								localStorage.setItem('token',Encrypt(accessToken))
+								localStorage.setItem('isLogin',JSON.stringify(true))
+								// sessionStorage.setItem('token', accessToken)
 								// 获取个人信息
+								this.getUserInfo()
 								// 获取购物车数据
 								this.getCarNum()
 								//  this.saveIsLoginAction(true)
@@ -770,12 +793,12 @@ export default {
 									// 以服务的方式调用的 Loading 需要异步关闭
 									identLoading.close()
 								})
-								this.getUserInfo()
 								this.$store.commit('saveLoginDialog', false)
 								this.$message({
 									message: '登录成功，赶紧去学习吧！',
 									type: 'success',
 								})
+								 this.$router.go(0)
 								// window.location.reload()
 							} else if (res.meta.code === '10010') {
 								this.$message({
@@ -793,7 +816,7 @@ export default {
 								this.backRegiter()
 								// this.$store.commit("saveLoginDialog", false);
 								// this.saveLoginAction();
-							} else {
+							}else {
 								this.$message({
 									message: res.meta.msg,
 									type: 'error',
@@ -802,7 +825,7 @@ export default {
 									// 以服务的方式调用的 Loading 需要异步关闭
 									identLoading.close()
 								})
-                                clearInterval(this.registerTiemr)
+              clearInterval(this.registerTiemr)
 							this.captcha = '发送验证码'
 							this.isSend = false
 								this.$store.commit('saveLoginDialog', false)
@@ -818,7 +841,7 @@ export default {
 								message: res.meta.msg,
 								type: 'error',
 							})
-                            clearInterval(this.registerTiemr)
+              clearInterval(this.registerTiemr)
 							this.captcha = '发送验证码'
 							this.isSend = false
 						})
@@ -936,12 +959,9 @@ export default {
 					.then((res) => {
 						// this.saveUserInfoActions()
 						if (res.meta.code === '200') {
-							sessionStorage.setItem(
-								'userInfo',
-								JSON.stringify(res.data.data)
-							)
-							this.saveUserInfoAction()
-							this.$router.go(0)
+							// localStorage.setItem('userInfo',Encrypt(JSON.stringify(res.data.data)))
+							this.saveUserInfoAction(res.data.data)
+							// this.$router.go(0)
 							//this.$router.push('/user/setbindsns')
 							// window.location.reload()
 						} else {
@@ -956,7 +976,7 @@ export default {
 		},
 		// 获取购物车数据
 		getCarNum() {
-			if (sessionStorage.getItem('token')) {
+			if (localStorage.getItem('token')) {
 				getShopCarCounter().then((res) => {
 					if (res.meta.code == '200') {
 						this.saveCartNumAction(res.data.counter)
@@ -1011,19 +1031,13 @@ export default {
 								type: 'success',
 								message: '退出成功!',
 							})
-							sessionStorage.removeItem('token')
-							sessionStorage.removeItem('userInfo')
-							sessionStorage.removeItem('isLogin')
-							// this.$router.push("/");
-							this.$router.go(0)
-							this.saveUserInfoAction({
-								avatar: '/image/common/avator.png',
-								nickName: '小鹿线-默认',
-								gender: 1,
-								city: '北京',
-								id: 1,
-							})
-							this.saveLoginAction()
+
+							localStorage.removeItem('token')
+							 // ocalStorage.removeItem('userInfo')
+							localStorage.removeItem('isLogin')
+							this.$router.push("/");
+							// this.$router.go(0)
+							this.saveLoginAction(false)
 						})
 						.catch((err) => {})
 				})
@@ -1084,6 +1098,23 @@ export default {
 </script>
 
 <style scoped>
+.identify {
+	margin-bottom: 0 !important;
+}
+.remember {
+	margin-bottom: 10px !important;
+}
+.el-form-item {
+	margin-bottom: 16px;
+}
+.el-checkbox {
+	color: #a2a2a2 !important;
+	font-weight: normal !important;
+	font-size: 12px !important;
+}
+.el-checkbox__label {
+	font-size: 12px !important;
+}
 .third-party-login {
 	width: 200px;
 	height: 40px;

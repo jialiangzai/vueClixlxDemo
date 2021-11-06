@@ -1,13 +1,13 @@
-import http from './requests';
-
+import request from './requests';
+import {Decrypt} from '@/utils/aes'
 // 查询收藏商品
 export function getByMemberId(params) {
-  return http.$axios({
+  return request({
     url: '/api/message/getByMemberId',
     method: 'POST',
     data: params,
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': Decrypt(localStorage.getItem('token'))
     }
   })
 }
@@ -16,11 +16,11 @@ export function getByMemberId(params) {
 // /message/get
 
 export function getMess({id,token}){
-  return http.$axios({
+  return request({
     url: '/api/message/get?id='+id,
     method: 'GET',
     headers: {
-      'Authorization': sessionStorage.getItem('token'),
+      'Authorization': Decrypt(localStorage.getItem('token')),
       'token': token
     }
   })
@@ -28,12 +28,12 @@ export function getMess({id,token}){
 
 // 删除收藏
 export function deleteMess({ids,token}){
-  return http.$axios({
+  return request({
     url: '/api/message/delete',
     method: 'POST',
     data: ids,
     headers: {
-      'Authorization': sessionStorage.getItem('token'),
+      'Authorization': Decrypt(localStorage.getItem('token')),
       'token': token
     }
   })
@@ -41,12 +41,12 @@ export function deleteMess({ids,token}){
 
 // 标记已读
 export function makeRead({ids,token}){
-  return http.$axios({
+  return request({
     url: '/api/message/makeRead',
     method: 'POST',
     data: ids,
     headers: {
-      'Authorization': sessionStorage.getItem('token'),
+      'Authorization':Decrypt(localStorage.getItem('token')),
       'token': token
     }
   })
