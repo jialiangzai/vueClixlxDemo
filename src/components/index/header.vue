@@ -179,11 +179,11 @@
                 v-model="registerForm.captcha"
                 style="width: 150px"
                 placeholder="请输入短信验证码"
-                @keyup.enter.native="showVerify('registerForm')"
+                @keyup.enter.native="submitRegisterForm('registerForm')"
               ></el-input>
               <div
                 class="sendcaptcha"
-                @click="sendCaptch"
+                @click="showVerify('registerForm')"
                 :class="phoneSend ? 'send' : ''"
               >
                 {{ Phonecaptcha }}
@@ -201,7 +201,7 @@
               <el-button
                 type="primary"
                 class="regiterBtn"
-                @click="showVerify('registerForm')"
+                @click="submitRegisterForm('registerForm')"
                 >立即注册</el-button
               >
             </el-form-item>
@@ -220,7 +220,7 @@
               <el-form-item prop="username" class="captcha">
                 <el-input
                   v-model="phoneForm.username"
-                  placeholder="请输入登录手机号/邮箱"
+                  placeholder="请输入用户名"
                 ></el-input>
               </el-form-item>
               <el-form-item prop="password" class="captcha">
@@ -228,14 +228,14 @@
                   v-model="phoneForm.password"
                   placeholder="请输入密码"
                   show-password
-                  @keyup.enter.native="showVerify('phoneForm')"
+                  @keyup.enter.native="submitPhoneForm('phoneForm')"
                 ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button
                   type="primary"
                   class="regiterBtn"
-                  @click="showVerify('phoneForm')"
+                  @click=" submitPhoneForm('phoneForm')"
                   >立即登录</el-button
                 >
               </el-form-item>
@@ -261,11 +261,11 @@
                   v-model="identifyForm.captcha"
                   style="width: 150px"
                   placeholder="请输入短信验证码"
-                  @keyup.enter.native="showVerify('identifyForm')"
+                  @keyup.enter.native="submitIdentifyForm('identifyForm')"
                 ></el-input>
                 <div
                   class="sendcaptcha"
-                  @click="sendLoginCode"
+                  @click="showVerify('identifyForm')"
                   :class="isSend ? 'send' : ''"
                 >
                   {{ captcha }}
@@ -275,7 +275,7 @@
                 <el-button
                   type="primary"
                   class="regiterBtn"
-                  @click="showVerify('identifyForm')"
+                  @click="submitIdentifyForm('identifyForm')"
                   >登录</el-button
                 >
               </el-form-item>
@@ -327,1184 +327,1235 @@
 </template>
 
 <script>
-import  Verify from '../verifition/Verify'
-import { sendRegisterOrLoginCaptcha } from "@/common/api/sms";
+import Verify from '../verifition/Verify'
+import { sendRegisterOrLoginCaptcha } from '@/common/api/sms'
 import {
-  loginByJson,
-  register,
-  loginByMobile,
-  logout,
-  getInfo,
-  getShopCarCounter,
-  createToken,
-  getAccessToken
-} from "@/common/api/auth";
-import  {Loading} from 'element-ui'
-import  {Encrypt,Decrypt} from '@/utils/aes.js';
+	loginByJson,
+	register,
+	loginByMobile,
+	logout,
+	getInfo,
+	getShopCarCounter,
+	createToken,
+	getAccessToken,
+} from '@/common/api/auth'
+import { Loading } from 'element-ui'
+import { Encrypt, Decrypt } from '@/utils/aes.js'
 
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
-  data() {
-    return {
-      courseColor: -1, // 鼠标移上显示颜色
-      crtType:"usernamePasswordLogin",
-      regiterSuccess: false, // 对话框
-      checked: false, // 同意协议
-      actives: "1",
-      msg: "我是头部",
-      // carNum: 0,
-      isCar: false,
-      // isLogin: false,
-      isUserInfo: false,
-      avatorImg: "/image/common/avator.png",
-      nickname: "小鹿线-默认",
-      // userInfo: null,
-      loginNav: [
-        {
-          id: 0,
-          title: "账号登录",
-        },
-        {
-          id: 1,
-          title: "验证码登录",
-        },
-      ],
-      loginCurrent: 0,
-      isregister: false,
-      isSend: false,
-      registerForm: {}, // 注册
-      captcha: "短信验证码",
-      registerRules: {
-        mobile: [
-          {
-            required: true,
-            message: "请输入手机号",
-            trigger: "blur",
-          },
-          {
-            pattern: /^1[3456789]\d{9}$/,
-            message: "目前只支持中国大陆的手机号码",
-          },
-        ],
-        captcha: [
-          {
-            required: true,
-            message: "请输入验证码",
-            trigger: "blur",
-          },
-        ]
-      }, // 注册
-      phoneForm: {}, // 账号登陆
-      phoneRules: {
-        username: [
-          {
-            required: true,
-            message: "请输入用户名",
-            trigger: "blur",
-          },
-        ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-      }, // 账号
-      identifyForm: {}, // 验证码登陆
-      identifyRules: {
-        mobile: [
-          {
-            required: true,
-            message: "请输入手机号",
-            trigger: "blur",
-          },
-          {
-            pattern: /^1[3456789]\d{9}$/,
-            message: "目前只支持中国大陆的手机号码",
-          },
-        ],
-        captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-      },
-      avatorList: [
-        {
-          id: 1,
-          imgUrl: "/image/header/course.png",
-          title: "我的课程",
-          linkUrl: "/about/my-course",
-        },
-        {
-          id: 2,
-          imgUrl: "/image/header/order.png",
-          title: "订单中心",
-          linkUrl: "/about/order",
-        },
-        {
-          id: 3,
-          imgUrl: "/image/header/mess.png",
-          title: "我的消息",
-          linkUrl: "/about/message",
-        },
-        {
-          id: 4,
-          imgUrl: "/image/header/setting.png",
-          title: "个人设置",
-          linkUrl: "/user/setbindsns",
-        },
-      ],
-      keywords: "",
-      phonetimer: null,
-      registerTiemr: null,
-      Phonecaptcha:'短信验证码',
-      phoneSend: false
-    };
-  },
-  computed: {
-    ...mapState({
-      userInfo: (state) => state.user.userInfo,
-      isLogin: (state) => state.user.isLogin,
-      cartNum: (state) => state.user.cartNum,
-      loginDialog: (state) => state.user.loginDialog,
-    }),
-  },
-  created() {
-    this.getCarNum();
-    this.copySearch();
-  },
-  components:{
-    Verify
-  },
-  methods: {
-    ...mapActions([
-      "saveUserInfoAction",
-      "saveLoginAction",
-      "saveCartNumAction",
-    ]),
-    ...mapMutations(["saveLoginDialog"]),
-    // 微信登录
-    goWeixin(){
-      window.location.href = 'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
-    },
-    // 行为验证码
-    success(e){
-      switch (this.crtType){
-        // 用户名登录
-        case "usernamePasswordLogin":
-          this.phoneForm.captchaVerification = e.captchaVerification
-          this.submitPhoneForm('phoneForm')
-          break;
-        // 手机号登录
-        case "mobileCaptchaLogin":
-          this.identifyForm.captchaVerification = e.captchaVerification
-          this.submitIdentifyForm('identifyForm')
-          break;
-        // 注册
-        case "registerLogin":
-          this.registerForm.captchaVerification = e.captchaVerification
-          this.submitRegisterForm('registerForm')
-          break;
-      }
-    },
-    error(e){
-      this.$message({
-        message: '验证失败，请重新验证',
-        type: 'error'
-      })
-    },
-    showVerify(formName){
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$refs.verify.show()
-        }else {
-          console.log('识别')
-        }
-      })
-
-    },
+	data() {
+		return {
+			courseColor: -1, // 鼠标移上显示颜色
+			crtType: 'usernamePasswordLogin',
+			regiterSuccess: false, // 对话框
+			checked: false, // 同意协议
+			actives: '1',
+			msg: '我是头部',
+			// carNum: 0,
+			isCar: false,
+			// isLogin: false,
+			isUserInfo: false,
+			avatorImg: '/image/common/avator.png',
+			nickname: '小鹿线-默认',
+			// userInfo: null,
+			loginNav: [
+				{
+					id: 0,
+					title: '账号登录',
+				},
+				{
+					id: 1,
+					title: '验证码登录',
+				},
+			],
+			loginCurrent: 0,
+			isregister: false,
+			isSend: false,
+			registerForm: {}, // 注册
+			captcha: '短信验证码',
+			registerRules: {
+				mobile: [
+					{
+						required: true,
+						message: '请输入手机号',
+						trigger: 'blur',
+					},
+					{
+						pattern: /^1[3456789]\d{9}$/,
+						message: '目前只支持中国大陆的手机号码',
+					},
+				],
+				captcha: [
+					{
+						required: true,
+						message: '请输入验证码',
+						trigger: 'blur',
+					},
+				],
+			}, // 注册
+			phoneForm: {}, // 账号登陆
+			phoneRules: {
+				username: [
+					{
+						required: true,
+						message: '请输入用户名',
+						trigger: 'blur',
+					},
+				],
+				password: [
+					{ required: true, message: '请输入密码', trigger: 'blur' },
+				],
+			}, // 账号
+			identifyForm: {}, // 验证码登陆
+			identifyRules: {
+				mobile: [
+					{
+						required: true,
+						message: '请输入手机号',
+						trigger: 'blur',
+					},
+					{
+						pattern: /^1[3456789]\d{9}$/,
+						message: '目前只支持中国大陆的手机号码',
+					},
+				],
+				captcha: [
+					{
+						required: true,
+						message: '请输入验证码',
+						trigger: 'blur',
+					},
+				],
+			},
+			avatorList: [
+				{
+					id: 1,
+					imgUrl: '/image/header/course.png',
+					title: '我的课程',
+					linkUrl: '/about/my-course',
+				},
+				{
+					id: 2,
+					imgUrl: '/image/header/order.png',
+					title: '订单中心',
+					linkUrl: '/about/order',
+				},
+				{
+					id: 3,
+					imgUrl: '/image/header/mess.png',
+					title: '我的消息',
+					linkUrl: '/about/message',
+				},
+				{
+					id: 4,
+					imgUrl: '/image/header/setting.png',
+					title: '个人设置',
+					linkUrl: '/user/setbindsns',
+				},
+			],
+			keywords: '',
+			phonetimer: null,
+			registerTiemr: null,
+			Phonecaptcha: '短信验证码',
+			phoneSend: false,
+		}
+	},
+	computed: {
+		...mapState({
+			userInfo: (state) => state.user.userInfo,
+			isLogin: (state) => state.user.isLogin,
+			cartNum: (state) => state.user.cartNum,
+			loginDialog: (state) => state.user.loginDialog,
+		}),
+	},
+	created() {
+		this.getCarNum()
+		this.copySearch()
+	},
+	components: {
+		Verify,
+	},
+	methods: {
+		...mapActions([
+			'saveUserInfoAction',
+			'saveLoginAction',
+			'saveCartNumAction',
+		]),
+		...mapMutations(['saveLoginDialog']),
+		// 微信登录
+		goWeixin() {
+			window.location.href =
+				'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
+		},
+		// 行为验证码
+		success(e) {
+			switch (this.crtType) {
+				// 用户名登录
+				// 手机号登录
+				case 'mobileCaptchaLogin':
+					this.identifyForm.captchaVerification =
+						e.captchaVerification
+					this.sendLoginCode()
+					break
+				// 注册
+				case 'registerLogin':
+					this.registerForm.captchaVerification =
+						e.captchaVerification
+					this.sendCaptch()
+					break
+			}
+		},
+		error(e) {
+			this.$message({
+				message: '验证失败，请重新验证',
+				type: 'error',
+			})
+		},
+		showVerify(formName) {
+			if (this.registerForm.mobile || this.identifyForm.mobile) {
+				let reg = /^1[3456789]\d{9}$/
+				if (
+					reg.test(this.registerForm.mobile) ||
+					reg.test(this.identifyForm.mobile)
+				) {
+					this.$refs.verify.show()
+				} else {
+					this.$message({
+						message: '手机号非法',
+						type: 'warning',
+					})
+				}
+			} else {
+				this.$message({
+					message: '手机号为空',
+					type: 'warning',
+				})
+			}
+		},
 		// 清空表单
-		goReset(){
-			 this.phoneForm = {}
-			 this.registerForm = {}
-			 this.identifyForm = {}
-
+		goReset() {
+			this.phoneForm = {}
+			this.registerForm = {}
+			this.identifyForm = {}
 		},
 		// 点击开始学习
-		goStudy(){
+		goStudy() {
 			this.isregister = false
 			this.regiterSuccess = false
-      //this.loginDialog = true
-      // this.$store.commit("saveLoginDialog", true);
+			//this.loginDialog = true
+			this.$store.commit('saveLoginDialog', true)
 		},
 		// 注册成功弹出
-		handleRegiterClose(){
+		handleRegiterClose() {
 			this.regiterSuccess = false
-      // this.$store.commit("saveLoginDialog", false);
-      //this.loginDialog = false
+			this.$store.commit('saveLoginDialog', false)
+			//this.loginDialog = false
 		},
-    //点击图标返回首页
-    goHome() {
-      this.$router.push("/");
-    },
-    //关键字搜索
-    toSearch() {
-      if (!this.keywords) {
-        this.$message({
-          message: "请输入关键字进行搜索！",
-          type: "error",
-        });
-        return;
-      }
-      this.$router.replace({
-        path: "/course",
-        query: { keywords: this.keywords },
-      });
-    },
-    // 去我的课程s
-    goAbout() {
-      this.$router.push('/about/my-course');
-    },
-    // 打开对话框
-    goLogin() {
-      this.goReset()
-      this.$store.commit("saveLoginDialog", true);
-    },
-    // 关闭对话框
-    handleClose() {
-      this.goReset()
-      this.$store.commit("saveLoginDialog", false);
-      clearInterval(this.phonetimer);
-      clearInterval(this.registerTiemr);
-    },
-    // 确认注册
-    submitRegisterForm(formName) {
-      if (this.checked) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            var regiterloading = Loading.service({
-              lock: true,
-              text: "Loading",
-              spinner: "el-icon-loading",
-              background: "rgba(0, 0, 0, 0.7)",
-            });
-            let mobile = Encrypt(this.registerForm.mobile)
-            let captchaVerification = this.registerForm.captchaVerification
-            register({
-              mobile,
-              captcha:this.registerForm.captcha,
-              captchaVerification
-            })
-              .then((res) => {
-                if (res.meta.code == "200") {
-                  this.$message({
-                    message: "注册成功",
-                    type: "success",
-                  });
-                  this.isregister = false;
+		//点击图标返回首页
+		goHome() {
+			this.$router.push('/')
+		},
+		//关键字搜索
+		toSearch() {
+			if (!this.keywords) {
+				this.$message({
+					message: '请输入关键字进行搜索！',
+					type: 'error',
+				})
+				return
+			}
+			this.$router.replace({
+				path: '/course',
+				query: { keywords: this.keywords },
+			})
+		},
+		// 去我的课程s
+		goAbout() {
+			this.$router.push('/about/my-course')
+		},
+		// 打开对话框
+		goLogin() {
+			this.goReset()
+			this.$store.commit('saveLoginDialog', true)
+		},
+		// 关闭对话框
+		handleClose() {
+			this.goReset()
+			this.$store.commit('saveLoginDialog', false)
+			clearInterval(this.phonetimer)
+			clearInterval(this.registerTiemr)
+		},
+		// 确认注册
+		submitRegisterForm(formName) {
+			if (this.checked) {
+				this.$refs[formName].validate((valid) => {
+					if (valid) {
+						var regiterloading = Loading.service({
+							lock: true,
+							text: 'Loading',
+							spinner: 'el-icon-loading',
+							background: 'rgba(0, 0, 0, 0.7)',
+						})
+						let mobile = Encrypt(this.registerForm.mobile)
+						let captchaVerification = this.registerForm
+							.captchaVerification
+						register({
+							mobile,
+							captcha: this.registerForm.captcha,
+							captchaVerification,
+						})
+							.then((res) => {
+								if (res.meta.code == '200') {
+									this.$message({
+										message: '注册成功',
+										type: 'success',
+									})
+									this.isregister = false
 									this.regiterSuccess = true
-									this.saveLoginAction();
+									this.saveLoginAction()
 									// this.$store.commit("saveLoginDialog", false);
-                  this.$nextTick(() => {
-                    // 以服务的方式调用的 Loading 需要异步关闭
-                    regiterloading.close();
-                  });
-                } else if (res.meta.code == "10005") {
-                  this.$message({
-                    message: res.meta.msg,
-                    type: "info",
-                  });
-                  this.isregister = false;
-                  this.$nextTick(() => {
-                    // 以服务的方式调用的 Loading 需要异步关闭
-                    regiterloading.close();
-                  });
-                } else {
-                  this.$message({
-                    message: res.meta.msg,
-                    type: "error",
-                  });
-                  this.isregister = false;
-                  this.$nextTick(() => {
-                    // 以服务的方式调用的 Loading 需要异步关闭
-                    regiterloading.close();
-                  });
-                }
-              })
-              .catch((err) => {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  regiterloading.close();
-                });
-              });
-          } else {
-            return false;
-          }
-        });
-      } else {
-        this.$message({
-          message: "请勾选同意隐私协议",
-          type: "error",
-        });
-      }
-    },
-    // 用户名和密码登陆成功
-    submitPhoneForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          // alert('submit!');
-          var phoneloading = Loading.service({
-            lock: true,
-            text: "Loading",
-            spinner: "el-icon-loading",
-            background: "rgba(0, 0, 0, 0.7)",
-          });
-          let username = Encrypt(this.phoneForm.username)
-          let password = Encrypt(this.phoneForm.password)
-          let captchaVerification = this.phoneForm.captchaVerification
-          loginByJson({
-            username,
-            password,
-            captchaVerification
-          })
-            .then((res) => {
-              if (res.meta.code === "10006") {
-                // 存储token
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  phoneloading.close();
-                });
-                this.$store.commit("saveLoginDialog", false);
-                let accessToken = res.data.accessToken;
-                // 存储到access中
-                sessionStorage.setItem("token", accessToken);
-                sessionStorage.setItem("isLogin", JSON.stringify(true));
-                this.getCarNum();
-                this.saveLoginAction();
-                this.$message({
-                  message: "登录成功，赶紧去学习吧！",
-                  type: "success",
-                });
-                // 获取用户信息
-                this.getUserInfo();
-                // window.location.reload()
-              } else {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  phoneloading.close();
-                });
-                this.$store.commit("saveLoginDialog", false);
+									this.$nextTick(() => {
+										// 以服务的方式调用的 Loading 需要异步关闭
+										regiterloading.close()
+									})
+									this.$store.commit('saveLoginDialog', false)
+								} else if (res.meta.code == '10005') {
+									this.$message({
+										message: res.meta.msg,
+										type: 'info',
+									})
+									this.isregister = false
+									this.$nextTick(() => {
+										// 以服务的方式调用的 Loading 需要异步关闭
+										regiterloading.close()
+									})
+								} else {
+									this.$message({
+										message: res.meta.msg,
+										type: 'error',
+									})
+									this.isregister = false
+									this.$nextTick(() => {
+										// 以服务的方式调用的 Loading 需要异步关闭
+										regiterloading.close()
+									})
+								}
+							})
+							.catch((err) => {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									regiterloading.close()
+								})
+							})
+					} else {
+						return false
+					}
+				})
+			} else {
+				this.$message({
+					message: '请勾选同意隐私协议',
+					type: 'error',
+				})
+			}
+		},
+		// 用户名和密码登陆成功
+		submitPhoneForm(formName) {
+			this.$refs[formName].validate((valid) => {
+				if (valid) {
+					// alert('submit!');
+					var phoneloading = Loading.service({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)',
+					})
+					let username = Encrypt(this.phoneForm.username)
+					let password = Encrypt(this.phoneForm.password)
+					let captchaVerification = this.phoneForm.captchaVerification
+					loginByJson({
+						username,
+						password,
+						captchaVerification,
+					})
+						.then((res) => {
+							if (res.meta.code === '10006') {
+								// 存储token
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									phoneloading.close()
+								})
+								this.$store.commit('saveLoginDialog', false)
+								let accessToken = res.data.accessToken
+								// 存储到access中
+								sessionStorage.setItem('token', accessToken)
+								sessionStorage.setItem(
+									'isLogin',
+									JSON.stringify(true)
+								)
+								this.getCarNum()
+								this.saveLoginAction()
+								this.$message({
+									message: '登录成功，赶紧去学习吧！',
+									type: 'success',
+								})
+								// 获取用户信息
+								this.getUserInfo()
+								// window.location.reload()
+							} else {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									phoneloading.close()
+								})
+								this.$store.commit('saveLoginDialog', false)
+							}
+						})
+						.catch((err) => {
+							this.$nextTick(() => {
+								// 以服务的方式调用的 Loading 需要异步关闭
+								phoneloading.close()
+							})
+							this.$message({
+								message: res.meta.msg,
+								type: 'error',
+							})
+						})
+				} else {
+					return false
+				}
+			})
+		},
+		// 验证码登陆
+		submitIdentifyForm(formName) {
+			this.$refs[formName].validate((valid) => {
+				if (valid) {
+					var identLoading = Loading.service({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)',
+					})
+					// alert('submit!');
+					let mobile = Encrypt(this.identifyForm.mobile)
+					let captchaVerification = this.identifyForm
+						.captchaVerification
+					loginByMobile({
+						mobile,
+						captcha: this.identifyForm.captcha,
+						captchaVerification,
+					})
+						.then((res) => {
+							if (res.meta.code === '10006') {
+								// 存储token
+								let accessToken = res.data.accessToken
+								// 存储到access中
+								sessionStorage.setItem('token', accessToken)
+								sessionStorage.setItem(
+									'isLogin',
+									JSON.stringify(true)
+								)
+								// 获取个人信息
+								// 获取购物车数据
+								this.getCarNum()
+								//  this.saveIsLoginAction(true)
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									identLoading.close()
+								})
+								this.getUserInfo()
+								this.$store.commit('saveLoginDialog', false)
+								this.$message({
+									message: '登录成功，赶紧去学习吧！',
+									type: 'success',
+								})
+								// window.location.reload()
+							} else if (res.meta.code === '10010') {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									identLoading.close()
+								})
+                                clearInterval(this.registerTiemr)
+							this.captcha = '发送验证码'
+							this.isSend = false
+								// 去快速注册界面
+								this.backRegiter()
+								// this.$store.commit("saveLoginDialog", false);
+								// this.saveLoginAction();
+							} else {
+								this.$message({
+									message: res.meta.msg,
+									type: 'error',
+								})
+								this.$nextTick(() => {
+									// 以服务的方式调用的 Loading 需要异步关闭
+									identLoading.close()
+								})
+                                clearInterval(this.registerTiemr)
+							this.captcha = '发送验证码'
+							this.isSend = false
+								this.$store.commit('saveLoginDialog', false)
+								this.saveLoginAction()
+							}
+						})
+						.catch((err) => {
+							this.$nextTick(() => {
+								// 以服务的方式调用的 Loading 需要异步关闭
+								identLoading.close()
+							})
+							this.$message({
+								message: res.meta.msg,
+								type: 'error',
+							})
+                            clearInterval(this.registerTiemr)
+							this.captcha = '发送验证码'
+							this.isSend = false
+						})
+				} else {
+					return false
+				}
+			})
+		},
 
+		// 发送注册验证码
+		sendCaptch() {
+			let reg = /^1[3456789]\d{9}$/
+			if (!reg.test(this.registerForm.mobile)) {
+				this.$message({
+					message: '手机号输入错误，请检查',
+					type: 'warning',
+				})
+			} else {
+				if (this.registerForm.mobile) {
+					let mobile = this.registerForm.mobile
+					// this.isSend = true;
+					this.phoneSend = true
+					this.Phonecaptcha = '重新发送60秒'
+					this.sendCode(mobile)
+					let time = 60
+					clearInterval(this.phonetimer)
+					this.phonetimer = setInterval(() => {
+						time--
+						if (time <= 0) {
+							clearInterval(this.phonetimer)
 
-              }
-            })
-            .catch((err) => {
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                phoneloading.close();
-              });
-              this.$message({
-                message: res.meta.msg,
-                type: "error",
-              });
-            });
-        } else {
-          return false;
-        }
-      });
-    },
-    // 验证码登陆
-    submitIdentifyForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          var identLoading = Loading.service({
-            lock: true,
-            text: "Loading",
-            spinner: "el-icon-loading",
-            background: "rgba(0, 0, 0, 0.7)",
-          });
-          // alert('submit!');
-         let mobile = Encrypt(this.identifyForm.mobile)
-          let captchaVerification = this.identifyForm.captchaVerification
-          loginByMobile({
-            mobile,
-            captcha:this.identifyForm.captcha,
-            captchaVerification
-          })
-            .then((res) => {
-              if (res.meta.code === "10006") {
-                // 存储token
-                let accessToken = res.data.accessToken;
-                // 存储到access中
-                sessionStorage.setItem("token", accessToken);
-                sessionStorage.setItem("isLogin", JSON.stringify(true));
-                // 获取个人信息
-                // 获取购物车数据
-                this.getCarNum();
-                //  this.saveIsLoginAction(true)
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  identLoading.close();
-                });
-                this.getUserInfo();
-                this.$store.commit("saveLoginDialog", false);
-                this.$message({
-                  message: "登录成功，赶紧去学习吧！",
-                  type: "success",
-                });
-                // window.location.reload()
-              } else {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-                this.$nextTick(() => {
-                  // 以服务的方式调用的 Loading 需要异步关闭
-                  identLoading.close();
-                });
-                this.$store.commit("saveLoginDialog", false);
-                this.saveLoginAction();
+							this.captcha = '发送验证码'
+							this.isSend = false
+							time = 60
+						} else {
+							this.Phonecaptcha = `重新发送${time}秒`
+						}
+					}, 1000)
+				} else {
+					this.$message({
+						message: '请先填写手机号哟',
+						type: 'warning',
+					})
+				}
+			}
+		},
+		// 登录验证码3
+		sendLoginCode() {
+			let reg = /^1[3456789]\d{9}$/
+			if (!reg.test(this.identifyForm.mobile)) {
+				this.$message({
+					message: '手机号输入错误，请检查',
+					type: 'warning',
+				})
+			} else {
+				if (this.identifyForm.mobile) {
+					let mobile = this.identifyForm.mobile
+					this.isSend = true
+					this.captcha = '重新发送60秒'
+					this.sendCode(mobile)
+					let time = 60
+					let timer
+					clearInterval(this.registerTiemr)
+					this.registerTiemr = setInterval(() => {
+						time--
+						if (time <= 0) {
+							clearInterval(this.registerTiemr)
 
-
-
-              }
-            })
-            .catch((err) => {
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                identLoading.close();
-              });
-              this.$message({
-                message: res.meta.msg,
-                type: "error",
-              });
-            });
-        } else {
-          return false;
-        }
-      });
-    },
-    // 发送注册验证码
-    sendCaptch(){
-      let reg = /^1[3456789]\d{9}$/
-      if(!reg.test(this.registerForm.mobile)){
-        this.$message({
-          message: '手机号输入错误，请检查',
-          type: 'warning'
-        })
-      }else {
-        if(this.registerForm.mobile) {
-          let mobile = this.registerForm.mobile;
-          // this.isSend = true;
-          this.phoneSend = true
-          this.Phonecaptcha = "重新发送60秒";
-          this.sendCode(mobile);
-          let time = 60;
-          clearInterval(this.phonetimer);
-          console.log(1)
-          this.phonetimer = setInterval(() => {
-            time--;
-            if (time <= 0) {
-              clearInterval(this.phonetimer);
-              time = 60;
-              this.captcha = "发送验证码";
-              this.isSend = false;
-            } else {
-              this.Phonecaptcha = `重新发送${time}秒`;
-            }
-          }, 1000);
-        }else {
-          this.$message({
-            message: "请先填写手机号哟",
-            type: "warning",
-          });
-        }
-      }
-
-    },
-    // 登录验证码3
-   sendLoginCode() {
-      let reg = /^1[3456789]\d{9}$/
-      if(!reg.test(this.identifyForm.mobile)){
-        this.$message({
-          message: '手机号输入错误，请检查',
-          type: 'warning'
-        })
-      }else {
-        if(this.identifyForm.mobile) {
-          let mobile = this.identifyForm.mobile;
-          this.isSend = true;
-          this.captcha = "重新发送60秒";
-          this.sendCode(mobile);
-          let time = 60;
-          let timer;
-          clearInterval(this.registerTiemr);
-          this.registerTiemr = setInterval(() => {
-            time--;
-            if (time <= 0) {
-              clearInterval(this.registerTiemr);
-              time = 60;
-              this.captcha = "发送验证码";
-              this.isSend = false;
-            } else {
-              this.captcha = `重新发送${time}秒`;
-            }
-          }, 1000);
-        } else {
-          this.$message({
-            message: "请先填写手机号哟",
-            type: "warning",
-          });
-        }
-      }
-
-    },
-    // 发送请求
-    sendCode(mobile) {
-      sendRegisterOrLoginCaptcha({
-        mobile: mobile,
-      })
-        .then((res) => {
-          if (res.meta.code === "200") {
-            this.$message({
-              message: "发送成功",
-              type: "success",
-            });
-          } else {
-            this.$message({
-              message: res.meta.msg,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          this.$message({
-            message: err.meta.code,
-            type: "error",
-          });
-        });
-    },
-    // 获取个人信息
-    getUserInfo(params) {
-      createToken().then(ress=>{
-        getInfo({
-          token:ress.data.token
-        })
-            .then((res) => {
-              // this.saveUserInfoActions()
-              if (res.meta.code === "200") {
-                sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-                this.saveUserInfoAction();
-                this.$router.push('/user/setbindsns')
-                // window.location.reload()
-              } else {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-              }
-            })
-            .catch((err) => {});
-      })
-
-    },
-    // 获取购物车数据
-    getCarNum() {
-      if (sessionStorage.getItem("token")) {
-        getShopCarCounter().then((res) => {
-          if (res.meta.code == "200") {
-            this.saveCartNumAction(res.data.counter);
-          } else {
-            this.$message({
-              message: res.meta.msg,
-              type: "error",
-            });
-          }
-        });
-      }
-    },
-    // 返回登陆页面
-    backLogin() {
-      this.isregister = false;
+							this.captcha = '发送验证码'
+							this.isSend = false
+							time = 60
+						} else {
+							this.captcha = `重新发送${time}秒`
+						}
+					}, 1000)
+				} else {
+					this.$message({
+						message: '请先填写手机号哟',
+						type: 'warning',
+					})
+				}
+			}
+		},
+		// 发送请求
+		sendCode(mobile) {
+			sendRegisterOrLoginCaptcha({
+				mobile: mobile,
+			})
+				.then((res) => {
+					if (res.meta.code === '200') {
+						this.$message({
+							message: '发送成功',
+							type: 'success',
+						})
+					} else {
+						this.$message({
+							message: res.meta.msg,
+							type: 'error',
+						})
+					}
+				})
+				.catch((err) => {
+					this.$message({
+						message: err.meta.code,
+						type: 'error',
+					})
+				})
+		},
+		// 获取个人信息
+		getUserInfo(params) {
+			createToken().then((ress) => {
+				getInfo({
+					token: ress.data.token,
+				})
+					.then((res) => {
+						// this.saveUserInfoActions()
+						if (res.meta.code === '200') {
+							sessionStorage.setItem(
+								'userInfo',
+								JSON.stringify(res.data.data)
+							)
+							this.saveUserInfoAction()
+							this.$router.go(0)
+							//this.$router.push('/user/setbindsns')
+							// window.location.reload()
+						} else {
+							this.$message({
+								message: res.meta.msg,
+								type: 'error',
+							})
+						}
+					})
+					.catch((err) => {})
+			})
+		},
+		// 获取购物车数据
+		getCarNum() {
+			if (sessionStorage.getItem('token')) {
+				getShopCarCounter().then((res) => {
+					if (res.meta.code == '200') {
+						this.saveCartNumAction(res.data.counter)
+					} else {
+						this.$message({
+							message: res.meta.msg,
+							type: 'error',
+						})
+					}
+				})
+			}
+		},
+		// 返回登陆页面
+		backLogin() {
+			this.isregister = false
 			this.goReset()
-      if(this.loginCurrent === 1){
-        this.crtType = "mobileCaptchaLogin"
-      }else {
-        this.crtType = "usernamePasswordLogin";
-      }
-    },
-    // 去快速注册页面
-    backRegiter() {
-      this.isregister = true;
+			if (this.loginCurrent === 1) {
+				this.crtType = 'mobileCaptchaLogin'
+			} else {
+				this.crtType = 'usernamePasswordLogin'
+			}
+		},
+		// 去快速注册页面
+		backRegiter() {
+			this.isregister = true
 			this.goReset()
-      this.crtType = "registerLogin"
-    },
-    // 登陆页面 切换
-    gochange(index) {
+			this.crtType = 'registerLogin'
+		},
+		// 登陆页面 切换
+		gochange(index) {
 			this.goReset()
-      if(index === 1) {
-        this.crtType = "mobileCaptchaLogin"
-      }else if(index === 0){
-        this.crtType = "usernamePasswordLogin";
-      }
-      // this.registerForm = {};
-      // console.log(this.$refs.registerForm);
-      this.loginCurrent = index;
-    },
-    // 退出登录
-    async goLogout() {
-      this.$confirm("您确定要退出登录吗？", "提示信息", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          logout()
-            .then((res) => {
-              this.$message({
-                type: "success",
-                message: "退出成功!",
-              });
-              sessionStorage.removeItem("token");
-              sessionStorage.removeItem("userInfo");
-              sessionStorage.removeItem("isLogin");
-              this.$router.push("/");
-              this.$router.go(0);
-              this.saveUserInfoAction({
-                avatar: "/image/common/avator.png",
-                nickName: "小鹿线-默认",
-                gender: 1,
-                city: "北京",
-                id: 1,
-              });
-              this.saveLoginAction();
-            })
-            .catch((err) => {});
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消退出",
-          });
+			if (index === 1) {
+				this.crtType = 'mobileCaptchaLogin'
+			} else if (index === 0) {
+				this.crtType = 'usernamePasswordLogin'
+			}
+			// this.registerForm = {};
+			// console.log(this.$refs.registerForm);
+			this.loginCurrent = index
+		},
+		// 退出登录
+		async goLogout() {
+			this.$confirm('您确定要退出登录吗？', '提示信息', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(() => {
+					logout()
+						.then((res) => {
+							this.$message({
+								type: 'success',
+								message: '退出成功!',
+							})
+							sessionStorage.removeItem('token')
+							sessionStorage.removeItem('userInfo')
+							sessionStorage.removeItem('isLogin')
+							// this.$router.push("/");
+							this.$router.go(0)
+							this.saveUserInfoAction({
+								avatar: '/image/common/avator.png',
+								nickName: '小鹿线-默认',
+								gender: 1,
+								city: '北京',
+								id: 1,
+							})
+							this.saveLoginAction()
+						})
+						.catch((err) => {})
+				})
+				.catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消退出',
+					})
 
-          return;
-        });
-    },
-    //给搜索赋值
-    copySearch() {
-      this.keywords = this.$route.query.keywords;
-    },
-    // 去课程页
-    goCourse(){
-      // 去课程页
-      this.$router.push({
-        path: '/course'
-      })
-    },
-    //去购物车
-    goShopCart(){
-      this.$router.push({
-        path: '/cart'
-      })
-    },
-    // 划过头像显示
-    changeColor(index){
-      this.courseColor = index
-    },
-    deleteColor(){
-        this.courseColor = -1
-    }
-  },
-  watch: {
-    $route: {
-      immediate: true,
-      handler(to, from) {
-        if (to.fullPath === "/home") {
-          this.actives = "1";
-        } else if (to.fullPath === "/course") {
-          this.actives = "2";
-        } else if (to.fullPath === "/member") {
-          this.actives = "3";
-        }
-        this.copySearch();
-      },
-    },
-  },
-};
+					return
+				})
+		},
+		//给搜索赋值
+		copySearch() {
+			this.keywords = this.$route.query.keywords
+		},
+		// 去课程页
+		goCourse() {
+			// 去课程页
+			this.$router.push({
+				path: '/course',
+			})
+		},
+		//去购物车
+		goShopCart() {
+			this.$router.push({
+				path: '/cart',
+			})
+		},
+		// 划过头像显示
+		changeColor(index) {
+			this.courseColor = index
+		},
+		deleteColor() {
+			this.courseColor = -1
+		},
+	},
+	watch: {
+		$route: {
+			immediate: true,
+			handler(to, from) {
+				let newUrl = to.fullPath
+				to.fullPath.replace(/(.*)\?/, function(a, b) {
+					newUrl = b
+				})
+				if (newUrl === '/home') {
+					this.actives = '1'
+				} else if (newUrl === '/course') {
+					this.actives = '2'
+				} else if (newUrl === '/member') {
+					this.actives = '3'
+				}
+				this.copySearch()
+			},
+		},
+	},
+}
 </script>
 
 <style scoped>
-.third-party-login{
-  width: 200px;
-  height: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin:10px auto 0;
+.third-party-login {
+	width: 200px;
+	height: 40px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 10px auto 0;
 }
 .third-party-login i {
-  font-size: 20px;
+	font-size: 20px;
 }
 .third-party-login div {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #E5FFE1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #e5ffe1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .third-party-login .login-qq {
-  background-color: #EDF5FF;
+	background-color: #edf5ff;
 }
 .third-party-login .login-weibo {
-  background-color: #FFF2F5;
+	background-color: #fff2f5;
 }
-.third-party-login .fa-qq{
-   color: #368AFE;
-  cursor: pointer;
- }
-.third-party-login .fa-weixin{
-   color: #09BB07;
-  cursor: pointer;
- }
-.third-party-login .fa-weibo{
-  color: #D81E06;
-  cursor: pointer;
+.third-party-login .fa-qq {
+	color: #368afe;
+	cursor: pointer;
+}
+.third-party-login .fa-weixin {
+	color: #09bb07;
+	cursor: pointer;
+}
+.third-party-login .fa-weibo {
+	color: #d81e06;
+	cursor: pointer;
 }
 .course-color {
-  color: #3689ff !important;
+	color: #3689ff !important;
 }
 .container {
 	font-size: 12px;
-font-family: Microsoft YaHei;
-font-weight: 400;
-color: #9199A1;
-text-align: center;
-margin-top: 10px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #9199a1;
+	text-align: center;
+	margin-top: 10px;
 }
 .regiter-success {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
- align-items: center;
-  z-index: 3000;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 3000;
 }
 .tip-img {
 	display: flex;
-  flex-direction: column;
-  justify-content: center;
+	flex-direction: column;
+	justify-content: center;
 	align-items: center;
 }
 .tip-img div {
 	margin: 20px 0;
 }
 .regiter-success img {
-  width: 250px;
-  height: 180px;
+	width: 250px;
+	height: 180px;
 }
 .start-study {
-  line-height: 40px;
-  text-align: center;
-  width: 200px;
-  height: 40px;
-  background: #3689ff;
+	line-height: 40px;
+	text-align: center;
+	width: 200px;
+	height: 40px;
+	background: #3689ff;
 	font-size: 18px;
-  border-radius: 31px;
+	border-radius: 31px;
 	color: #fff;
+	cursor: pointer;
 }
 .privacy {
-  font-size: 10px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: rgba(145, 153, 161, 1);
+	font-size: 10px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: rgba(145, 153, 161, 1);
 }
 .privacy a {
-  color: #3689ff;
-  text-decoration: none;
+	color: #3689ff;
+	text-decoration: none;
 }
 .active {
-  font-weight: bold;
-  color: #3481ff;
-  /* color: #3689ff; */
+	font-weight: bold;
+	color: #3481ff;
+	/* color: #3689ff; */
 }
 * {
-  list-style: none;
-  text-decoration: none;
+	list-style: none;
+	text-decoration: none;
 }
 .header {
-  width: 100%;
-  height: 100px;
-  position: relative;
+	width: 100%;
+	height: 100px;
+	position: relative;
 }
 .title-desc {
-  cursor: pointer;
+	cursor: pointer;
 }
 .index-header {
-  position: relative;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 100px;
-  /* background: skyblue; */
-  background: white;
-  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.16);
-  opacity: 1;
-  border-radius: 0px;
-  z-index: 20;
+	position: relative;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 100%;
+	height: 100px;
+	/* background: skyblue; */
+	background: white;
+	box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.16);
+	opacity: 1;
+	border-radius: 0px;
+	z-index: 20;
 }
 .header-content {
-  position: relative;
-  display: flex;
-  width: 1200px;
-  justify-content: space-around;
+	position: relative;
+	display: flex;
+	width: 1200px;
+	justify-content: space-around;
 }
 .content-logo {
-  width: 160px;
-  height: 55px;
-  margin: 10px 0;
-  cursor: pointer;
+	width: 160px;
+	height: 55px;
+	margin: 10px 0;
+	cursor: pointer;
 }
 .content-logo img {
-  height: 100%;
+	height: 100%;
 }
 .content-nav {
-  width: 300px;
-  height: 75px;
+	width: 300px;
+	height: 75px;
 }
 .content-nav ul {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 75px;
-  margin: 0;
-  padding: 0;
-  /* height: 100%; */
-  color: black;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 100%;
+	height: 75px;
+	margin: 0;
+	padding: 0;
+	/* height: 100%; */
+	color: black;
 }
 
 .content-nav ul li a {
-  font-size: 18px;
-  font-family: MicrosoftYaHei;
-  color: #808080;
+	font-size: 18px;
+	font-family: MicrosoftYaHei;
+	color: #808080;
 }
 
 .searBuyLogin {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 650px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 650px;
 }
 .content-search {
-  display: flex;
-  align-items: center;
-  padding: 5px 10px;
-  width: 350px;
-  height: 35px;
-  border-radius: 8px;
-  background: #f0f2f4;
+	display: flex;
+	align-items: center;
+	padding: 5px 10px;
+	width: 350px;
+	height: 35px;
+	border-radius: 8px;
+	background: #f0f2f4;
 }
 .content-search input {
-  padding: 0 10px;
-  width: 430px;
-  height: 40px;
-  border: 0;
-  border-radius: 8px;
-  color: #808080;
-  background: #f0f2f4;
-  font-size: 16px;
-  outline: none;
+	padding: 0 10px;
+	width: 430px;
+	height: 40px;
+	border: 0;
+	border-radius: 8px;
+	color: #808080;
+	background: #f0f2f4;
+	font-size: 16px;
+	outline: none;
 }
 .content-search i {
-  color: #808080;
-  font-size: 22px;
+	color: #808080;
+	font-size: 22px;
 }
 .content-Shopping i {
-  color: #808080;
-  font-size: 24px;
+	color: #808080;
+	font-size: 24px;
 }
 .content-login {
-  height: 31px;
-  font-size: 18px;
-  color: #808080;
-  text-align: center;
-  cursor: pointer;
+	height: 31px;
+	font-size: 18px;
+	color: #808080;
+	text-align: center;
+	cursor: pointer;
 }
 .content-login-success {
-  height: 53px;
-  color: #808080;
-  text-align: center;
-  width: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 18px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #707070;
+	height: 53px;
+	color: #808080;
+	text-align: center;
+	width: 180px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 18px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #707070;
 }
 .avator {
-  height: 53px;
-  width: 53px;
-  cursor: pointer;
-  border-radius: 50%;
+	height: 53px;
+	width: 53px;
+	cursor: pointer;
+	border-radius: 50%;
 }
 .dialog-title {
-  width: 400px;
-  height: 30px;
-  display: flex;
-  align-items: center;
+	width: 400px;
+	height: 30px;
+	display: flex;
+	align-items: center;
 }
 .title-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 30px;
-  font-size: 16px;
-  font-family: Microsoft YaHei;
-  font-weight: bold;
-  color: rgba(120, 125, 130, 1);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-right: 30px;
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: bold;
+	color: rgba(120, 125, 130, 1);
 }
 .title-item span {
-  margin-top: 5px;
-  width: 15px;
-  height: 2px;
-  /* background-color: red; */
+	margin-top: 5px;
+	width: 15px;
+	height: 2px;
+	/* background-color: red; */
 }
 
 .active span {
-  background-color: rgba(54, 137, 255, 1);
+	background-color: rgba(54, 137, 255, 1);
 }
 .dialog-register {
-  width: 200px;
-  height: 30px;
-  color: #3689ff;
-  font-size: 16px;
-  font-family: Microsoft YaHei;
-  font-weight: bold;
-  cursor: pointer;
+	width: 200px;
+	height: 30px;
+	color: #3689ff;
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: bold;
+	cursor: pointer;
 }
 .captcha {
-  width: 100%;
-  background: rgba(245, 245, 245, 1);
-  position: relative;
+	width: 100%;
+	background: rgba(245, 245, 245, 1);
+	position: relative;
 }
 .captcha el-input {
-  background: rgba(245, 245, 245, 1);
+	background: rgba(245, 245, 245, 1);
 }
 .sendcaptcha {
-  position: absolute;
-  top: 0;
-  right: 20px;
-  font-size: 16px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #3689ff;
-  cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 20px;
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #3689ff;
+	cursor: pointer;
 }
 .send {
-  font-size: 12px;
-  color: rgba(120, 125, 130, 1);
+	font-size: 12px;
+	color: rgba(120, 125, 130, 1);
 }
 .regiterBtn {
-  width: 100%;
-  border-radius: 20px;
+	width: 100%;
+	border-radius: 20px;
 }
 .backLogin {
-  width: 100%;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-  font-size: 16px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #3689ff;
-  cursor: pointer;
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #3689ff;
+	cursor: pointer;
 }
 .user-info {
-  width: 200px;
-  height: 194px;
-  background-color: #fff;
-  border: 1px solid rgba(248, 250, 252, 1);
-  box-shadow: 0px 5px 15px 3px #888888;
-  position: absolute;
-  top: 87px;
-  right: -40px;
-  z-index: 999;
-  display: block;
-  border-radius: 10px;
+	width: 200px;
+	height: 194px;
+	background-color: #fff;
+	border: 1px solid rgba(248, 250, 252, 1);
+	box-shadow: 0px 5px 15px 3px #888888;
+	position: absolute;
+	top: 87px;
+	right: -40px;
+	z-index: 999;
+	display: block;
+	border-radius: 10px;
 }
 .user-info-top {
-  display: flex;
-  width: 100%;
-  height: 160px;
-  border-bottom: 1px solid rgba(248, 250, 252, 1);
-  flex-direction: column;
+	display: flex;
+	width: 100%;
+	height: 160px;
+	border-bottom: 1px solid rgba(248, 250, 252, 1);
+	flex-direction: column;
 }
 .u-i-t-top {
-  display: flex;
-  height: 60px;
-  width: 100%;
-  align-items: center;
+	display: flex;
+	height: 60px;
+	width: 100%;
+	align-items: center;
 }
 .u-i-t-top img {
-  width: 40px;
-  height: 40px;
-  margin: 0 10px;
-  cursor: pointer;
+	width: 40px;
+	height: 40px;
+	margin: 0 10px;
+	cursor: pointer;
 }
 .avator-info {
-  width: 120px;
-  height: 60px;
-  font-size: 14px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #333333;
-  display: flex;
-  flex-direction: column;
-  /*align-items: center;*/
+	width: 120px;
+	height: 60px;
+	font-size: 14px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #333333;
+	display: flex;
+	flex-direction: column;
+	/*align-items: center;*/
 }
 /*有会员了之后高度微调*/
 .avator-info p {
-  height: 40px;
-  line-height: 40px;
-  cursor: pointer;
+	height: 40px;
+	line-height: 40px;
+	cursor: pointer;
 }
 .u-i-i-bottom {
-  display: flex;
-  height: 100px;
-  width: 200px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-  justify-content: space-around;
+	display: flex;
+	height: 100px;
+	width: 200px;
+	margin-top: 10px;
+	flex-wrap: wrap;
+	justify-content: space-around;
 }
 .info-item {
-  width: 90px;
-  height: 30px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  font-size: 12px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #333333;
-  border-radius: 3px;
-  cursor: pointer;
-  background-color: rgba(0,0,0,.1) !important;
+	width: 90px;
+	height: 30px;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	font-size: 12px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #333333;
+	border-radius: 3px;
+	cursor: pointer;
+	background-color: rgba(0, 0, 0, 0.1) !important;
 }
 .info-item img {
-  width: 14px;
-  height: 16px;
+	width: 14px;
+	height: 16px;
 }
 .user-info-bottom {
-  position: relative;
-  width: 100%;
-  height: 30px;
+	position: relative;
+	width: 100%;
+	height: 30px;
 }
 .logout {
-  line-height: 30px;
-  position: absolute;
-  top: 0;
-  right: 10px;
-  font-size: 12px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #93999f;
-  cursor: pointer;
+	line-height: 30px;
+	position: absolute;
+	top: 0;
+	right: 10px;
+	font-size: 12px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #93999f;
+	cursor: pointer;
 }
 .shopcar {
-  width: 200px;
-  height: 220px;
-  background: #fff;
-  position: absolute;
-  top: 87px;
-  right: 130px;
-  z-index: 999;
-  padding: 0 10px;
-  box-sizing: border-box;
-  box-shadow: 0px 5px 15px 3px #888888;
-  border-radius: 10px;
+	width: 200px;
+	height: 220px;
+	background: #fff;
+	position: absolute;
+	top: 87px;
+	right: 130px;
+	z-index: 999;
+	padding: 0 10px;
+	box-sizing: border-box;
+	box-shadow: 0px 5px 15px 3px #888888;
+	border-radius: 10px;
 }
 .shopcar-top {
-  height: 30px;
-  line-height: 30px;
-  width: 100%;
-  display: flex;
-  border-bottom: 1px solid rgba(51, 51, 51, 0.2);
-  box-sizing: border-box;
+	height: 30px;
+	line-height: 30px;
+	width: 100%;
+	display: flex;
+	border-bottom: 1px solid rgba(51, 51, 51, 0.2);
+	box-sizing: border-box;
 }
 .s-t-left {
-  font-size: 12px;
-  font-family: Microsoft YaHei;
-  font-weight: bold;
-  color: #333333;
+	font-size: 12px;
+	font-family: Microsoft YaHei;
+	font-weight: bold;
+	color: #333333;
 }
 .shopcar-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 160px;
-  font-size: 10px;
-  box-sizing: border-box;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #a2a2a2;
-  /* opacity: 0.56; */
-  border-bottom: 1px solid rgba(51, 51, 51, 0.2);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 160px;
+	font-size: 10px;
+	box-sizing: border-box;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #a2a2a2;
+	/* opacity: 0.56; */
+	border-bottom: 1px solid rgba(51, 51, 51, 0.2);
 }
 .shopcar-center img {
-  width: 60px;
-  height: 54px;
-  margin-bottom: 5px;
+	width: 60px;
+	height: 54px;
+	margin-bottom: 5px;
 }
 .car-empy {
-  font-size: 14px;
-  color: #787d82;
-  margin-bottom: 5px;
+	font-size: 14px;
+	color: #787d82;
+	margin-bottom: 5px;
 }
 .course-center {
-  color: #3481ff;
-  cursor: pointer;
+	color: #3481ff;
+	cursor: pointer;
 }
 .shopcar-bottom {
-  width: 100%;
-  height: 30px;
-  line-height: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: #93999f;
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 10px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #93999f;
 }
 .shopcar-bottom .car {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 }
 .car img {
-  width: 13px;
-  height: 13px;
-  margin-right: 5px;
+	width: 13px;
+	height: 13px;
+	margin-right: 5px;
 }
 .actives {
-  position: relative;
-  color: #3689ff !important;
+	position: relative;
+	color: #3689ff !important;
 }
-.actives::after{
-  content: '' !important;
-  position: absolute !important;
-  bottom: -38px !important;
-  left: -15px;
-  width: 70px;
-  height: 2px;
-  background-color: #3689ff;
-  border-radius: 5px  !important;
+.actives::after {
+	content: '' !important;
+	position: absolute !important;
+	bottom: -38px !important;
+	left: -15px;
+	width: 70px;
+	height: 2px;
+	background-color: #3689ff;
+	border-radius: 5px !important;
 }
 </style>

@@ -24,7 +24,7 @@
           @pagination="getReadList"
         />
         <!-- </happy-scroll> -->
-        
+
       </el-tab-pane>
       <el-tab-pane label="未读消息" name="third">
         <!-- <happy-scroll> -->
@@ -37,7 +37,7 @@
           @pagination="getunreadList"
         />
         <!-- </happy-scroll> -->
-        
+
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -145,7 +145,5 @@ export default {
 <style scoped>
 .course-tabs {
   margin-left: 20px;
-  height: 100%;
-  margin-bottom: 120px;
 }
 </style>

@@ -76,9 +76,7 @@ export default {
           token:res.data.token,
           ids: arr
         }).then(ress=>{
-          console.log(ress)
           if(ress.meta.code === '200'){
-            console.log(1)
             this.$message({
               message: '删除成功',
               type:'success'
@@ -156,7 +154,8 @@ export default {
                 // 以服务的方式调用的 Loading 需要异步关闭
                 readloading.close();
               });
-              window.location.reload()
+              // window.location.reload()
+              this.$router.go(0);
             }else {
               this.$message({
                 message: res.meta.msg,

@@ -245,7 +245,6 @@ export default {
 		getcourseInfo() {
 			getcourseInfo(this.courseId).then((res) => {
 				if (res.meta.code === '200') {
-                    console.log(res);
 					this.courseInfoArr = res.data.data
 					this.courseDetail = res.data.data.bizCourseDetail
 					this.courseChapters = res.data.data.bizCourseChapters
