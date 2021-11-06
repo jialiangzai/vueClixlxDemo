@@ -4,7 +4,7 @@
           <div class="course-main" style="width:980px;" v-if="courseList && courseList.length > 0">
             <div class="course-item" v-for="item in courseList" :key="item.id">
               <div class="item-left"  @click="goStu(item.id)">
-                <img :src="item.courseCover" alt="" />
+                <img :src="item.courseCover" :alt="item.courseName" />
                 <!-- <p>晋级TS高手搞定复杂项目</p> -->
               </div>
               <div class="item-right">

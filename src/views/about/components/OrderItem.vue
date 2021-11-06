@@ -20,7 +20,7 @@
             >
               <div class="i-b-left">
                 <div class="i-b-l-left" @click="goStu(course.courseId)">
-                  <img :src="course.courseCover" alt="" />
+                  <img :src="course.courseCover" :alt=" course.courseName" />
                   <!-- <p>晋级TS高手搞定复杂项目</p> -->
                 </div>
                 <div class="i-b-l-right" style="width: 400px">

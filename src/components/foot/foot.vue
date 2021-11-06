@@ -18,21 +18,21 @@
                     <li><a href="#">版权声明</a></li>
                 </ul>
                 <div class="copy-bottom">
-<!--                    <span class="">Copyrignt© 2021 imooc.com  京ICP备  12003892号-11  京公网安备11010802030151号  营业执照</span>-->
-                    <span class="">{{webconfig.copyright}}</span><a class="go" href="https://beian.miit.gov.cn/" target="_blank">{{webconfig.icp}}</a>
+                  <span class="">{{webconfig.copyright ? webconfig.copyright : ""}}</span>
+                  <a class="go" href="https://beian.miit.gov.cn/" target="_blank">{{webconfig.icp ? webconfig.icp : ""}}</a>
                 </div>
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img :src="guanfangwx" alt="">
+                    <img :src="guanfangwx.imgUrl" :alt="guanfangwx.imageName" :title="guanfangwx.imageName">
                 </div>
-                <div class="wx-dsc">官方账号</div>
+                <div class="wx-dsc">{{guanfangwx.imageName}}</div>
             </div>
             <div class="wx">
                 <div class="wx-bg">
-                    <img :src="teacherwx" alt="">
+                    <img :src="teacherwx.imgUrl" :alt="teacherwx.imageName" :title="teacherwx.imageName">
                 </div>
-                <div class="wx-dsc">指导老师</div>
+                <div class="wx-dsc">{{teacherwx.imageName}}</div>
             </div>
 
         </div>
@@ -47,9 +47,7 @@ import {webConfig} from '@/common/api/webConfig.js'
 export default{
     data(){
         return{
-          guanfangwx:'',
-          teacherwx:'',
-          webconfig:{
+          webconfig: {
             id: "",//主键
             keywords: "",//站点关键字
             ext03: "",//扩展字段3
@@ -61,30 +59,45 @@ export default{
             copyright: "",//网站版权信息
             website: "",//网址
             description: ""//网站描述
+          },
+          guanfangwx:{
+              imageName:'',
+              imgUrl:''
+          },
+          teacherwx:{
+              imageName:'',
+              imgUrl:''
           }
         }
     },
     created(){
-        this.getImageByCodeGuanfangwx()
-        this.getImageByCodeTeacherwx()
-        this.__init()
-
+      this.__init()
+      this.getImageByCodeGuanfangwx()
+      this.getImageByCodeTeacherwx()
     },
     methods:{
-        async __init(){
-      let res = await webConfig()
-      this.webconfig = res.data.data
-    },
-        getImageByCodeGuanfangwx(){
-            getImageByCode({imageCode:imgCode.global_guanfangcode}).then(res => {
-                this.guanfangwx = res.data.data.imageUrl;
-            })
-        },
-        getImageByCodeTeacherwx(){
-            getImageByCode({imageCode:imgCode.global_teachercode}).then(res => {
-                this.teacherwx = res.data.data.imageUrl;
-            })
-        },
+      async __init(){
+        let res = await webConfig()
+        this.webconfig = res.data.data
+      },
+      getImageByCodeGuanfangwx(){
+          getImageByCode({imageCode:imgCode.global_guanfangcode}).then(res => {
+            let data = res.data.data;
+            this.guanfangwx = {
+                imageName:data.imageName,
+                imgUrl:data.imageUrl
+            }
+          })
+      },
+      getImageByCodeTeacherwx(){
+          getImageByCode({imageCode:imgCode.global_teachercode}).then(res => {
+            let data = res.data.data;
+            this.teacherwx = {
+                imageName:data.imageName,
+                imgUrl:data.imageUrl
+            }
+          })
+      }
     }
 }
 
@@ -158,7 +171,7 @@ export default{
     height: 100%;
 }
 .wx-dsc{
-    margin-left: 15px;
+    margin:15px;
 }
 .go{
     color: #FFFFFF;

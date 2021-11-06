@@ -46,7 +46,7 @@ export default {
     ]),
     ...mapMutations(["saveLoginDialog"]),
     goWeiLogin(){
-      if(!sessionStorage.getItem('token')){
+      if(!localStorage.getItem('token')){
         if(this.$route.query.code && this.$route.query.logintype && this.$route.query.t){
           try{
             const code = Decrypt(this.$route.query.code)
@@ -97,7 +97,8 @@ export default {
               if (res.meta.code === "200") {
                 // sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
                 this.saveUserInfoAction();
-                this.$router.push('/user/setbindsns')
+                // this.$router.push('/user/setbindsns')
+                window.location.href = '/home'
                 // window.location.reload()
               } else {
                 this.$message({

@@ -425,6 +425,7 @@ export default {
 								captchaVerification: captchaVerification,
 							})
 								.then((ress) => {
+                  console.log(ress)
 									if (ress.meta.code === '200') {
 										this.$message({
 											message: '修改成功，重新登录',
@@ -452,6 +453,7 @@ export default {
 									}
 								})
 								.catch((err) => {
+                  console.log(err)
 									this.$message({
 										message: err.meta.msg,
 										type: 'warning',
@@ -673,15 +675,10 @@ export default {
 					localStorage.removeItem('token')
 					//sessionStorage.removeItem('userInfo')
 					localStorage.removeItem('isLogin')
-					this.$router.push('/')
+					// this.$router.push('/home')
+          window.location.href = '/home'
 					// this.$router.go(0)
-					this.saveUserInfoAction({
-						avatar: '/image/common/avator.png',
-						nickName: '小鹿线-默认',
-						gender: 1,
-						city: '北京',
-						id: 1,
-					})
+					// this.saveUserInfoAction()
 					this.saveLoginAction(false)
 				})
 				.catch((err) => {})

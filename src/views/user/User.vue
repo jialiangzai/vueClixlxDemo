@@ -35,6 +35,7 @@
         <router-view ></router-view>
       </div>
     </div>
+    <Foot></Foot>
   </div>
 </template>
 
@@ -42,6 +43,7 @@
 import Header from "@/components/index/header.vue";
 import {Decrypt , Encrypt} from '@/utils/aes.js'
 import {mapState} from 'vuex'
+import Foot from '@/components/foot/foot.vue'
 export default {
   data() {
     return {
@@ -75,6 +77,7 @@ export default {
   },
   components: {
     Header,
+    Foot
   },
   created() {
     // 获取当前路由信息 判断当前路由 是否 等于 选中路由

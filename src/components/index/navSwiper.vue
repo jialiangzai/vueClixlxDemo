@@ -9,8 +9,8 @@
             <div class="category-detail" v-if="categorysDetail[index]">
                 <div class="detail-main" >
                     <div class="detail-desc">基础知识</div>
-                    <div class="detail-list">
-                        <div class="list-know">知识点:</div>
+                    <div class="detail-list" >
+                        <div class="list-know" v-if="tagarr.length > 0">知识点:</div>
                         <div class="list-ul">
                             <a href="javascript:;" @click="goDetail(item.tagName)" class="list-item" v-for="(item,index) in tagarr" :key="index" >{{item.tagName}}</a>
                         </div>
@@ -25,13 +25,10 @@
                                 <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
                                 <div class="buy">
                                     <div class="buy-free">
-                                        
-
                                         <div class="coursePriceZero" v-if="item.discountPrice == 0">
                                             <div class="learn">免费学习</div>
                                             <img src="../../assets/image/about/free.png" alt="">
                                         </div>
-
                                         <div class="coursePrice" v-else-if="item.isMember == 1">
                                             <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
                                             <div class="price">¥ {{item.discountPrice}}</div>
@@ -39,8 +36,6 @@
                                         <div class="coursePricePri" v-else>
                                             <div class="pricePri">¥ {{item.discountPrice}}</div>
                                         </div>
-
-
                                     </div>
                                     <div class="car" @click="addCart(item)">
                                         <div class="cart-image">
@@ -367,8 +362,9 @@ export default {
     height: 300px;
     padding: 20px 20px;
     /* margin-top: 30px; */
-    background-color: #F3F5F6;
+    /*background-color: #F3F5F6;*/
     box-sizing: border-box;
+  background-color: cyan;
 }
 .course-card{
     display: flex;
@@ -377,7 +373,7 @@ export default {
     width: 370px;
     height: 120px;
     box-sizing: border-box;
-    /* background: cyan; */
+     background: red;
     /* border-radius: 10px; */
 }
 .course-image{
@@ -393,7 +389,7 @@ export default {
 }
 .right{
     margin-left:6px;
-} 
+}
 .courseName{
     width: 100%;
     height: 100%;
