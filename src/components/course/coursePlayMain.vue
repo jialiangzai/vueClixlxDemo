@@ -15,6 +15,7 @@
                     :playsinline="true"
                     :options="playerOptions"
                     v-if="playerOptions.sources[0].src"
+                    @ready = "playerReadied($event)"
                     @timeupdate="onPlayerTimeupdate($event)"
                     @ended="onPlayerEnded($event)"
                 ></video-player>
@@ -150,7 +151,8 @@ export default {
             courseDetail:{},
             isCollect:false,
             tokens:'',
-            courseTeacher:''
+            courseTeacher:'',
+            getLastTime:''//获取最后一次播放记录
         }
 	},
 	created() {
@@ -260,6 +262,8 @@ export default {
                 memberId:this.memberid,
                 courseId:this.courseId,
                 chapterId:this.chapterId
+            }).then(res => {
+                this.getLastTime = res.data.data.lastTime
             })
         },
          /* 获取视频播放进度 */
@@ -277,6 +281,10 @@ export default {
                 )
                 this.count = 0
             }
+        },
+        //设置视频进度
+        playerReadied(player){
+            player.currentTime(this.getLastTime)
         },
         //视频播放结束
         onPlayerEnded(player) {

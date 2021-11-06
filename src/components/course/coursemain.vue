@@ -486,9 +486,7 @@ export default{
     },
     watch:{
       '$route':function(to,from){
-
         this.watchUrl();
-
         let query = to.query;
         this.queryParams.entity.courseName= query.keywords;
         this.queryParams.entity.tags= query.searchKnowledge;
