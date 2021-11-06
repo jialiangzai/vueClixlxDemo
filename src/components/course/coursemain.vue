@@ -263,7 +263,7 @@ export default{
     },
     created() {
         this.watchUrl();
-        this.tokens = sessionStorage.getItem('token')
+        this.tokens = localStorage.getItem('token')
         let keywords = this.$route.query.keywords
         if(keywords){
             this.queryParams.entity.courseName = keywords

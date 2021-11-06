@@ -105,7 +105,7 @@ export default {
 		}
 	},
 	created() {
-        this.tokens = sessionStorage.getItem('token')
+        this.tokens = localStorage.getItem('token')
 		this.getFirstCategory()
 		this.getSliders()
 	},
