@@ -44,7 +44,6 @@ import {getImageByCode} from '@/common/api/picture.js'
 import imgCode from '@/common/globalImages.js'
 import {webConfig} from '@/common/api/webConfig.js'
 
-
 export default{
     data(){
         return{
