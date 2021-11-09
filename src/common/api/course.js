@@ -1,12 +1,12 @@
-import http from './requests';
-
+import request from './requests';
+import {Decrypt} from '@/utils/aes'
 export function myCourses(imageCode){
-  return http.$axios({
-    url: 'api/course/myCourses',
+  return request({
+    url: '/api/course/myCourses',
     method: 'POST',
     data: imageCode,
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization':  Decrypt(localStorage.getItem('token'))
     }
   })
 }

@@ -1,9 +1,9 @@
-import http from './requests';
-
+import request from './requests';
+import {Decrypt} from '@/utils/aes'
 // 手机 加 密码登陆
 export function loginByJson (params){
-  return http.$axios({
-    url: 'api/u/loginByJson',
+  return request({
+    url: '/api/u/loginByJson',
     method: 'POST',
     data: params
   })
@@ -11,8 +11,8 @@ export function loginByJson (params){
 
 // 手机验证码登陆
 export function loginByMobile(params){
-  return http.$axios({
-    url: 'api/u/loginByMobile',
+  return request({
+    url: '/api/u/loginByMobile',
     method: 'POST',
     data: params
   })
@@ -20,25 +20,31 @@ export function loginByMobile(params){
 
 // 退出登陆
 export function logout() {
-  return http.$axios({
-    url: 'api/u/logout',
+  return request({
+    url: '/api/u/logout',
     method: 'GET'
   })
 }
 
 // 修改密码
-export function modifyPassword(params){
-  return http.$axios({
-    url: 'api/member/modifyPassword',
+export function modifyPassword({token,...params}){
+  return request({
+    url: '/api/member/modifyPassword',
     method: 'POST',
-    data: params
+    data: {
+      ...params
+    },
+    headers: {
+      'Authorization': Decrypt(localStorage.getItem('token')),
+      'token':token
+    }
   })
 }
 
 // 手机号验证码注册
 export function register(params){
-  return http.$axios({
-    url: 'api/member/register',
+  return request({
+    url: '/api/member/register',
     method: 'POST',
     data: params
   })
@@ -46,8 +52,8 @@ export function register(params){
 
 // 找回密码
 export function findPassword(params){
-  return http.$axios({
-    url: 'api/member/findPassword',
+  return request({
+    url: '/api/member/findPassword',
     method: 'POST',
     data: params
   })
@@ -56,8 +62,8 @@ export function findPassword(params){
 // 重置密码
 
 export function resetPassword(params) {
-  return http.$axios({
-    url: 'api/member/resetPassword',
+  return request({
+    url: '/api/member/resetPassword',
     method: 'POST',
     data: params
   })
@@ -65,11 +71,11 @@ export function resetPassword(params) {
 
 // 获取个人信息
 export function getInfo({token}) {
-  return http.$axios({
-    url: 'api/member/getInfo?token='+token,
+  return request({
+    url: '/api/member/getInfo?token='+token,
     method: 'GET',
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': Decrypt(localStorage.getItem('token'))
     }
   })
 }
@@ -77,11 +83,11 @@ export function getInfo({token}) {
 // 获取购物车数据
 
 export function getShopCarCounter(){
-  return http.$axios({
-    url: 'api/shopcar/getShopCarCounter',
+  return request({
+    url: '/api/shopcar/getShopCarCounter',
     method: 'GET',
     headers: {
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': Decrypt(localStorage.getItem('token'))
     }
   })
 }
@@ -89,13 +95,13 @@ export function getShopCarCounter(){
 // updatePortrait
 // 修改头像
 export function updatePortrait(params){
-  return http.$axios({
-    url: 'api/member/updatePortrait',
+  return request({
+    url: '/api/member/updatePortrait',
     method: 'POST',
     data: params,
     headers: {
       'Content-Type':'multipart/form-data;',
-      'Authorization': sessionStorage.getItem('token')
+      'Authorization': Decrypt(localStorage.getItem('token'))
     }
   })
 }
@@ -103,8 +109,50 @@ export function updatePortrait(params){
 // 获取 token /token/createToken
 
 export function createToken(){
-  return http.$axios({
-    url: 'api/token/createToken',
+  return request({
+    url: '/api/token/createToken',
     method: 'POST'
+  })
+}
+
+// 修改手机号
+
+export function modifyMobile({token,...params}){
+  return request({
+    url: '/api/member/modifyMobile',
+    method: 'POST',
+    data: {
+      ...params
+    },
+    headers: {
+      'Authorization': Decrypt(localStorage.getItem('token')),
+      'token':token
+    }
+  })
+}
+
+
+// 修改用户名
+
+export function modifyUsername({token,...params}){
+  return request({
+    url: '/api/member/modifyUsername',
+    method: 'POST',
+    data:{
+      ...params
+    },
+    headers: {
+      'Authorization': Decrypt(localStorage.getItem('token')),
+      'token':token
+    }
+  })
+}
+
+// 三方登录
+// oauth/getAccessToken
+export function getAccessToken({code}){
+  return request({
+    url: '/api/oauth/getAccessToken?code='+code,
+    method:'GET'
   })
 }

@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     getPath(){
-      console.log(this.$route.path);
+    //   console.log(this.$route.path);
     }
   }
 };
@@ -25,6 +25,7 @@ export default {
 
 <style>
 @import './common/css/global.css';
+@import './common/css/font-awsome/css/font-awesome.min.css';
 body{
   margin: 0;
   padding: 0;

@@ -4,7 +4,7 @@
     <indexHeader></indexHeader>
     <navSwiper></navSwiper>
     <newGoodCourse></newGoodCourse>
-    <foot></foot>
+    <foot class="coursefoot"></foot>
   </div>
 </template>
 
@@ -13,23 +13,32 @@ import indexHeader from '@/components/index/header.vue';
 import navSwiper from '@/components/index/navSwiper.vue';
 import newGoodCourse from '@/components/index/newGoodCourse.vue';
 import foot from '@/components/foot/foot.vue';
-
+import {webConfig} from '@/common/api/webConfig.js'
 
 export default {
-  metaInfo: {
-    title: '鹿线课堂', // set a title
-    meta: [
-      {
-        // set meta
-        name: '关键字,web前端',
-        content: '描述',
-      },
-    ],
+  data(){
+    return{
+      webconfig:{}
+    }
+  },
+  metaInfo() {
+    return {
+      title: this.webconfig.title, // set a title
+      meta: [{ // set meta
+        name: this.webconfig.keywords,
+        content: this.webconfig.description
+      }]
+    }
   },
   created() {
-
+    this.__init()
   },
   methods: {
+    async __init(){
+      let res = await webConfig()
+      // console.log(res)
+      this.webconfig = res.data.data
+    }
   },
   components: {
     indexHeader,
@@ -41,4 +50,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

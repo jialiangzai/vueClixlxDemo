@@ -1,8 +1,8 @@
-import http from './requests'
+import request from './requests'
 
 export function queryCourseTag(params){
-    return http.$axios({
-        url:'api/course/tags/list',
+    return request({
+        url:'/api/course/tags/list',
         method:'POST',
         data:params,
         header:{

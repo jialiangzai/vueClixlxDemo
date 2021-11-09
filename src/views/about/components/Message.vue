@@ -24,7 +24,7 @@
           @pagination="getReadList"
         />
         <!-- </happy-scroll> -->
-        
+
       </el-tab-pane>
       <el-tab-pane label="未读消息" name="third">
         <!-- <happy-scroll> -->
@@ -37,7 +37,7 @@
           @pagination="getunreadList"
         />
         <!-- </happy-scroll> -->
-        
+
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -104,7 +104,6 @@ export default {
     getReadList() {
       // this.query.entity.status = 2;
       getByMemberId(this.readquery).then((res) => {
-        console.log(res);
         if (res.meta.code == "200") {
           this.readListPage = res.data.pageInfo.total;
           this.readList = res.data.pageInfo.list;
@@ -146,7 +145,5 @@ export default {
 <style scoped>
 .course-tabs {
   margin-left: 20px;
-  height: 100%;
-  margin-bottom: 120px;
 }
 </style>

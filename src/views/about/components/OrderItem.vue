@@ -19,12 +19,12 @@
               :key="course.courseId"
             >
               <div class="i-b-left">
-                <div class="i-b-l-left">
-                  <img :src="course.courseCover" alt="" />
+                <div class="i-b-l-left" @click="goStu(course.courseId)">
+                  <img :src="course.courseCover" :alt=" course.courseName" />
                   <!-- <p>晋级TS高手搞定复杂项目</p> -->
                 </div>
                 <div class="i-b-l-right" style="width: 400px">
-                  <p class="i-b-l-r-title">
+                  <p class="i-b-l-r-title" @click="goStu(course.courseId)">
                     {{ course.courseName }}
                   </p>
                   <p class="i-b-l-r-tip">{{ course.description }}</p>
@@ -108,7 +108,13 @@ export default {
       }
       return fmt;
     },
+    goStu(id){
+      this.$router.push({
+        path: '/course-info/'+id
+      })
+    }
   },
+
 };
 </script>
 
@@ -167,15 +173,18 @@ export default {
   width: 200px;
   height: 100px;
   position: relative;
+
 }
 .i-b-l-left img {
   width: 200px;
   height: 100px;
+  cursor: pointer;
 }
 .i-b-l-left p {
   width: 110px;
   height: 60px;
   white-space: wrap;
+  cursor: pointer;
   font-size: 18px;
   font-family: MicrosoftYaHei-Bold;
   color: #ffffff;
@@ -197,6 +206,7 @@ export default {
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #333333;
+  cursor: pointer;
 }
 .i-b-l-r-tip {
   font-size: 12px;

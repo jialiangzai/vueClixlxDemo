@@ -91,7 +91,7 @@ export default {
           this.query.token = res.data.token;
           getFavoriteList(this.query)
             .then((res) => {
-              if (res.meta.code == "200") {
+              if (res.meta.code === "200") {
                   this.totalList = res.data.pageInfo.list;
                   this.totalpage = res.data.pageInfo.total
                 } else {
@@ -112,9 +112,7 @@ export default {
           this.freequery.token = res.data.token;
           getFavoriteList(this.freequery)
             .then((res) => {
-              console.log(res);
-              if (res.meta.code == "200") {
-                  console.log(res);
+              if (res.meta.code === "200") {
                   this.freeList = res.data.pageInfo.list;
                   this.freepage = res.data.pageInfo.total
                 } else {
@@ -135,9 +133,7 @@ export default {
           this.vipquery.token = res.data.token;
           getFavoriteList(this.vipquery)
             .then((res) => {
-              console.log(res);
-              if (res.meta.code == "200") {
-                  console.log(res);
+              if (res.meta.code === "200") {
                   this.vipList= res.data.pageInfo.list;
                   this.vippage = res.data.pageInfo.total;
                 } else {
@@ -168,7 +164,5 @@ export default {
 <style scoped>
 .course-tabs {
   margin-left: 20px;
-  /* height: 800px; */
-  margin-bottom: 120px;
 }
 </style>

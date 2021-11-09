@@ -6,9 +6,9 @@
         style="width: 980px"
         v-if="courseList && courseList.length > 0"
       >
-        <div class="course-item" v-for="item in courseList" :key="item">
+        <div class="course-item" v-for="item in courseList" :key="item.id">
           <div class="item-left">
-            <img :src="item.courseCover" alt="" />
+            <img :src="item.courseCover" :alt="item.courseName" />
             <!-- <p>晋级TS高手搞定复杂项目</p> -->
           </div>
           <div class="item-right">
@@ -26,7 +26,7 @@
             </div>
             <div class="i-r-right">
               <div class="i-r-bottom">
-                <div @click="goRemove(item.id)">取消收藏</div>
+                <div @click="goRemove(item)">取消收藏</div>
               </div>
             </div>
           </div>
@@ -45,6 +45,8 @@
 <script>
 import { deleteFavorite } from "@/common/api/favorite";
 import { createToken } from "@/common/api/auth";
+import  {mapState} from "vuex";
+import  {Loading} from 'element-ui'
 export default {
   props: {
     courseList: {
@@ -52,24 +54,46 @@ export default {
       default: [],
     },
   },
+  computed:{
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    })
+  },
   methods: {
-    goRemove(id) {
+    goRemove(item) {
+      var readloading = Loading.service({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       createToken().then((res) => {
         if (res.data.token) {
           deleteFavorite({
-            id: id,
+            courseId: item.courseId,
+            memberId:item.memberId,
             token: res.data.token,
           }).then((res) => {
-            if (res.meta.code == "200") {
+            if (res.meta.code === "200") {
               this.$message({
                 message: "取消收藏成功",
                 type: "success",
               });
+              this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                readloading.close();
+              });
+              // window.location.reload()
+              this.$router.go(0);
             }else {
               this.$message({
               message: "取消收藏失败",
               type: "error",
             });
+              this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                readloading.close();
+              });
             }
           });
         }
@@ -248,5 +272,6 @@ export default {
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #ffffff;
+  cursor: pointer;
 }
 </style>

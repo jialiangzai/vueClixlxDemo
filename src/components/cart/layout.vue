@@ -1,11 +1,10 @@
 <template>
     <div class="fixed">
-        <div class="bgColor"></div>
+        <div class="bgColor">
+            <h1 class="main-shopcart">购物车</h1>
+        </div>
         <div class="container">
             <div class="main">
-                <div class="main-shop">
-                  <div class="cart">购物车</div>
-                </div>
                 <div class="nav">
                     <span class="left">全部课程</span>
                     <span class="right">
@@ -56,9 +55,7 @@
                     <li class="foot-item">已选课程<span class="unique">{{getCount}}</span></li>
                     <li class="foot-item">合计<span class="unique">{{price}}</span></li>
                     <li >
-                        <router-link to="/confirmOrder">
-                            <button class="btn" @click="getSelecteds">去结算</button>
-                        </router-link>
+                        <button class="btn" @click="getSelecteds">去结算</button>
                     </li>
                 </ul>
             </div>
@@ -69,13 +66,15 @@
 <script>
 import {getShopCarList,deleteShopCar} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
+import {getShopCarCounter} from "@/common/api/auth";
+import { mapState, mapActions } from "vuex";
 export default{
     data(){
         return{
             orderList:[],
             allChecked:false,
             selectedProducts:[],
-            token:'',
+            tokens:'',
             count:0,
             price:0,
         }
@@ -100,14 +99,22 @@ export default{
         },
     },
     methods:{
+        ...mapActions(["saveCartNumAction"]),
         // 去结算
         getSelecteds(){
+            if(!this.selectedProducts || this.selectedProducts.length <= 0){
+                this.$message({
+                    type: "error",
+                    message: "请选择课程再结算！"
+                })
+                return;
+            }
             let arr = new Array();
             this.selectedProducts.forEach(item => {
                 arr.push({'number':item.counter,"id":item.courseId})
             })
-            sessionStorage.setItem('selectedArr',JSON.stringify(arr))
-
+            localStorage.setItem('selectedArr',JSON.stringify(arr))
+            this.$router.push("/confirmOrder")
         },
         //全选
         selectAll(e){
@@ -115,10 +122,12 @@ export default{
                 this.orderList.forEach(item => {
                     item['checked'] = true
                 })
+                this.selectedProducts = this.orderList;
             }else{
                 this.orderList.forEach(item => {
                     item['checked'] = false
                 })
+                this.selectedProducts = []
             }
         },
         //数量 、价格变化
@@ -135,9 +144,6 @@ export default{
         },
         //获取购物车数据
         getShopCarList(){
-            createToken().then(res => {
-                this.token = res.data.token
-            })
             getShopCarList().then(res => {
                 let list = res.data.list
                 list.forEach(item => {
@@ -146,21 +152,37 @@ export default{
                 this.orderList = list;
             })
         },
+        
         //删除购物车数据
-        deleteOrder(id){
-            this.$confirm('确定是否删除该订单', '警告', {
+         deleteOrder(id){
+            this.$confirm('确定是否删除该课程', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                deleteShopCar({id:id,token:this.token}).then(response => {
-                    if (response.meta.code === '200') {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功'
-                        })
-                        this.getShopCarList()
-                    }
+                createToken().then(res => {
+                    console.log(res,'jjjjjjj');
+                    this.tokens = res.data.token
+                    console.log(this.tokens,'lllllll');
+                    deleteShopCar({id:id,token:this.tokens}).then(response => {
+                        if (response.meta.code === '200') {
+                            getShopCarCounter().then((res) => {
+                                if (res.meta.code == '200') {
+                                    this.saveCartNumAction(res.data.counter)
+                                } else {
+                                    this.$message({
+                                    message: res.meta.msg,
+                                    type: "error",
+                                    });
+                                }
+                            });
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功'
+                            })
+                            this.getShopCarList()
+                        }
+                    })
                 })
             }).catch(err => {})
         }
@@ -197,8 +219,8 @@ export default{
 .container{
     position: absolute;
     left: 50%;
-  top: 50%;
-  transform: translate(-50%,0);
+    top: 50%;
+    transform: translate(-50%,0);
     width: 1200px;
     margin: 0 auto;
     background: #EBEDF2;
@@ -206,8 +228,9 @@ export default{
     box-shadow: 0px 5px 15px 3px #888888;
 }
 .main{
-    padding:30px 50px;
-    border-radius: 15px;
+    padding:20px;
+    border-radius: 5px;
+   
 }
 .main-shop{
   position: relative;
@@ -220,20 +243,17 @@ export default{
   color: #FF4400;
   font-weight: bold;
 }
-.cart{
-    position: absolute;
-    top: -107px;
-    left: 0px;
-    /*width: 96px;*/
+.main-shopcart{
+    width: 1200px;
+    margin: 0 auto;
     height: 42px;
     font-size: 24px;
     font-family: Microsoft YaHei;
     font-weight: bold;
-    line-height: 24px;
+    line-height: 35px;
     color: #FFFFFF;
-    padding: 25px 0;
+    padding: 30px 0;
     opacity: 1;
-
 }
 .nav{
     display: flex;
@@ -275,7 +295,7 @@ export default{
     opacity: 1;
     border-radius: 0px;
     box-sizing: border-box;
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: 0px 2px 5px 2px #cccccc;
 }
 .head .item{
@@ -304,8 +324,8 @@ export default{
     height: 200px;
     background: #FCFCFC;
     margin-bottom: 10px;
-    border-radius: 10px;
-  box-shadow: 0px 2px 5px 2px #cccccc;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px 2px #cccccc;
 }
 .haveorder .order-item{
     height: 200px;
@@ -362,10 +382,10 @@ export default{
 .noOrder{
     width: 100%;
     height: 100%;
-    margin:200px 350px;
+    text-align: center;
+    margin:200px 0;
 }
 .order-alert{
-    width: 168px;
     height: 31px;
     font-size: 20px;
     font-family: Microsoft YaHei;

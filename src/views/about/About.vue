@@ -1,94 +1,95 @@
 <template>
   <div class="about">
     <Header></Header>
-    <div class="about-containe" >
-      <div class="about-ee">
-        <div class="about-banner">
-          <div class="banner-main">
-            <div class="banner-content">
-              <div class="banner-left">
-                <img
+    <div class="about-containe">
+      <div class="about-banner">
+        <div class="banner-main">
+          <div class="banner-content">
+            <div class="banner-left">
+              <img
                   class="banner-avator"
                   :src="userInfo.avatar"
                   alt=""
                   v-if="userInfo.avatar"
-                />
-                <img
+              />
+              <img
                   class="banner-avator"
-                  :src="userInfo.avatar"
+                  :src="avatar"
                   alt=""
                   v-else
-                />
-                <div class="banner-my">
-                  <div class="banner-name">{{ userInfo.nickName }}</div>
-                  <div class="banner-introduce">
-                    <p>{{ userInfo && userInfo.gender == 1 ? "男" : "女" }}</p>
-                    <p>
-                      {{ userInfo && userInfo.city ? userInfo.city : "北京" }}
-                    </p>
-                    <p>web前端工程师</p>
-                  </div>
-                  <div class="banner-autograph">
-                    这位同学很神秘，没有留下个性签名
-                  </div>
+              />
+              <div class="banner-my">
+                <div class="banner-name">{{ userInfo.nickName ? userInfo.nickName : '小鹿线-默认' }}</div>
+                <div class="banner-introduce">
+                  <p>{{ userInfo && userInfo.gender == 1 ? "男" : "女" }}</p>
+                  <p>
+                    {{ userInfo && userInfo.city ? userInfo.city : "北京" }}
+                  </p>
+                  <p>web前端工程师</p>
                 </div>
-              </div>
-              <div class="banner-right">
-                <div class="banner-study">学习时长 <span>{{ userInfo.totalHour ? parseFloat(userInfo.totalHour/360).toFixed(2)+'h' : '0h' }}</span></div>
-                <div class="banner-setting" @click="goMine">
-                  <img src="/image/about/setting.png" alt="" />
-                  <p>个人设置</p>
+                <div class="banner-autograph">
+                  这位同学很神秘，没有留下个性签名
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="about-main">
-          <div class="about-container">
-            <div class="about-left">
-              <div class="about-list">
-                <div
-                  v-for="(item, index) in aboutList"
-                  :key="item.id"
-                  @click="geDetail(index)"
-                >
-                  <router-link :to="item.link">
-                    <div
-                      class="about-list-item"
-                      :class="current == index ? 'active' : ''"
-                    >
-                      <img
-                        :src="current == index ? item.selectImg : item.imgUrl"
-                        alt=""
-                      />
-                      <p class="list-title">{{ item.title }}</p>
-                    </div>
-                  </router-link>
-                </div>
+            <div class="banner-right">
+              <div class="banner-study">学习时长
+                <span>{{ userInfo.totalHour ? parseFloat(userInfo.totalHour / 360).toFixed(2) + 'h' : '0h' }}</span>
               </div>
-            </div>
-            <div class="about-right">
-              <router-view></router-view>
+              <div class="banner-setting" @click="goMine">
+                <img src="/image/about/setting.png" alt=""/>
+                <p>个人设置</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="about-container">
+        <div class="about-left">
+          <div class="about-list">
+            <div
+                v-for="(item, index) in aboutList"
+                :key="item.id"
+                @click="geDetail(index)"
+            >
+              <router-link :to="item.link">
+                <div
+                    class="about-list-item"
+                    :class="current === index ? 'active' : ''"
+                >
+                  <img
+                      :src="current === index ? item.selectImg : item.imgUrl"
+                      alt=""
+                  />
+                  <p class="list-title">{{ item.title }}</p>
+                </div>
+              </router-link>
+            </div>
+          </div>
+        </div>
+        <div class="about-right">
+          <router-view></router-view>
+        </div>
+      </div>
     </div>
-    <Foot class="foot"></Foot>
+    <foot></foot>
   </div>
 </template>
 
 <script>
 import Header from "@/components/index/header.vue";
-import { mapState } from "vuex";
-import Foot from "@/components/foot/foot.vue";
-// import Footer from '@/components/foot/Footer.vue';
+import {mapState} from "vuex";
+import foot from '@/components/foot/foot.vue';
+import {webConfig} from '@/common/api/webConfig.js'
 import IScroll from "iscroll";
 
 export default {
   name: "About",
   data() {
     return {
+      clientHeight: 0,
+      avatar: '/image/common/avator.png',
+      webconfig: {},
       aboutList: [
         {
           id: 1,
@@ -132,9 +133,23 @@ export default {
   },
   components: {
     Header,
-    Foot,
+    foot,
   },
+  created() {
+    // 获取当前路由信息 判断当前路由 是否 等于 选中路由
+    let curpath = this.$route.path
+    let curIndex = this.aboutList.findIndex(item => {
+      return item.link === curpath
+    })
+    this.current = curIndex
+    this.__init()
+  },
+
   methods: {
+    async __init() {
+      let res = await webConfig()
+      this.webconfig = res.data.data
+    },
     geDetail(index) {
       this.current = index;
       // sessionStorage.setItem('current',JSON.stringify(index))
@@ -147,15 +162,23 @@ export default {
 </script>
 
 <style scoped>
+.about-containe {
+  display: flex;
+  flex-direction: column;
+}
 .about-banner {
   background: url("/image/about/about-banner.png") no-repeat 0 0;
   box-sizing: border-box;
+  height: 200px;
+  margin-bottom: 30px;
 }
+
 .banner-main {
   position: relative;
   width: 100%;
   height: 185px;
 }
+
 .banner-content {
   width: 1200px;
   height: 170px;
@@ -168,12 +191,14 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
+
 .banner-left {
   width: 600px;
   height: 170px;
   display: flex;
   align-items: center;
 }
+
 .banner-avator {
   width: 177px;
   height: 177px;
@@ -182,6 +207,7 @@ export default {
   position: absolute;
   top: 20px;
 }
+
 .banner-my {
   flex: 1;
   display: flex;
@@ -194,19 +220,23 @@ export default {
   font-size: 16px;
   font-family: Microsoft YaHei;
 }
+
 .banner-name {
   font-size: 32px;
   font-weight: bold;
 }
+
 .banner-introduce {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
 }
+
 .banner-autograph {
   font-size: 14px;
 }
+
 .banner-right {
   width: 400px;
   height: 170px;
@@ -219,47 +249,38 @@ export default {
   line-height: 0px;
   color: #ffffff;
 }
+
 .banner-study span {
   font-size: 32px;
   font-family: Microsoft YaHei;
   font-weight: bold;
   margin-left: 5px;
 }
+
 .banner-setting {
   display: flex;
   justify-content: space-around;
   align-items: center;
   cursor: pointer;
 }
+
 .banner-setting img {
   width: 18px;
   height: 18px;
   margin-right: 10px;
 }
-/* 主体开始 */
-.about-main {
-  width: 100%;
-  /* height: 800px; */
-  height: 100%;
-  position: relative;
-  margin-top:20px;
-}
+
+
 .about-container {
   width: 1200px;
-  /* height: 800px; */
-  /* height: 800px; */
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
+  flex:1;
   display: flex;
+  overflow: hidden;
+  margin:0 auto;
 }
+
 .about-left {
   width: 200px;
-  height: 100%;
-  /* height: 1000px; */
-  /* height: 800px;
-  overflow: hidden; */
 }
 
 .about-list .about-list-item {
@@ -272,25 +293,24 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .about-list .active {
   background: rgba(52, 131, 255, 0.3);
   color: #3483ff;
 }
+
 .about-list .about-list-item img {
   width: 18px;
   height: 20px;
 }
+
 .list-title {
   width: 100px;
   text-align: center;
 }
+
 .about-right {
   flex: 1;
-  /* height: 600px; */
-  /* border: 1px solid blue; */
 }
-.foot {
-  position: fixed;
-  bottom: 0;
-}
+
 </style>

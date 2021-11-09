@@ -3,16 +3,16 @@
       <div v-if="courseList && courseList.length > 0" style="width:980px;">
           <div class="course-main" style="width:980px;" v-if="courseList && courseList.length > 0">
             <div class="course-item" v-for="item in courseList" :key="item.id">
-              <div class="item-left">
-                <img :src="item.courseCover" alt="" />
+              <div class="item-left"  @click="goStu(item.id)">
+                <img :src="item.courseCover" :alt="item.courseName" />
                 <!-- <p>晋级TS高手搞定复杂项目</p> -->
               </div>
               <div class="item-right">
                 <div class="i-r-left">
                   <div class="i-r-l-title">
                     <p class="tip" v-if="item.discountPrice === 0">免费课</p>
-                    <p class="tip vip" v-if="item.isMember === 1">会员课程</p>
-                    <p class="title">{{item.courseName}}</p>
+                    <p class="tip vip" v-if="item.discountPrice !== 0 && item.isMember === 1">会员课程</p>
+                    <p class="title" @click="goStu(item.id)">{{item.courseName}}</p>
                   </div>
                   <div class="i-r-l-center">
                     <p class="study-time">总时长: {{item.totalHour}}</p>
@@ -110,6 +110,7 @@ export default {
   width: 250px;
   height: 150px;
   position: relative;
+  cursor: pointer;
 }
 .item-left img {
   width: 220px;
@@ -118,6 +119,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  cursor: pointer;
   /* border: 1px solid red; */
 }
 .item-left p {
@@ -175,6 +177,7 @@ export default {
   font-family: Microsoft YaHei;
   font-weight: bold;
   color: #333333;
+  cursor: pointer;
 }
 .i-r-l-center {
   display: flex;
@@ -229,6 +232,7 @@ border: none;
 outline: none
 }
 .i-r-bottom  .student {
+    cursor: pointer;
   background: linear-gradient(
     to right,
     rgba(125, 177, 255, 1) 0%,

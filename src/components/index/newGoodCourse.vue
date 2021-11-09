@@ -21,20 +21,28 @@
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in newCourses" :key="index" >
                     <div class="courseInfo">
+                        <div class="memberlogo" v-if="item.isMember == 1 && item.discountPrice != 0">
+                            <img src="../../assets/image/member/vipLogo.png" alt="">
+                        </div>
                         <router-link :to="{path:'/course-info/' + item.id}">
                             <div class="courseBg">
                                 <img class="courseImg" :src="item.courseCover" alt="">
                             </div>
                         </router-link>
                         <div class="courseName">{{item.courseName}}</div>
-                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
-                        <div class="coursePrice">
-                            <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                            <div class="price">¥ {{item.salePrice}}</div>
-                            <div class="addCart" @click="addCart(item)">
-                                <i class="el-icon-shopping-cart-1 cart"></i>
-                                <span class="cart-text">加入购物车</span>
-                            </div>
+                        <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人报名</div>
+
+                        <div class="coursePriceZero" v-if="item.discountPrice == 0">
+                            <div class="pricefree">免费学习</div>
+                            <img src="../../assets/image/about/free.png" alt="">
+                        </div>
+
+                        <div class="coursePrice" v-else-if="item.isMember == 1">
+                            <div class="courseMemberbg"><span class="courseMember">会员免费</span></div>
+                            <div class="price">¥ {{item.discountPrice}}</div>
+                        </div>
+                        <div class="coursePricePri" v-else>
+                            <div class="pricePri">¥ {{item.discountPrice}}</div>
                         </div>
                     </div>
                 </li>
@@ -62,68 +70,73 @@
         <!-- 推荐好课标题结束 -->
         <div class="commendCourseContent">
             <div class="commendLeft">
-                <img class="commendLeftimg" :src="imageCode" alt="">
+                <img class="commendLeftimg" :src="imgUrl" alt="">
             </div>
             <ul class="courseUl">
                 <li class="courseItem" v-for="(item,index) in hotCourse" :key="index">
                     <div class="courseInfo">
+                        <div class="memberlogo" v-if="item.isMember == 1 && item.discountPrice != 0">
+                            <img src="../../assets/image/member/vipLogo.png" alt="">
+                        </div>
                         <router-link :to="{path:'/course-info/' + item.id}">
                             <div class="courseBg">
                                 <img class="courseImg" :src="item.courseCover" alt="">
                             </div>
                         </router-link>
                         <div class="courseName">{{item.courseName}}</div>
-                        <div class="courseDegree">{{item.courseLevel}}   {{item.purchaseCounter + item.purchaseCnt}}人购买</div>
-                        <div class="coursePrice">
-                            <!-- <div class="courseMemberbg"><span class="courseMember">会员专享</span></div> -->
-                            <div class="price">¥ {{item.salePrice}}</div>
-                            <div class="addCart" @click="addCart(item)">
-                                <i class="el-icon-shopping-cart-1 cart"></i>
-                                <span class="cart-text">加入购物车</span>
-                            </div>
+                        <div class="courseDegree">{{item.courseLevel}} · {{item.purchaseCounter + item.purchaseCnt}}人报名</div>
+
+                        <div class="coursePriceZero" v-if="item.discountPrice == 0">
+                            <div class="pricefree">免费学习</div>
+                            <img src="../../assets/image/about/free.png" alt="">
+                        </div>
+
+                        <div class="coursePrice" v-else-if="item.isMember == 1">
+                            <div class="courseMemberbg"><span class="courseMember">会员免费</span></div>
+                            <div class="price">¥ {{item.discountPrice}}</div>
+                        </div>
+                        <div class="coursePricePri" v-else>
+                            <div class="pricePri">¥ {{item.discountPrice}}</div>
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="course-list-container">
+        <!-- 都在看好书标题开始 -->
+         <h1 class="contentTitle">
+            <div class="txt">
+                <div class="txt-top">都在看好书</div>
+                <div class="txt-bottom"></div>
+            </div>
+        </h1>
+        <!-- 都在看好书标题结束 -->
+         <div class="book">
+            <ul class="courseUl">
+                <li class="goodBook" v-for="i in 4" :key="i">
+                    <div class="goodBookInfo">
+                        <div class="courseBg">
+                            <img class="courseImg" :src="goodBook[i]" alt="">
+                        </div>
+                        <div class="courseName">
+                            小鹿线，WEB前端开发书籍待上线...
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
-    <!-- <div class="course-list-container"> -->
-        <!-- 都在看好书标题开始 -->
-        <!-- <h1 class="contentTitle">
-            <div class="txt">
-                <div class="txt-top">都在看好书</div>
-                <div class="txt-bottom"></div>
-            </div>
-        </h1> -->
-        <!-- 都在看好书标题结束 -->
-        <!-- <div class="book">
-            <ul class="courseUl">
-                <li class="goodBook" v-for="i in 4" :key="i">
-                    <div class="goodBookInfo">
-                        <div class="courseBg">
-                            <img class="courseImg" src="/image/classbg.png" alt="">
-                            <div  class="courseDesc">
-                                <div>晋级TS高手</div>
-                                <div>搞定复杂项目</div>
-                            </div>
-                        </div>
-                        <div class="courseName">
-                            晋级TypeScript高手，成为抢手的前端开发人才
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>   -->
-    <!-- </div> -->
 </div>
 </template>
 
 <script>
-import {getNewCourse,getHotCourse} from '@/common/api/courseManage.js'
-import {addShopCar} from '@/common/api/shopcar.js'
-import {createToken} from '@/common/api/token.js'
-import { mapState } from "vuex";
+import {getHotCourse, getNewCourse} from '@/common/api/courseManage.js'
 import {getImageByCode} from '@/common/api/picture.js'
+import imgCode from '@/common/globalImages.js'
+import {mapActions, mapMutations, mapState} from "vuex";
+
 export default {
 	data() {
 		return {
@@ -141,11 +154,14 @@ export default {
                 entity: {}
             },
             token:'',
-            imageCode:''
+            imgUrl:'',
+            tokens:'',
+            goodBook:['/image/book1.png','/image/book2.png','/image/book3.png','/image/book4.png','/image/book5.png']
 
         }
 	},
     created(){
+        this.tokens = localStorage.getItem('token')
         this.getNewCourse()
         this.getHotCourse()
         this.getImageByCode()
@@ -157,26 +173,13 @@ export default {
         }),
     },
     methods:{
+        ...mapActions(["saveCartNumAction"]),
+        ...mapMutations(["saveLoginDialog"]),
         getImageByCode(){
-            getImageByCode({imageCode:'C56R35638I'}).then(res => {
-                this.imageCode = res.data.data.imageUrl;
+            getImageByCode({imageCode:imgCode.global_commendcourse}).then(res => {
+                // console.log(res)
+                this.imgUrl = res.data.data.imageUrl;
             })
-        },
-        //加入购物车
-        addCart(item){
-            createToken().then(res => {
-                this.token = res.data.token
-                this.memberId = this.userInfo.id
-                addShopCar({courseId:item.id,memberId:this.memberId,token:this.token}).then(res => {
-                    if(res.meta.code === '200'){
-                        this.$message({
-                            message: '恭喜你，加入购物车成功',
-                            type: 'success'
-                        });
-                    }
-                })
-            })
-
         },
         //获取最新课程
         getNewCourse(){
@@ -267,7 +270,7 @@ export default {
 .course-list-container h1 .hot .hot-left {
 	height: 38px;
 	font-size: 20px;
-  padding: 0 10px;
+    padding: 0 10px;
 	text-align: center;
 	line-height: 37px;
 	color: #ffffff;
@@ -314,8 +317,11 @@ export default {
 	width: 285px;
 	height: 280px;
 	margin: 0 20px 20px 0;
+    transition:margin-top 0.2s;
+    -webkit-transition: margin-top 0.2s;
 }
 .newCourseContent .courseUl .courseItem:hover{
+    margin-top: -10px;
     cursor: pointer;
 }
 .newCourseContent .courseUl .courseItem:nth-child(4n+0){
@@ -331,7 +337,8 @@ export default {
 .commendCourseContent .commendLeft{
     width: 285px;
     height: 580px;
-	margin: 0 20px 20px 0;
+	  margin: 0 20px 20px 0;
+    cursor: not-allowed;
 }
 .commendCourseContent .commendLeft img{
     width: 100%;
@@ -346,8 +353,11 @@ export default {
 	width: 285px;
 	height: 280px;
 	margin: 0 20px 20px 0;
+    transition:margin-top 0.2s;
+    -webkit-transition: margin-top 0.2s;
 }
 .commendCourseContent .courseUl .courseItem:hover{
+    margin-top: -10px;
     cursor: pointer;
 }
 .commendCourseContent .courseUl .courseItem:nth-child(3n+0){
@@ -360,12 +370,26 @@ export default {
 	margin: 20px 0 0 0;
 }
 .courseInfo {
+    position: relative;
 	width: 100%;
-	height: 280px;
+	height: 270px;
 	background: #ffffff;
-	box-shadow: 2px 4px 4px rgba(27, 39, 94, 0.1);
+	box-shadow: 1px 1px 10px rgba(27, 39, 94, 0.4);
 	opacity: 1;
-	border-radius: 8px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    overflow: hidden;
+}
+.memberlogo{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 999;
+    margin: 5px 5px 0 0;
+}
+.memberlogo img{
+    width: 40px;
+    height: 20px;
 }
 .courseBg {
 	position: relative;
@@ -384,8 +408,6 @@ export default {
 	color: #ffffff;
 }
 .courseName {
-    width: 300px;
-    height: 40px;
 	margin: 10px;
 	font-weight: bold;
 	font-size: 14px;
@@ -402,29 +424,51 @@ export default {
 }
 .coursePrice {
 	display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    align-items: center;
+    width: 130px;
 	font-size: 14px;
-	margin-top: 10px;
+	margin-top: 15px;
+    padding: 0 5px;
+}
+.coursePricePri{
+    width: 75px;
+	font-size: 14px;
+	margin-top: 18px;
+    padding: 0 13px;
+    color: rgba(255, 114, 127, 1);
+    font-weight: 700;
+}
+.coursePriceZero{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 75px;
+	font-size: 14px;
+	margin-top: 15px;
+    padding: 0 10px;
+    color: rgba(53, 134, 255, 1);
 }
 .courseMemberbg {
 	position: relative;
 	left: 5px;
 	width: 80px;
-	height: 25px;
+	height: 20px;
 	color: #ffffff;
 	background: linear-gradient(90deg, #ff928e 0%, #fe7062 99%);
 	border-radius: 24px 0px 24px 0px;
 }
 .courseMember {
 	position: absolute;
-	line-height: 25px;
-	left: 10px;
+	line-height: 20px;
+	left: 13px;
+    font-weight: 700;
 }
 .price {
 	line-height: 25px;
-	left: 90px;
+	left: 100px;
 	color: #ff727f;
-	margin-left: 10px;
+    font-weight: 700;
 }
 
 /* 推荐好课结束 */
@@ -453,12 +497,10 @@ export default {
 	background: #ffffff;
 	box-shadow: 2px 4px 4px rgba(27, 39, 94, 0.1);
 	opacity: 1;
-	border-radius: 8px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
 /* 都在看好书结束 */
-.addCart{
-    margin-top: 3px;
-    color: #FF3D17;
-}
+
 </style>

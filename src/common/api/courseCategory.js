@@ -1,15 +1,15 @@
-import http from './requests'
+import request from './requests'
 
 export function getFirstCategorys(){
-    return http.$axios({
-        url:'api/course/category/getFirstCategorys',
+    return request({
+        url:'/api/course/category/getFirstCategorys',
         method:'GET',
     })
 }
 
 export function getSecondCategorys(categoryId){
-    return http.$axios({
-        url:'api/course/category/getSecondCategorys',
+    return request({
+        url:'/api/course/category/getSecondCategorys',
         method:'GET',
         params:{categoryId}
     })

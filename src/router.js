@@ -17,17 +17,21 @@ import Setprofile from '@/views/user/components/Setprofile.vue';
 import Setavator from '@/views/user/components/Setavator.vue';
 import Cart from '@/views/cart/Cart.vue';
 import ConfirmOrder from '@/views/cart/ConfirmOrder.vue';
-
+import  Loading from '@/views/loading/index.vue'
+import PaySuccess from '@/views/paySuccess/index.vue'
+import PayFail from '@/views/payFail/index.vue'
 
 
 Vue.use(Router);
 
 const routes = [
-  { path: '/', redirect: '/home'},
+  { path: '/',component: Home},
   { path: '/home', component: Home ,name:'home'},
+  { path:'*',component:Home},
   { path: '/course', component: Course ,name:'course'},
   { path:'/course-info/:courseId',component:CourseInfo,name:'course-info'},
-  { path:'/course-play/:courseId/:chapterId',component:CoursePlay,name:'course-play',meta:{ requiresAuth : true }},
+  {path: '/loading',component: Loading,name: 'loading'},
+  { path:'/course-play/:courseId/:chapterId',component:CoursePlay,name:'course-play',meta:{ requiresAuth : false }},
   { path: '/member', component: Member ,name:'member'},
   {
     path: '/about', component: About, name: 'about',
@@ -89,33 +93,46 @@ const routes = [
   },
   {path: '/cart', component: Cart,name:'cart',meta:{ requiresAuth : true }},
   {path: '/confirmOrder', component: ConfirmOrder,name:'confirmOrder',meta:{ requiresAuth : true }},
+  {path:'/paySuccess',component: PaySuccess,name:'paySuccess'},
+  {path:'/payFail',component: PayFail,name:'payFail'},
+
 ];
 
 // export default new Router({
 //   routes,
 //   mode: 'hash',
 // });
-
 const router = new Router({
-  mode: "hash",
+  mode: "history",
   // base: process.env.BASE_URL,
   routes,
 });
 
 router.beforeEach((to,from,next)=>{
-  let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+  let userInfo = localStorage.getItem('isLogin')
   if( to.matched.some(record => record.meta.requiresAuth) ){
     if( !userInfo ){
-      next({
+       /*  this.$confirm('未登录，请您登录', '提示信息', {
+            confirmButtonText: '登录',
+            cancelButtonText: '取消',
+            type: 'success'
+        }).then(() => {
+            this.$router.push('/home')
+        }).catch(() => {
+            this.$router.go(-1)
+        }); */
+        return
+      /* next({
         name:'home',
         query:{redirect:'/home'}
-      })
+      }) */
     }else{
       next()
     }
   }else{
     next()
   }
+
 })
 
 export default router;
