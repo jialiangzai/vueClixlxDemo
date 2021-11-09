@@ -32,9 +32,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="codeimg" v-if="qrCode">
-                    <img :src="qrCode" alt="">
-                </div>
                 <ul class="foot">
                     <li class="foot-item">应付<span class="unique">￥{{totalPrice}}</span></li>
                     <li>
@@ -44,6 +41,14 @@
 
             </div>
         </div>
+        <!-- 二维码对话框 -->
+        <el-dialog :visible.sync="codeVisible" class="pay-dialog" :title="title" width="500px">
+            <div class="dialogPrice">支付：<span class="prices">{{totalPrice}}元</span></div>
+            <div class="codeimg" v-if="qrCode">
+                <img :src="qrCode" alt="">
+            </div>
+            <div class="alert">请您及时付款，已便订单尽快处理！</div>
+        </el-dialog>
     </div>
 </template>
 
@@ -66,7 +71,8 @@ export default{
             counter: 0,
             isFinished: false,
             token:'',
-
+            codeVisible: false,
+            title:"",
         }
     },
     created(){
@@ -81,7 +87,8 @@ export default{
             queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
                     clearInterval(this.timeInterVal)
-                    this.$confirm('订单支付成功！', '提示信息', {
+                    this.$router.push('/paySuccess')
+                    /* this.$confirm('订单支付成功！', '提示信息', {
                         confirmButtonText: '个人中心',
                         cancelButtonText: '返回首页',
                         type: 'success'
@@ -91,8 +98,10 @@ export default{
                         this.$router.push('/')
                     });
                     this.isFinished = true
-                    sessionStorage.removeItem("selectedArr");
-                    this.removeShopCartCourses()
+                    localStorage.removeItem("selectedArr");
+                    this.removeShopCartCourses() */
+                }else{
+                     this.$router.push('/payFail')
                 }
             })
         },
@@ -103,7 +112,8 @@ export default{
             queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
                     clearInterval(this.timeInterVal)
-                    this.$confirm('订单支付成功！', '提示信息', {
+                    this.$router.push('/paySuccess')
+                    /* this.$confirm('订单支付成功！', '提示信息', {
                         confirmButtonText: '个人中心',
                         cancelButtonText: '返回首页',
                         type: 'success'
@@ -113,8 +123,10 @@ export default{
                         this.$router.push('/')
                     });
                     this.isFinished = true
-                    sessionStorage.removeItem("selectedArr");
-                    this.removeShopCartCourses()
+                    localStorage.removeItem("selectedArr");
+                    this.removeShopCartCourses() */
+                }else{
+                     this.$router.push('/payFail')
                 }
             })
         },
@@ -135,6 +147,8 @@ export default{
                 })
             }else{
                 if(this.payment.code === 'alipayment'){
+                    this.title = '支付宝扫码支付'
+                    this.codeVisible  = true
                     let data = {courses: this.setArr, payModes: this.payment.code}
                     zfbpay(data).then(res => {
                         this.qrCode = res.data.payurl
@@ -142,6 +156,8 @@ export default{
                         this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
                     })
                 }else if(this.payment.code === 'wxpayment'){
+                    this.title = '微信扫码支付'
+                    this.codeVisible  = true
                     let data = {courses: this.setArr, payModes: this.payment.code}
                     wxpay(data).then(res => {
                         this.qrCode = res.data.payurl
@@ -164,7 +180,7 @@ export default{
                                 this.$router.push('/')
                             });
                             this.isFinished = true
-                            sessionStorage.removeItem("selectedArr");
+                            localStorage.removeItem("selectedArr");
                             this.removeShopCartCourses()
                         }
                     })
@@ -176,7 +192,7 @@ export default{
             this.payment = payment
         },
         order(){
-            let selectedArr = sessionStorage.getItem("selectedArr");
+            let selectedArr = localStorage.getItem("selectedArr");
             if(!selectedArr){
                 this.$message({
                     message: '系统错误',
@@ -199,6 +215,23 @@ export default{
 
 
 <style scoped>
+>>>.el-dialog {
+    text-align: center !important;
+    border-radius: 10px!important;
+}
+.dialogPrice{
+    padding-bottom: 20px;
+    color: #93999F;
+}
+.prices{
+    color: #F01414;
+}
+.alert{
+    padding: 20px 0;
+    font-size: 14px;
+    color: #93999F;
+
+}
 .confirmOrder{
     width: 100%;
     height: 1000px;

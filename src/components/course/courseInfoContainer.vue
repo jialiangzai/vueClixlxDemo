@@ -54,7 +54,7 @@
         <div class="main">
             <div class="introduction">
                 <div class="desc">
-                    {{courseDetail.description ? courseDetail.description : ""}}
+                    {{courseDetail.description ? courseDetail.description : "该课程暂无介绍  "}}
                 </div>
                 <div class="btn">
                     <button class="btn-item active" @click="goOrder(courseInfoArr)">立即购买</button>
@@ -91,12 +91,19 @@
         </div>
     </div>
     <div class="down" v-else  v-for="(x,y) in downsource" :key="y">
-        <div class="source">
+        <div v-if="downsource.length === 0">
+            <el-empty
+                image="/image/about/course-empt.png"
+                description="该课程暂无资料"
+            ></el-empty>
+        </div>
+        <div class="source" v-else >
             <span class="downloadCourse">{{x.attachmentName}}</span>
             <button class="downloadbtn" @click="downloadSource(x)">下载资料</button>
         </div>
     </div>
   </div>
+  
 </template>
 
 
@@ -133,6 +140,7 @@ export default {
 	created() {
 		this.tokens = localStorage.getItem('token')
 		this.getcourseInfo()
+        window.scroll(0,0)
 	},
 	computed: {
 		...mapState({
@@ -277,7 +285,7 @@ export default {
 			j.isShow = false
 		},
 		goPlay(courseId, chapterId,publicType) {
-      if (!this.tokens) {
+            if (!this.tokens) {
 				this.$message({
 					message: '请先登录才能学习该课程哦',
 					type: 'error',

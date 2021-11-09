@@ -18,13 +18,16 @@ import Setavator from '@/views/user/components/Setavator.vue';
 import Cart from '@/views/cart/Cart.vue';
 import ConfirmOrder from '@/views/cart/ConfirmOrder.vue';
 import  Loading from '@/views/loading/index.vue'
+import PaySuccess from '@/views/paySuccess/index.vue'
+import PayFail from '@/views/payFail/index.vue'
 
 
 Vue.use(Router);
 
 const routes = [
-  { path: '/', redirect: '/home'},
+  { path: '/',component: Home},
   { path: '/home', component: Home ,name:'home'},
+  { path:'*',component:Home},
   { path: '/course', component: Course ,name:'course'},
   { path:'/course-info/:courseId',component:CourseInfo,name:'course-info'},
   {path: '/loading',component: Loading,name: 'loading'},
@@ -90,6 +93,9 @@ const routes = [
   },
   {path: '/cart', component: Cart,name:'cart',meta:{ requiresAuth : true }},
   {path: '/confirmOrder', component: ConfirmOrder,name:'confirmOrder',meta:{ requiresAuth : true }},
+  {path:'/paySuccess',component: PaySuccess,name:'paySuccess'},
+  {path:'/payFail',component: PayFail,name:'payFail'},
+
 ];
 
 // export default new Router({

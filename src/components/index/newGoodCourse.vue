@@ -38,7 +38,7 @@
                         </div>
 
                         <div class="coursePrice" v-else-if="item.isMember == 1">
-                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
+                            <div class="courseMemberbg"><span class="courseMember">会员免费</span></div>
                             <div class="price">¥ {{item.discountPrice}}</div>
                         </div>
                         <div class="coursePricePri" v-else>
@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="coursePrice" v-else-if="item.isMember == 1">
-                            <div class="courseMemberbg"><span class="courseMember">会员专享</span></div>
+                            <div class="courseMemberbg"><span class="courseMember">会员免费</span></div>
                             <div class="price">¥ {{item.discountPrice}}</div>
                         </div>
                         <div class="coursePricePri" v-else>
@@ -121,7 +121,7 @@
                             <img class="courseImg" :src="goodBook[i]" alt="">
                         </div>
                         <div class="courseName">
-                            晋级TypeScript高手，成为抢手的前端开发人才
+                            小鹿线，WEB前端开发书籍待上线...
                         </div>
                     </div>
                 </li>

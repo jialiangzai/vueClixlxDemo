@@ -15,7 +15,7 @@
                     :playsinline="true"
                     :options="playerOptions"
                     v-if="playerOptions.sources[0].src"
-                    @ready = "playerReadied($event)"
+                    @ready="playerReadied($event)"
                     @timeupdate="onPlayerTimeupdate($event)"
                     @ended="onPlayerEnded($event)"
                 ></video-player>
@@ -180,6 +180,7 @@ export default {
             createToken().then(res => {
                 this.tokens = res.data.token
                 if(this.isCollect === true){
+                    ByteLengthQueuingStrategy
                     addFavorite({courseId:this.courseId,token:this.tokens}).then(res => {
                         if(res.meta.code === '200'){
                             this.$message({
@@ -257,14 +258,7 @@ export default {
                     this.$router.go(-1)
                 }
             })
-            //获取播放历史记录
-            getLastHistoryByChapterId({
-                memberId:this.memberid,
-                courseId:this.courseId,
-                chapterId:this.chapterId
-            }).then(res => {
-                this.getLastTime = res.data.data.lastTime
-            })
+            
         },
          /* 获取视频播放进度 */
         onPlayerTimeupdate (player) {
@@ -284,7 +278,17 @@ export default {
         },
         //设置视频进度
         playerReadied(player){
-            player.currentTime(this.getLastTime)
+            //获取播放历史记录
+            getLastHistoryByChapterId({
+                memberId:this.memberid,
+                courseId:this.courseId,
+                chapterId:this.chapterId
+            }).then(res => {
+                if (res.data.data !==null){
+                    this.getLastTime = res.data.data.lastTime 
+                    player.currentTime(this.getLastTime)
+                }
+            })
         },
         //视频播放结束
         onPlayerEnded(player) {

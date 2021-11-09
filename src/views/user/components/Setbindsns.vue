@@ -425,7 +425,6 @@ export default {
 								captchaVerification: captchaVerification,
 							})
 								.then((ress) => {
-                  console.log(ress)
 									if (ress.meta.code === '200') {
 										this.$message({
 											message: '修改成功，重新登录',
@@ -453,7 +452,6 @@ export default {
 									}
 								})
 								.catch((err) => {
-                  console.log(err)
 									this.$message({
 										message: err.meta.msg,
 										type: 'warning',

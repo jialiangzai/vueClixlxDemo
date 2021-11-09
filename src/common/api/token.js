@@ -4,9 +4,6 @@ import {Decrypt} from '@/utils/aes'
 export function createToken(){ 
   return request({
     url: '/api/token/createToken',
-    method: 'POST',
-    headers: {
-      'Authorization': Decrypt(localStorage.getItem('token'))
-    }
+    method: 'POST'
   })
 }

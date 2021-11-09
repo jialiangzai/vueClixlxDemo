@@ -14,14 +14,9 @@
 import indexHeader from '@/components/index/header.vue';
 import foot from '@/components/foot/foot.vue';
 import {
-  getInfo,
-  getShopCarCounter,
-  createToken,
   getAccessToken
 } from "@/common/api/auth";
-import  {Loading} from 'element-ui'
 import  {Encrypt,Decrypt} from '@/utils/aes.js';
-import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   name: "index.vue",
   data(){
@@ -39,14 +34,7 @@ export default {
     this.goWeiLogin()
   },
   methods:{
-    ...mapActions([
-      "saveUserInfoAction",
-      "saveLoginAction",
-      "saveCartNumAction",
-    ]),
-    ...mapMutations(["saveLoginDialog"]),
     goWeiLogin(){
-      if(!localStorage.getItem('token')){
         if(this.$route.query.code && this.$route.query.logintype && this.$route.query.t){
           try{
             const code = Decrypt(this.$route.query.code)
@@ -55,20 +43,17 @@ export default {
             }).then(res=>{
               if(res.meta.code === '200'){
 
-                // 获取用户信息
-                this.getUserInfo();
                 this.$store.commit("saveLoginDialog", false);
                 let accessToken = res.data.accessToken;
                 // 存储到access中
-                localStorage.setItem("token", accessToken);
+                // console.log(accessToken)
+                localStorage.setItem("token", Encrypt(accessToken));
                 localStorage.setItem("isLogin", JSON.stringify(true));
-                this.getCarNum();
-                this.saveLoginAction();
+                 window.location.href = '/home'
                 this.$message({
                   message: "登录成功，赶紧去学习吧！",
                   type: "success",
                 });
-
               }else {
 
                 this.$message({
@@ -77,54 +62,12 @@ export default {
                 });
               }
             })
-
           }catch (e) {
             console.log(e)
           }
         }else{
           console.log('微信登录失败')
         }
-      }
-    },
-    // 获取个人信息
-    getUserInfo(params) {
-      createToken().then(ress=>{
-        getInfo({
-          token:ress.data.token
-        })
-            .then((res) => {
-              // this.saveUserInfoActions()
-              if (res.meta.code === "200") {
-                // sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-                this.saveUserInfoAction();
-                // this.$router.push('/user/setbindsns')
-                window.location.href = '/home'
-                // window.location.reload()
-              } else {
-                this.$message({
-                  message: res.meta.msg,
-                  type: "error",
-                });
-              }
-            })
-            .catch((err) => {});
-      })
-
-    },
-    // 获取购物车数据
-    getCarNum() {
-      if (localStorage.getItem("token")) {
-        getShopCarCounter().then((res) => {
-          if (res.meta.code === "200") {
-            this.saveCartNumAction(res.data.counter);
-          } else {
-            this.$message({
-              message: res.meta.msg,
-              type: "error",
-            });
-          }
-        });
-      }
     },
   }
 }

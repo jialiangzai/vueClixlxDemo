@@ -74,7 +74,7 @@ export default{
             orderList:[],
             allChecked:false,
             selectedProducts:[],
-            token:'',
+            tokens:'',
             count:0,
             price:0,
         }
@@ -113,7 +113,7 @@ export default{
             this.selectedProducts.forEach(item => {
                 arr.push({'number':item.counter,"id":item.courseId})
             })
-            sessionStorage.setItem('selectedArr',JSON.stringify(arr))
+            localStorage.setItem('selectedArr',JSON.stringify(arr))
             this.$router.push("/confirmOrder")
         },
         //全选
@@ -144,9 +144,6 @@ export default{
         },
         //获取购物车数据
         getShopCarList(){
-            createToken().then(res => {
-                this.token = res.data.token
-            })
             getShopCarList().then(res => {
                 let list = res.data.list
                 list.forEach(item => {
@@ -155,31 +152,37 @@ export default{
                 this.orderList = list;
             })
         },
+        
         //删除购物车数据
-        deleteOrder(id){
+         deleteOrder(id){
             this.$confirm('确定是否删除该课程', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                deleteShopCar({id:id,token:this.token}).then(response => {
-                    if (response.meta.code === '200') {
-                        getShopCarCounter().then((res) => {
-                            if (res.meta.code == '200') {
-                                this.saveCartNumAction(res.data.counter)
-                            } else {
-                                this.$message({
-                                message: res.meta.msg,
-                                type: "error",
-                                });
-                            }
-                        });
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功'
-                        })
-                        this.getShopCarList()
-                    }
+                createToken().then(res => {
+                    console.log(res,'jjjjjjj');
+                    this.tokens = res.data.token
+                    console.log(this.tokens,'lllllll');
+                    deleteShopCar({id:id,token:this.tokens}).then(response => {
+                        if (response.meta.code === '200') {
+                            getShopCarCounter().then((res) => {
+                                if (res.meta.code == '200') {
+                                    this.saveCartNumAction(res.data.counter)
+                                } else {
+                                    this.$message({
+                                    message: res.meta.msg,
+                                    type: "error",
+                                    });
+                                }
+                            });
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功'
+                            })
+                            this.getShopCarList()
+                        }
+                    })
                 })
             }).catch(err => {})
         }
@@ -379,10 +382,10 @@ export default{
 .noOrder{
     width: 100%;
     height: 100%;
-    margin:200px 350px;
+    text-align: center;
+    margin:200px 0;
 }
 .order-alert{
-    width: 168px;
     height: 31px;
     font-size: 20px;
     font-family: Microsoft YaHei;

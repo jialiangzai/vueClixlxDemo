@@ -503,9 +503,9 @@ export default {
 		// 微信登录
 		goWeixin() {
             //'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
-            // 'https://www.xuexiluxian.cn/api//oauth/login/WECHAT_OPEN'
+            // 'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
 			window.location.href =
-				'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
+				'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
 
 		},
 		// 行为验证码
