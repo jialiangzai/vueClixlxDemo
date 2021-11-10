@@ -10,38 +10,160 @@
         <div class="content-buy">
           <div class="buy-txt">欢 迎 加 入 本 站 会 员</div>
           <div class="buy-item">
-            <div class="item-nom item-low">
+            <!--体验会员-->
+            <div class="item-normal">
               <div class='item-title'>
-                <span class="item-title-title">初级VIP</span>
-                <span class="item-title-img"><img src="../assets/image/member/king.png" alt=""></span>
+                <div class="item-title-img"><img src="../assets/image/member/member01.png" alt=""></div>
+                <div class="item-title-title">体验会员</div>
               </div>
-              <div class="item-sales">会员课程9.0折</div>
-              <div class="item-price">￥<span class="item-price-num">100</span></div>
-              <div class="item-time">1个月</div>
-              <div class="item-start">立即开通</div>
-              <div class="item-desc">初级VIP</div>
+              <div class="item-desc">全网体验学习，找到最适合自己的学习内容</div>
+              <div class="item-price">
+                <div class="item-price-fuhao">￥</div>
+                <div class="item-price-num">9.9</div>
+                <div class="item-price-time">元/5天</div>
+              </div>
+              <div class="item-start-box">
+                <button class="item-start-btn btn-animate">立即开通</button>
+              </div>
+              <ul class="item-list">
+                <li>
+                  <div>每天免费学课程</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>W3C标准技术</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>快捷易懂的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>在线实例测试工具</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>自律的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+              </ul>
             </div>
-            <div class="item-nom item-mid">
+            <!--1个月会员-->
+            <div class="item-normal item-normal-one">
               <div class='item-title'>
-                <span class="item-title-title">高级VIP</span>
-                <span class="item-title-img"><img src="../assets/image/member/king.png" alt=""></span>
+                <div class="item-title-img"><img src="../assets/image/member/member02.png" alt=""></div>
+                <div class="item-title-title">1个月会员</div>
               </div>
-              <div class="item-sales">会员课程5.0折</div>
-              <div class="item-price">￥<span class="item-price-num">600</span></div>
-              <div class="item-time">6个月</div>
-              <div class="item-start item-start-mid">立即开通</div>
-              <div class="item-desc">高级VIP(6个月)</div>
+              <div class="item-desc">学习能力，不断成长中</div>
+              <div class="item-price item-price-one">
+                <div class="item-price-fuhao">￥</div>
+                <div class="item-price-num">199</div>
+                <div class="item-price-time">元/月</div>
+              </div>
+              <div class="item-start-box">
+                <button class="item-start-btn btn-animate item-start-btn-one">立即开通</button>
+              </div>
+              <ul class="item-list item-list-one">
+                <li>
+                  <div>每天免费学课程</div>
+                  <div class="item-list-r list-r-one"></div>
+                </li>
+                <li>
+                  <div>W3C标准技术</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>快捷易懂的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>在线实例测试工具</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>自律的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+              </ul>
             </div>
-            <div class="item-nom item-top">
+            <!--3个月会员-->
+            <div class="item-normal item-normal-three">
               <div class='item-title'>
-                <span class="item-title-title">优创会员</span>
-                <span class="item-title-img"><img src="../assets/image/member/king.png" alt=""></span>
+                <div class="item-title-img"><img src="../assets/image/member/member03.png" alt=""></div>
+                <div class="item-title-title title-title-three">3个月会员</div>
+                <div class="title-tuijian">
+                  <img src="../assets/image/member/tuijian.png" alt="">
+                </div>
               </div>
-              <div class="item-sales">会员课程免费</div>
-              <div class="item-price">￥<span class="item-price-num">1000</span></div>
-              <div class="item-time">1个月</div>
-              <div class="item-start item-start-top">立即开通</div>
-              <div class="item-desc">优创会员(1个月)</div>
+              <div class="item-desc item-desc-three">学习成就更优秀的自己</div>
+              <div class="item-price item-price-three">
+                <div class="item-price-fuhao">￥</div>
+                <div class="item-price-num">499</div>
+                <div class="item-price-time">元/5天</div>
+              </div>
+              <div class="item-start-box">
+                <button class="item-start-btn btn-animate item-start-btn-three">立即开通</button>
+              </div>
+              <ul class="item-list item-list-three">
+                <li>
+                  <div>每天免费学课程</div>
+                  <div class="item-list-r list-r-three"></div>
+                </li>
+                <li>
+                  <div>W3C标准技术</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>快捷易懂的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>在线实例测试工具</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>自律的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+              </ul>
+            </div>
+            <!--12个月会员-->
+            <div class="item-normal item-normal-one">
+              <div class='item-title'>
+                <div class="item-title-img"><img src="../assets/image/member/member04.png" alt=""></div>
+                <div class="item-title-title">12个月会员</div>
+              </div>
+              <div class="item-desc">学习能力，不断成长中</div>
+              <div class="item-price item-price-one">
+                <div class="item-price-fuhao">￥</div>
+                <div class="item-price-num">1024</div>
+                <div class="item-price-time">元/5天</div>
+              </div>
+              <div class="item-start-box">
+                <button class="item-start-btn btn-animate item-start-btn-one">立即开通</button>
+              </div>
+              <ul class="item-list item-list-one">
+                <li>
+                  <div>每天免费学课程</div>
+                  <div class="item-list-r list-r-one"></div>
+                </li>
+                <li>
+                  <div>W3C标准技术</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>快捷易懂的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>在线实例测试工具</div>
+                  <div class="item-list-r"></div>
+                </li>
+                <li>
+                  <div>自律的学习方式</div>
+                  <div class="item-list-r"></div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -103,6 +225,7 @@ export default {
     padding: 1px 0 0 0;
     width: 1300px;
     margin: 0 auto;
+    /*background: cyan;*/
   }
   .buy-txt{
     width: 323px;
@@ -132,97 +255,171 @@ export default {
     align-items: center;
     margin: 0 0 100px 0;
   }
-  .buy-item .item-nom{
-    width: 280px;
-    height: 420px;
+  .buy-item .item-normal{
+    padding: 15px;
+    width: 296px;
+    height: 550px;
+    background: #F7F8FA;
     border-radius: 12px;
-    background: url('../assets/image/member/low.png') no-repeat center;
     display: flex;
     flex-direction: column;
     position: relative;
+    /*box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
   }
-  .buy-item .item-nom:hover{
-    transform: translate(-5px,-5px);
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  .item-normal-one{
+    background: #FFFFFF;
   }
-  .buy-item .item-mid{
-    background: url('../assets/image/member/mid.png') no-repeat center;
-  }
-  .buy-item .item-top{
-    background: url('../assets/image/member/top.png') no-repeat center;
+  .buy-item .item-normal.item-normal-three{
+    background-color: #0D0D0D;
   }
   /* 会员卡片内部样式 */
+  /*标题*/
   .item-title{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 28px;
+    position: relative;
+    /*background: #cccccc;*/
+  }
+  .title-tuijian{
     position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 26px;
-    color: white;
+    top: -30px;
+    right: -42px;
+    width: 150px;
+    height: 150px;
   }
-  .item-title .item-title-img{
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    margin-left: 10px;
-  }
-  .item-title-img img{
+  .title-tuijian img{
     width: 100%;
     height: 100%;
   }
-  .item-sales{
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%,30px);
-    font-size: 20px;
+  .item-title .item-title-img{
+    width: 26px;
+    height: 26px;
+  }
+  .item-title .item-title-img img{
+    width: 100%;
+    height: 100%;
+  }
+  .item-title-title{
+    margin-left: 10px;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .title-title-three{
+    color: #e0e0e0;
+  }
+  /*描述*/
+  .item-desc{
+    width: 100%;
+    height: 18px;
+    margin-top: 15px;
+    /*background: #00ac06;*/
+    font-size: 14px;
+    color: #999999;
+  }
+  .item-desc-three{
+    color: #efefef;
+  }
+  /*价格*/
+  .item-price{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    /*width: 135px;*/
+    height: 59px;
+    margin-top: 25px;
+    /*background: #2c80ff;*/
+    color: #999999;
+  }
+  .item-price-one{
+    color: #DC985E;
+  }
+  .item-price-num{
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 34px;
+  }
+  .item-price-three{
     color: white;
   }
-  .item-price{
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%,100px);
-    font-size: 30px;
-    color: #ffffff;
+  /*按钮*/
+  .item-start-box{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 126px;
+    border-bottom: 1px solid;
+    border-bottom-color: #eeeeee;
   }
-  .item-price .item-price-num{
-    font-size: 60px;
+  .item-start-btn{
+    width: 100%;
+    height: 50px;
+    outline: none;
+    border: none;
+    font-size: 18px;
+    color: #666666;
+    border-radius: 4px;
+    cursor: pointer;
   }
-  .item-time{
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%,190px);
-    font-size: 20px;
-    color: #ffffff;
+  .item-start-btn-one{
+    background: #DC985E;
+    color: white;
   }
-  .item-start{
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%,260px);
-    font-size: 20px;
-    width: 140px;
-    height: 30px;
-    background: #ffffff;
-    text-align: center;
-    line-height: 30px;
-    border-radius: 15px;
-    color: #2691FF ;
-    box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
+  .item-start-btn-three{
+    background: linear-gradient(180deg, #FCC994 0%, #F6A967 100%);
+    color: #FFFFFF;
   }
-  .item-desc{
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%,330px);
-    font-size: 15px;
-    color: #ffffff;
+  .item-start-btn:hover{
+    box-shadow:3px 2px 5px #cccccc;
   }
-  .item-start-mid{
-    color: #FFA73B;
+  /*.item-start-btn-one:hover{*/
+  /*  box-shadow:3px 5px 5px #cccccc;*/
+  /*}*/
+
+  /*列表*/
+  .item-list{
+    padding: 10px 0;
+    width: 100%;
+    height: 244px;
+    /*background: deeppink;*/
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: #666666;
   }
-  .item-start-top{
-    color: #FF422C;
+  .item-list li{
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+  }
+  .item-list li:first-child{
+    font-weight: bold;
+  }
+  .item-list-one li:first-child{
+    font-weight: bold;
+    color: #DC985E;
+  }
+  .item-list-r{
+    width: 14px;
+    height: 14px;
+    border: 1px solid #666666;
+    border-radius: 8px;
+  }
+  .list-r-one{
+    border-color: #DC985E;
+  }
+  .item-list-three{
+    color: #eeeeee;
+  }
+  .item-list-three li:first-child{
+    font-weight: bold;
+    color: #DC985E;
+  }
+  .list-r-three{
+    border-color: #DC985E;
   }
 </style>
