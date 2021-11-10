@@ -344,6 +344,11 @@ export default{
                             message: '恭喜你，加入购物车成功',
                             type: 'success'
                         });
+                    }else if(res.meta.code === '20003'){
+                        this.$message({
+                            message: '该商品已在购物车，请勿重复添加',
+                            type: 'error'
+                        });
                     }
                 })
             })

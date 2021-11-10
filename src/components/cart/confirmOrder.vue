@@ -48,6 +48,10 @@
                 <img :src="qrCode" alt="">
             </div>
             <div class="alert">请您及时付款，已便订单尽快处理！</div>
+            <div class="finish">
+                <div class="error" @click="payFail">支付遇到问题</div>
+                <div class="success" @click="paySuccess">我已支付</div>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -56,6 +60,7 @@
 import {settlement,zfbpay,queryOrderWithAli,wxpay,queryOrderWithWX} from '@/common/api/payment.js'
 import {deleteShopCars} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
+
 export default{
     data(){
         return{
@@ -78,12 +83,37 @@ export default{
     created(){
         this.order()
     },
-
     methods:{
-        queryOrderWithAli(){
-            if(this.isFinished){
-                return;
+      //支付成功
+      paySuccess(){
+        if(this.payment.code === 'alipayment'){
+          queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
+            if(res.meta.code === "200"){
+              clearInterval(this.timeInterVal)
+              this.$router.push('/paySuccess')
+            }else{
+               this.$router.push('/payFail')
             }
+          })
+        }else if(this.payment.code === 'wxpayment'){
+          queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
+            if(res.meta.code === "200"){
+              clearInterval(this.timeInterVal)
+              this.$router.push('/paySuccess')
+            }else{
+              this.$router.push('/payFail')
+            }
+          })
+        }
+      },
+      payFail(){
+        clearInterval(this.timeInterVal)
+        this.$router.push('/payFail')
+      },
+        queryOrderWithAli(){
+            // if(this.isFinished){
+            //     return;
+            // }
             queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
                     clearInterval(this.timeInterVal)
@@ -100,15 +130,13 @@ export default{
                     this.isFinished = true
                     localStorage.removeItem("selectedArr");
                     this.removeShopCartCourses() */
-                }else{
-                     this.$router.push('/payFail')
                 }
             })
         },
         queryOrderWithWX(){
-            if(this.isFinished){
-                return;
-            }
+            // if(this.isFinished){
+            //     return;
+            // }
             queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
                     clearInterval(this.timeInterVal)
@@ -125,8 +153,6 @@ export default{
                     this.isFinished = true
                     localStorage.removeItem("selectedArr");
                     this.removeShopCartCourses() */
-                }else{
-                     this.$router.push('/payFail')
                 }
             })
         },
@@ -148,19 +174,19 @@ export default{
             }else{
                 if(this.payment.code === 'alipayment'){
                     this.title = '支付宝扫码支付'
-                    this.codeVisible  = true
                     let data = {courses: this.setArr, payModes: this.payment.code}
                     zfbpay(data).then(res => {
                         this.qrCode = res.data.payurl
+                        this.codeVisible  = true
                         this.orderNumber = res.data.orderNumber;
                         this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
                     })
                 }else if(this.payment.code === 'wxpayment'){
                     this.title = '微信扫码支付'
-                    this.codeVisible  = true
                     let data = {courses: this.setArr, payModes: this.payment.code}
                     wxpay(data).then(res => {
                         this.qrCode = res.data.payurl
+                        this.codeVisible  = true
                         this.orderNumber = res.data.orderNumber
                         this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
                     })
@@ -215,6 +241,31 @@ export default{
 
 
 <style scoped>
+.finish{
+  width: 170px;
+
+  line-height: 30px;
+  margin: 0 auto;
+  display: flex;
+}
+.success{
+  margin-left: 20px;
+  width: 70px;
+  font-size:12px ;
+  background: rgba(54, 137, 255, 0.22);
+  color: #3692ff;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.error{
+  width: 100px;
+  font-size:12px ;
+  background: linear-gradient(90deg, #fc7979 0%, #da4848 100%);
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 8px;
+
+}
 >>>.el-dialog {
     text-align: center !important;
     border-radius: 10px!important;
