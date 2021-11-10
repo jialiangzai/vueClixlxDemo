@@ -10,88 +10,87 @@
         </div>
 		<div class="play">
 			<div class="play-left">
-                <video-player class="video-player vjs-custom-skin"
-                    ref="videoPlayer"
-                    :playsinline="true"
-                    :options="playerOptions"
-                    v-if="playerOptions.sources[0].src"
-                    @ready="playerReadied($event)"
-                    @timeupdate="onPlayerTimeupdate($event)"
-                    @ended="onPlayerEnded($event)"
-                ></video-player>
-                <div class="loading" v-if="!playerOptions.sources[0].src">
-                    <img src="/image/loading.gif" alt="">
-                    加载中...
-                </div>
-                <div class="over" v-if="isEnded">
-                    <div class="finished" v-if="isEnded && !isCourseEnded">
-                        <p>恭喜您学完该小节</p>
-                        <p class="nextCourse">下一小节：{{nextChapter.chapterName}}</p>
-                        <button class="over-btn resetLearn" @click="resetLearn">重学一遍</button>
-                        <button class="over-btn" @click="nextCourse">下一小节</button>
-                    </div>
-                    <div class="finished" v-if="isEnded && isCourseEnded">
-                        <p>恭喜您学完本课程全部内容</p>
-                        <button class="over-btn goHome" @click="goHome">返回首页</button>
-                        <button class="over-btn goCourse" @click="goCourse">返回课程</button>
-                    </div>
-                </div>
+        <video-player class="video-player vjs-custom-skin"
+            ref="videoPlayer"
+            :playsinline="true"
+            :options="playerOptions"
+            v-if="playerOptions.sources[0].src"
+            @ready="playerReadied($event)"
+            @timeupdate="onPlayerTimeupdate($event)"
+            @ended="onPlayerEnded($event)"
+        ></video-player>
+        <div class="loading" v-if="!playerOptions.sources[0].src">
+            <img src="/image/loading.gif" alt="">
+            加载中...
+        </div>
+        <div class="over" v-if="isEnded">
+            <div class="finished" v-if="isEnded && !isCourseEnded">
+                <p>恭喜您学完该小节</p>
+                <p class="nextCourse">下一小节：{{nextChapter.chapterName}}</p>
+                <button class="over-btn resetLearn" @click="resetLearn">重学一遍</button>
+                <button class="over-btn" @click="nextCourse">下一小节</button>
+            </div>
+            <div class="finished" v-if="isEnded && isCourseEnded">
+                <p>恭喜您学完本课程全部内容</p>
+                <button class="over-btn goHome" @click="goHome">返回首页</button>
+                <button class="over-btn goCourse" @click="goCourse">返回课程</button>
+            </div>
+        </div>
 			</div>
 			<div class="play-right" ref="wrapper">
-                <el-tabs tab-position="right" >
-                    <el-tab-pane>
-                        <div slot="label" class="tabpanel-title">
-                            <div class="icon"><i class="el-icon-reading"></i></div>
-                            <p class="text">课程</p>
-                        </div>
-             
-                        <div class="course-container" >
-                            <div class="courseName"  :title="courseInfo.courseName">{{courseInfo.courseName}}</div>
-                            <div class="courseDesc">{{courseDetail.description}}</div>
-                            <div class="courseImg">
-                                <img :src="courseDetail.courseCover" alt="">
-                            </div>
-                            <div class="teacherRecommend">讲师介绍</div>
-                            <div class="teacher">
-                                <div class="teacherAvt">
-                                    <img :src="courseTeacher !== null ? courseTeacher.teacherAvatar:''" alt="">
-                                </div>
-                                <div class="teacherInfo">
-                                    <div class="teacherName">{{courseTeacher !== null ? courseTeacher.teacherName:''}}</div>
-                                    <div class="teacherTag">{{courseTeacher !== null ? courseTeacher.tags:'标签点击就不就'}}</div>
+        <el-tabs tab-position="right" >
+            <el-tab-pane>
+                <div slot="label" class="tabpanel-title">
+                    <div class="icon"><i class="el-icon-reading"></i></div>
+                    <p class="text">课程</p>
+                </div>
 
-                                </div>
+                <div class="course-container" >
+                    <div class="courseName"  :title="courseInfo.courseName">{{courseInfo.courseName}}</div>
+                    <div class="courseDesc">{{courseDetail.description}}</div>
+                    <div class="courseImg">
+                        <img :src="courseDetail.courseCover" alt="">
+                    </div>
+                    <div class="teacherRecommend"  v-if="courseTeacher !== null">讲师介绍</div>
+                    <div class="teacher" v-if="courseTeacher !== null">
+                        <div class="teacherAvt">
+                            <img :src="courseTeacher.teacherAvatar" alt="">
+                        </div>
+                        <div class="teacherInfo">
+                            <div class="teacherName">{{courseTeacher.teacherName}}</div>
+                            <div class="teacherTag">{{courseTeacher.tags}}</div>
+                        </div>
+                    </div>
+                    <div class="teacherReacher" v-if="courseTeacher !== null">{{ courseTeacher.research}}</div>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane>
+                <div slot="label" class="tabpanel-title">
+                    <div class="icon"><i class="el-icon-data-analysis"></i></div>
+                    <p class="text">章节</p>
+                </div>
+                <div class="chapter-container">
+                    <dl class="list" v-for="(item,index) in chapters" :key="index">
+                        <dt  :title="item.chapterName">{{item.chapterName}}</dt>
+                        <dd :class="chapterInfo.id === child.id ? 'active' : ''"  v-for="child in item.children" :key="child.id" @click="play(child)">
+                            <div class="video-itemIcon" :ref="renderMaps(child)">
+                                <i class="el-icon-video-camera"></i>
                             </div>
-                            <div class="teacherReacher">{{courseTeacher !== null ? courseTeacher.research:''}}</div>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane>
-                        <div slot="label" class="tabpanel-title">
-                            <div class="icon"><i class="el-icon-data-analysis"></i></div>
-                            <p class="text">章节</p>
-                        </div>
-                        <div class="chapter-container">
-                            <dl class="list" v-for="(item,index) in chapters" :key="index">
-                                <dt  :title="item.chapterName">{{item.chapterName}}</dt>
-                                <dd :class="chapterInfo.id === child.id ? 'active' : ''"  v-for="child in item.children" :key="child.id" @click="play(child)">
-                                    <div class="video-itemIcon" :ref="renderMaps(child)">
-                                        <i class="el-icon-video-camera"></i>
-                                    </div>
-                                    <div class="item-name" :title="child.chapterName">
-                                        视频：{{child.chapterName}}
-                                    </div>
-                                </dd>
-                            </dl>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane class="note">
-                        <div slot="label" class="tabpanel-title">
-                            <div class="icon"><i class="el-icon-notebook-1"></i></div>
-                            <p class="text">笔记</p>
-                        </div>
-                        <el-empty image="/image/about/course-empt.png"></el-empty>
-                    </el-tab-pane>
-                </el-tabs>
+                            <div class="item-name" :title="child.chapterName">
+                                视频：{{child.chapterName}}
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane class="note">
+                <div slot="label" class="tabpanel-title">
+                    <div class="icon"><i class="el-icon-notebook-1"></i></div>
+                    <p class="text">笔记</p>
+                </div>
+                <el-empty image="/image/about/course-empt.png"></el-empty>
+            </el-tab-pane>
+        </el-tabs>
 			</div>
 		</div>
 	</div>
@@ -112,7 +111,6 @@ export default {
                 autoplay: true, //如果true,浏览器准备好时开始回放。
                 muted: false, // 默认情况下将会消除任何音频。
                 loop: false, // 导致视频一结束就重新开始。
-                height: '100',
                 preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
                 language: 'zh-CN',
                 aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
@@ -156,13 +154,15 @@ export default {
         }
 	},
 	created() {
-        let token = localStorage.getItem("token");
-        if(!token){
-            this.$message.error('无法播放视频，请先登录');
-            this.$router.go(-1)
-        }
+    let width = document.body.clientWidth;
+    this.playerOptions.aspectRatio = (width - 450) + ":600";
+    let token = localStorage.getItem("token");
+    if(!token){
+        this.$message.error('无法播放视频，请先登录');
+        this.$router.go(-1)
+    }
 
-        this.playCourse(this.courseId,this.chapterId)
+    this.playCourse(this.courseId,this.chapterId)
 	},
     computed: {
       player(){
@@ -258,7 +258,7 @@ export default {
                     this.$router.go(-1)
                 }
             })
-            
+
         },
          /* 获取视频播放进度 */
         onPlayerTimeupdate (player) {
@@ -285,7 +285,7 @@ export default {
                 chapterId:this.chapterId
             }).then(res => {
                 if (res.data.data !==null){
-                    this.getLastTime = res.data.data.lastTime 
+                    this.getLastTime = res.data.data.lastTime
                     player.currentTime(this.getLastTime)
                 }
             })
@@ -387,17 +387,17 @@ export default {
 .play {
 	display: flex;
 	background: #25282A;
-    padding: 20px;
-    height: 600px;
-    overflow: hidden;
+  padding: 20px;
+  height: 600px;
+  overflow: hidden;
 }
 /* 视频播放开始 */
 .play-left {
 	width: calc(100% - 400px);
 	height: 100%;
 	background: #000;
-    position: relative; 
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 .video-js .vjs-icon-placeholder {
     width: 100%;
