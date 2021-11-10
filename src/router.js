@@ -20,6 +20,8 @@ import ConfirmOrder from '@/views/cart/ConfirmOrder.vue';
 import  Loading from '@/views/loading/index.vue'
 import PaySuccess from '@/views/paySuccess/index.vue'
 import PayFail from '@/views/payFail/index.vue'
+import VipSuccess from '@/views/vipSuccess/index.vue'
+
 
 
 Vue.use(Router);
@@ -95,6 +97,7 @@ const routes = [
   {path: '/confirmOrder', component: ConfirmOrder,name:'confirmOrder',meta:{ requiresAuth : true }},
   {path:'/paySuccess',component: PaySuccess,name:'paySuccess'},
   {path:'/payFail',component: PayFail,name:'payFail'},
+  {path:'/vipSuccess',component: VipSuccess,name:'vipSuccess'},
 
 ];
 

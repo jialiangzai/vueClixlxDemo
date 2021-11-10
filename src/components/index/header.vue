@@ -85,7 +85,7 @@
           </div>
           <div class="content-login" v-else @click="goLogin">登录 / 注册</div>
         </div>
-        <!-- 划过头像显示 -->
+        <!-- 划过头像显示  -->
         <div class="user-info" v-show="isUserInfo">
           <div class="user-info-top">
             <div class="u-i-t-top">
@@ -100,6 +100,13 @@
                 <p>
                   {{ userInfo.nickName ? userInfo.nickName : nickname}}
                 </p>
+              </div>
+              <div class="vip">
+                <div class="vipImg">
+                  <img src="/image/vip.png">
+                </div>
+                <div class="vipName">铂金会员</div>
+                <div class="endTime">300天到期</div>
               </div>
             </div>
             <div class="u-i-i-bottom">
@@ -1101,6 +1108,37 @@ export default {
 </script>
 
 <style scoped>
+/*vip开始*/
+.vip{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 30px;
+  margin-left: -105px;
+  margin-top: 18px;
+  font-size: 12px;
+  line-height:30px;
+}
+.vipImg{
+  width: 15px;
+  height: 15px;
+  margin-right: 12px;
+}
+.vipImg img{
+  width: 100% !important;
+  height: 100% !important;
+}
+.vipName{
+  color: #93999F;
+}
+.endTime{
+  padding-left: 2px;
+  color:#FF0000 ;
+}
+
+
+
+/*vip结束*/
 .remember {
 	margin-bottom: 10px !important;
 }

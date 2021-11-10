@@ -170,6 +170,65 @@
       </div>
       <!-- 公共底部 -->
       <MyFooter :webconfig="webconfig"></MyFooter>
+      <!--点击开通，弹出蒙层-->
+<!--    <div class="member-mask" v-if="showMask === true" @click="showMask = true">-->
+      <div class="member-mask">
+        <div class="mask-box">
+<!--          <div class="mask-close" @click="showMask = false">-->
+
+          <div class="mask-close">
+            <img src="../assets/image/member/close.png" alt="">
+          </div>
+          <div class="mask-content">
+            <div class="content-top">
+              <div class="top-main">
+                <img src="../assets/image/member/maskuser.png" alt="">
+                <p>不一样的我</p>
+                <p>切换账号</p>
+              </div>
+            </div>
+            <div class="content-main">
+              <div class="main-title">
+                <p>开通<span class="vipDegree">初级VIP</span></p>
+              </div>
+              <div class="vipCards" >
+                <div class="vipCard" v-for="i in 4" >
+                  <p class="vipName">初级</p>
+                  <p class="vipPirce"><span class="vipNumber">399</span>元</p>
+                  <p class="vipTime">1个月</p>
+                  <p class="vipDesc">会员课0.9折 </p>
+                  <div class="vipStyle" >
+                    <img src="/image/bigVip.png"/>
+                  </div>
+
+                </div>
+              </div>
+              <div class="payPrice">
+                <p class="text">应付金额 <span class="num">388元</span></p>
+                <p class="alert">支付即同意成为VIP</p>
+              </div>
+              <div class="code">
+                <div class="sameCode ">
+                  <img class="wxCode" src="/image/guanfangwx.jpg">
+                  <div class="someAlert">
+                    <img class="wxDesc" src="/image/wx.png">
+                    <span class="alert">使用微信扫码付款</span>
+                  </div>
+                </div>
+                <div class="sameCode ">
+                  <img class="zfbCode" src="/image/guanfangwx.jpg">
+                  <div class="someAlert">
+                    <img class="zfbDesc" src="/image/zfb.png">
+                    <span class="alert">使用支付宝扫码付款</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -180,6 +239,8 @@ import {webConfig} from '@/common/api/webConfig.js'
 export default {
   data(){
     return{
+      showMask:false,
+      isactive:true,
       webconfig:{}
     }
   },
@@ -421,5 +482,200 @@ export default {
   }
   .list-r-three{
     border-color: #DC985E;
+  }
+  /*遮罩层样式*/
+  .member-mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
+    z-index: 999;
+  }
+  .mask-box{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 1200px;
+    height: 725px;
+    /*background-color: #cccccc;*/
+  }
+  .mask-close{
+    position: absolute;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    /*background-color: cyan;*/
+  }
+  .mask-close img{
+    width: 100%;
+    height: 100%;
+  }
+  .mask-content{
+    width: 100%;
+    height: 700px;
+    margin-top: 55px;
+    background-color: #F5F5F5;
+    border-radius: 7px;
+  }
+  .content-top{
+    width: 100%;
+    height: 170px;
+    /*background-color: red;*/
+    background: url("../assets/image/member/maskbg.png");
+    background-size: 100% 100%;
+  }
+  .top-main{
+    position: absolute;
+    top: 61px;
+    left: 40px;
+    /*width: 200px;*/
+    height: 45px;
+    /*background-color: #F6A967;*/
+    display: flex;
+  }
+  .top-main img{
+    width: 45px;
+    height: 45px;
+  }
+  .top-main p{
+    margin-left: 10px;
+    line-height: 45px;
+    font-size: 16px;
+  }
+  .top-main p:last-child{
+    margin-left: 15px;
+    color: #333333;
+    opacity: .4;
+  }
+  .content-main{
+    width: 1120px;
+    height: 625px;
+    background-color: #FFF;
+    border-radius: 7px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%,-98%);
+  }
+  .main-title{
+    width: 100%;
+    height: 68px;
+    position: relative;
+    border-bottom: 1px solid #cccccc;
+  }
+  .main-title p{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-33%);
+    width: 160px;
+    height: 45px;
+    /*background-color: yellow;*/
+    font-size: 24px;
+    text-align: center;
+    line-height: 45px;
+    border-bottom: 5px solid;
+    color: red;
+  }
+  .vipCards{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+  }
+  selectedVipCard{
+    width: 250px;
+    height: 200px;
+    text-align: center;
+    border-radius: 8px;
+    background: url("/iamge/checkedVip.png") no-repeat;
+    z-index: 10;
+  }
+  .vipCard{
+    width: 250px;
+    height: 200px;
+    text-align: center;
+    border: 1px solid #BFBFBF;;
+    background: url("/iamge/checkedVip.png") no-repeat;
+
+    border-radius: 8px;
+    z-index: 10;
+  }
+  .vipName{
+    margin-top: 20px;
+    font-size: 14px;
+    color: #595959;
+  }
+  .vipPirce{
+    margin:20px 0 5px 0;
+    font-size: 12px;
+    color: #595959;
+  }
+  .vipNumber{
+    color: #FF4E2C;
+    font-size: 30px;
+  }
+  .vipTime{
+    color: #8C8C8C;
+    font-size: 12px;
+  }
+  .vipDesc{
+    margin-top: 40px;
+    color: #8C8C8C;
+    font-size: 14px;
+  }
+  .vipStyle{
+    width: 33px;
+    height: 12px;
+    margin: -20px 0 0 168px;
+  }
+  .vipStyle img{
+    width: 100%;
+    height: 100%;
+  }
+  .payPrice{
+    margin-top: 10px;
+    text-align: center;
+    height: 70px;
+  }
+  .text{
+    color: #595959;
+    font-size: 14px;
+  }
+  .payPrice .num{
+    color: #FF4E2C;
+    font-size: 30px;
+  }
+  .alert{
+    margin-top: 5px;
+    font-size: 12px;
+    color: #B2B2B2;
+  }
+  .code{
+    display: flex;
+    justify-content: space-around;
+  }
+  .sameCode{
+    width: 220px;
+    height: 220px;
+  }
+  .sameCode .wxCode,.sameCode .zfbCode{
+    width: 100%;
+    height: 100%;
+  }
+  .someAlert{
+    display: flex;
+    justify-content:center ;
+  }
+  .wxDesc,.zfbDesc{
+    width: 30px;
+    height: 30px;
+  }
+  .sameCode .alert{
+    margin-left: 10px;
+    font-size: 14px;
+    color: #595959;
   }
 </style>
