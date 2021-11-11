@@ -451,7 +451,6 @@ export default {
 }
 .courseMemberbg {
 	position: relative;
-	left: 5px;
 	width: 80px;
 	height: 20px;
 	color: #ffffff;

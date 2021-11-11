@@ -41,57 +41,53 @@
       <!-- 公共底部 -->
       <MyFooter :webconfig="webconfig"></MyFooter>
       <!--点击开通，弹出蒙层-->
-      <div class="member-mask" ref="memberMask">
-        <div class="mask-box">
-          <div class="mask-close" @click="closeMask">
-            <img src="../assets/image/member/close.png" alt="">
+      <div class="member-mask" ref="memberMask"></div>
+      <div class="mask-box" ref="memberMaskBox">
+        <div class="mask-close" @click="closeMask">
+          <img src="../assets/image/member/close.png" alt="">
+        </div>
+        <div class="mask-content">
+          <div class="content-top">
+            <div class="top-main">
+              <img :src="userAvat?userAvat:'/image/common/avator.png'" alt="">
+              <p>{{userName}}</p>
+              <p class="changeuser" @click="changeUser" style="cursor: pointer">切换账号</p>
+            </div>
           </div>
-          <div class="mask-content">
-            <div class="content-top">
-              <div class="top-main">
-                <img :src="userAvat?userAvat:'/image/common/avator.png'" alt="">
-                <p>{{userName}}</p>
-                <p @click="changeUser" style="cursor: pointer">切换账号</p>
-              </div>
+          <div class="content-main">
+            <div class="main-title">
+              <p>开通<span class="vipDegree">{{ payName }}</span></p>
             </div>
-            <div class="content-main">
-              <div class="main-title">
-                <p>开通<span class="vipDegree">{{ payName }}</span></p>
-              </div>
-              <div class="vipCards" >
-                <div @click="selectedVip(i)" v-for="(i,k) in vipArr" :key="k" :class="['vipCard',[selectedId === i.id?'vipCardsBg':'']]">
-                  <p class="vipName">{{i.vipName}}</p>
-                  <p class="vipPirce"><span class="vipNumber">{{i.price}}</span>元</p>
-                  <p class="vipTime">{{i.termNumber}}个{{i.termType}}</p>
-                  <p class="vipDesc">{{ i.vipDesc }} </p>
-                  <p class="vipStyle" >
+            <div class="vipCards" >
+              <div @click="selectedVip(i)" v-for="(i,k) in vipArr" :key="k" :class="['vipCard',[selectedId === i.id?'vipCardsBg':'']]">
+                <p class="vipName">{{i.vipName}}</p>
+                <p class="vipPirce"><span class="vipNumber">{{i.price}}</span>元</p>
+                <p class="vipTime">{{i.termNumber}}个{{i.termType}}</p>
+                <div class="card-foot">
+                  <div class="vipDesc">平台所有课程免费学习</div>
+                  <div class="vipStyle" >
                     <img src="/image/bigVip.png"/>
-                  </p>
-                </div>
-              </div>
-              <div class="payPrice">
-                <p class="text">应付金额 <span class="num">{{goPayPrice}}元</span></p>
-                <p class="alert">支付即同意成为VIP</p>
-              </div>
-              <div class="code">
-                <div class="sameCode ">
-                  <img class="wxCode" :src="wxInfo.payurl">
-                  <div class="someAlert">
-                    <img class="wxDesc" src="/image/wx.png">
-                    <span class="alert">使用微信扫码付款</span>
                   </div>
                 </div>
-                <div class="sameCode ">
-                  <img class="zfbCode":src="zfbInfo.payurl">
-                  <div class="someAlert">
-                    <img class="zfbDesc" src="/image/zfb.png">
-                    <span class="alert">使用支付宝扫码付款</span>
-                  </div>
-                </div>
-              </div>
 
+              </div>
             </div>
-
+            <div class="payPrice">
+              <p class="text">应付金额 <span class="num">{{goPayPrice}}元</span></p>
+              <p class="alert">支付即同意成为VIP</p>
+            </div>
+            <div class="choosePayWay">
+              <h3>支付方式 <span class="pay" >{{payWay}}</span></h3>
+              <el-radio-group v-model="radio" class="radioStyle"  @change="getWay">
+                <el-radio :label="1">微信</el-radio>
+                <el-radio :label="2">支付宝</el-radio>
+              </el-radio-group>
+            </div>
+            <div class="code">
+              <div class="sameCode " ref="sameCodeHave">
+                <img class="wxCode" :src="payurl">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -102,18 +98,17 @@
 import MyHeader from '../components/index/header.vue'
 import MyFooter from '../components/foot/foot.vue'
 import {webConfig} from '@/common/api/webConfig.js'
-import {getAllVips,settlement,wxpay,zfbpay,doExchange} from '@/common/api/vip.js'
+import {getAllVips,settlement,wxpay,zfbpay} from '@/common/api/vip.js'
 import {createToken} from '@/common/api/token.js'
 import { mapState, mapActions,mapMutations } from "vuex";
+import {queryOrderWithAli,queryOrderWithWX} from '@/common/api/payment.js'
+
 
 export default {
   data(){
     return{
-      styleObject:{
-        width: '250px',
-        height: '180px',
-        backgroundImage:"url( '/image/checkedVip.png' )"
-      },
+      payWay:'',
+      radio:'',
       showMask:false,
       isactive:true,
       webconfig:{},
@@ -121,11 +116,12 @@ export default {
       tokens:'',
       goPayPrice:'',
       payName:'',
-      wxInfo:{},
-      zfbInfo:{},
+      payurl:'',
+      orderNumber:'',
       selectedId:'',
       userAvat:'',
-      userName:''
+      userName:'',
+      timeInterVal: "",
     }
   },
   metaInfo() {
@@ -148,24 +144,58 @@ export default {
     this.getAllVips()
   },
   methods: {
+    queryOrderWithAli(){
+      queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
+        if(res.meta.code === "200"){
+          clearInterval(this.timeInterVal)
+          this.$router.push('/vipSuccess')
+        }
+      })
+    },
+    queryOrderWithWX(){
+      queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
+        if(res.meta.code === "200"){
+          clearInterval(this.timeInterVal)
+          this.$router.push('/vipSuccess')
+        }
+      })
+    },
+    //得到支付方式
+    getWay(value){
+      if(value === 1){
+        this.payWay = '微信'
+        this.$refs.sameCodeHave.style.display = 'block'
+        //微信结算接口
+        wxpay({vipId:this.selectedId,payModes:'wxpayment',token:this.tokens}).then(res => {
+          this.orderNumber = res.data.orderNumber
+          this.payurl = res.data.payurl
+          this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
+        })
+
+      }else if(value === 2){
+        this.payWay = '支付宝'
+        this.$refs.sameCodeHave.style.display = 'block'
+        //支付宝结算接口
+        zfbpay({vipId:this.selectedId,payModes:'alipayment',token:this.tokens}).then(res => {
+          this.orderNumber = res.data.orderNumber
+          this.payurl = res.data.payurl
+          this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
+        })
+      }
+      console.log(value)
+    },
     //切换账号
     changeUser(){
-
-      console.log(this.userInfo,'jjjjjj');
-
+      this.$store.commit('saveLoginDialog',true)
     },
     //选中的会员等级
     selectedVip(item){
       this.goPayPrice=item.price
       this.payName=item.vipName
       this.selectedId = item.id
-      console.log(item);
     },
     //获取所有的会员等级
     getAllVips(){
-      console.log(this.userInfo,'ggggggggggggg');
-      this.userAvat = this.userInfo.avatar
-      this.userName = this.userInfo.nickName
       getAllVips().then(res => {
         res.data.list.forEach(item => {
           item["fontColor"] = "#DC985E";
@@ -207,28 +237,26 @@ export default {
       let res = await webConfig()
       this.webconfig = res.data.data
     },
+    //设置蒙层
     setMask(vipId){
+      this.userAvat = this.userInfo.avatar
+      this.userName = this.userInfo.nickName
       this.selectedId = vipId
       createToken().then(res => {
         this.tokens = res.data.token
         settlement({id:vipId,token:this.tokens}).then(res => {
           this.goPayPrice = res.data.totalPrice
           this.payName = res.data.vipInfo.vipName
-          console.log(res,'qqqqqqqqqq');
         })
-        //微信结算接口
-        wxpay({vipId:vipId,payModes:'wxpayment',token:this.tokens}).then(res => {
-          this.wxInfo = res.data
-        })
-        //支付宝结算接口
-        zfbpay({vipId:vipId,payModes:'alipayment',token:this.tokens}).then(res => {
-          this.zfbInfo = res.data
-        })
+
       })
       this.$refs.memberMask.style.display = 'block'
+      this.$refs.memberMaskBox.style.display = 'block'
+
     },
     closeMask(){
       this.$refs.memberMask.style.display = 'none'
+      this.$refs.memberMaskBox.style.display = 'none'
     },
   },
   components:{
@@ -278,6 +306,7 @@ export default {
     }
   }
   .buy-item{
+    /* position: relative; */
     width: 1300px;
     display: flex;
     justify-content: space-around;
@@ -297,6 +326,12 @@ export default {
     box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
   }
+  .item-normal-one{
+    background: #FFFFFF;
+  }
+  .buy-item .item-normal.item-normal-three{
+    background-color: #0D0D0D;
+  }
   /* 会员卡片内部样式 */
   /*标题*/
   .item-title{
@@ -305,6 +340,7 @@ export default {
     width: 100%;
     height: 28px;
     position: relative;
+    /*background: #cccccc;*/
   }
   .title-tuijian{
     position: absolute;
@@ -330,11 +366,15 @@ export default {
     font-size: 22px;
     font-weight: bold;
   }
+  .title-title-three{
+    color: #e0e0e0;
+  }
   /*描述*/
   .item-desc{
     width: 100%;
     height: 18px;
     margin-top: 15px;
+    /*background: #00ac06;*/
     font-size: 14px;
     color: #999999;
   }
@@ -344,8 +384,10 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
+    /*width: 135px;*/
     height: 59px;
     margin-top: 25px;
+    /*background: #2c80ff;*/
     color: #999999;
   }
 
@@ -378,6 +420,9 @@ export default {
   .item-start-btn:hover{
     box-shadow:3px 2px 5px #cccccc;
   }
+  /*.item-start-btn-one:hover{*/
+  /*  box-shadow:3px 5px 5px #cccccc;*/
+  /*}*/
 
   /*列表*/
   .item-list{
@@ -415,40 +460,41 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    bottom:0;
+    right:0;
     background: rgba(0,0,0,.5);
-    z-index: 99999;
+    z-index: 888;
   }
   .mask-box{
+    display: none;
     position: absolute;
-    /*top: 50%;*/
-    /*left: 50%;*/
-    /*transform: translate(-50%,-50%);*/
-    width: 1200px;
-    height: 725px;
+    top: 50%;
+    left: 50%;
+    z-index: 999;
+    transform: translate(-50%,-50%);
   }
   .mask-close{
     position: absolute;
     right: 0;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
+    top: 15px;
+    width: 35px;
+    height: 35px;
   }
   .mask-close img{
     width: 100%;
     height: 100%;
   }
   .mask-content{
-    width: 100%;
-    height: 700px;
+    width: 1200px;
+    height: 600px;
     margin-top: 55px;
     background-color: #F5F5F5;
     border-radius: 7px;
   }
   .content-top{
     width: 100%;
-    height: 170px;
+    height: 150px;
+    /*background-color: red;*/
     background: url("../assets/image/member/maskbg.png");
     background-size: 100% 100%;
   }
@@ -456,17 +502,21 @@ export default {
     position: absolute;
     top: 61px;
     left: 40px;
+    /*width: 200px;*/
     height: 45px;
+    /*background-color: #F6A967;*/
     display: flex;
   }
   .top-main img{
-    width: 45px;
-    height: 45px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
   }
   .top-main p{
     margin-left: 10px;
+    margin-top: -7px;
     line-height: 45px;
-    font-size: 16px;
+    font-size: 12px;
   }
   .top-main p:last-child{
     margin-left: 15px;
@@ -475,26 +525,27 @@ export default {
   }
   .content-main{
     width: 1120px;
-    height: 625px;
+    height: 555px;
     background-color: #FFF;
     border-radius: 7px;
     position: absolute;
-    top: 100%;
+    top: 98%;
     left: 50%;
     transform: translate(-50%,-98%);
   }
   .main-title{
     width: 100%;
-    height: 68px;
+    height: 50px;
     position: relative;
     border-bottom: 1px solid #cccccc;
   }
   .main-title p{
     position: absolute;
-    top: 50%;
+    top: 39%;
     left: 50%;
     transform: translate(-50%,-33%);
-    height: 45px;
+    height: 40px;
+    /*background-color: yellow;*/
     font-size: 24px;
     text-align: center;
     line-height: 45px;
@@ -508,21 +559,21 @@ export default {
   }
   .vipCardsBg{
     background: url("/image/checkedVip.png") no-repeat;
-    background-size: 250px 200px;
+    background-size: 250px 150px;
     background-position: 0px 0px;
   }
 
   selectedStyle{
     width: 250px;
-    height: 200px;
+    height: 180px;
     text-align: center;
     border-radius: 8px;
-    background: red;
+    /*background: red;*/
     z-index: 10;
   }
   .vipCard{
     width: 250px;
-    height: 180px;
+    height: 150px;
     text-align: center;
     border: 1px solid #BFBFBF;;
     /*background: url("/image/checkedVip.png") no-repeat;*/
@@ -548,22 +599,31 @@ export default {
     color: #8C8C8C;
     font-size: 12px;
   }
+  .card-foot{
+    display: flex;
+    justify-content: center;
+  }
   .vipDesc{
     color: #8C8C8C;
     font-size: 14px;
-    margin-top: 20px;
+    margin-top: 10px;
+  }
+  .vipDescContent{
+    display: flex;
+
   }
   .vipStyle{
     width: 33px;
     height: 12px;
-    margin: -20px 0 0 168px;
+    margin-top: 8px;
   }
   .vipStyle img{
     width: 100%;
     height: 100%;
+
   }
   .payPrice{
-    margin-top: 10px;
+    margin-top: 5px;
     text-align: center;
     height: 70px;
   }
@@ -585,6 +645,7 @@ export default {
     justify-content: space-around;
   }
   .sameCode{
+    display: none;
     width: 220px;
     height: 220px;
   }
@@ -604,5 +665,24 @@ export default {
     margin-left: 10px;
     font-size: 14px;
     color: #595959;
+  }
+  .choosePayWay{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .choosePayWay h3{
+    font-size: 16px;
+    color: #8C8C8C;
+  }
+  .choosePayWay .pay{
+    color: 18px;
+    color: #FF4E2C;
+  }
+  .radioStyle{
+    height: 21px;
+    line-height: 21px;
+    margin-left: 20px;
+    margin-top: 4px;
   }
 </style>

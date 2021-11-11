@@ -24,11 +24,11 @@
                     <el-divider></el-divider>
                     <h3>支付方式 <span class="pay" v-if="payment">{{payment.description}}</span></h3>
                     <div class="choosebg">
-                        <div :class="'payment ' + item.code" @mouseup="mouseup(item)" v-for="(item) in payMethod" :key="item.code">
-                            <i class="icon iconfont icon-zhifubaozhifu" v-if="item.code === 'alipayment'"></i>
-                            <span v-if="item.code === 'alipayment'">支付宝</span>
-                            <i class="icon iconfont icon-weixin" v-if="item.code === 'wxpayment'"></i>
-                            <span v-if="item.code === 'wxpayment'">微信</span>
+                        <div @mouseup="mouseup(item)" v-for="(item) in payMethod" :key="item.code" :class="renderClass(item) + (item.selected ? ' payStyle' : '')" >
+                          <i class="icon iconfont icon-zhifubaozhifu" v-if="item.code === 'alipayment'"></i>
+                          <span v-if="item.code === 'alipayment'">支付宝</span>
+                          <i class="icon iconfont icon-weixin" v-if="item.code === 'wxpayment'"></i>
+                          <span v-if="item.code === 'wxpayment'">微信</span>
                         </div>
                     </div>
                 </div>
@@ -78,12 +78,20 @@ export default{
             token:'',
             codeVisible: false,
             title:"",
+            isWx:false,
+            isZfb:false
         }
     },
     created(){
         this.order()
     },
     methods:{
+      renderClass(item){
+        if(!item.selected){
+          item["selected"] = false;
+        }
+        return "payment " + item.code;
+      },
       //支付成功
       paySuccess(){
         if(this.payment.code === 'alipayment'){
@@ -215,6 +223,10 @@ export default{
         },
         //鼠标弹起时触发
         mouseup(payment){
+            this.payMethod.forEach(item => {
+              item.selected = false;
+            })
+          payment.selected = true;
             this.payment = payment
         },
         order(){
@@ -382,7 +394,7 @@ export default{
 .coursePrice .nowprice{
     font-size: 18px;
     font-weight: 600;
-    color: 1C1F21;
+    color: #1C1F21;
 }
 .coursePrice .oldprice{
     padding-left: 10px;
@@ -432,10 +444,16 @@ export default{
     color: #01a8eb;
     box-shadow: 0px 1px 2px 1px #01a8eb;
 }
+.payStyle{
+  background: url("/image/checkedVip.png") no-repeat;
+  background-size: 220px 111px;
+  background-position: -67px -59px;
+}
 .wxpayment{
     border: #01af37 solid 1px;
     color: #01af37;
     box-shadow: 0px 1px 2px 1px #01af37;
+
 }
 
 /* 支付结束 */
