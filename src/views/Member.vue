@@ -11,157 +11,27 @@
           <div class="buy-txt">欢 迎 加 入 本 站 会 员</div>
           <div class="buy-item">
             <!--体验会员-->
-            <div class="item-normal">
+            <div class="item-normal" v-for="(item,index) in vipArr" :key="index" :style="'background:' + item.bgColor">
               <div class='item-title'>
-                <div class="item-title-img"><img src="../assets/image/member/member01.png" alt=""></div>
-                <div class="item-title-title">体验会员</div>
-              </div>
-              <div class="item-desc">全网体验学习，找到最适合自己的学习内容</div>
-              <div class="item-price">
-                <div class="item-price-fuhao">￥</div>
-                <div class="item-price-num">9.9</div>
-                <div class="item-price-time">元/5天</div>
-              </div>
-              <div class="item-start-box">
-                <button class="item-start-btn btn-animate">立即开通</button>
-              </div>
-              <ul class="item-list">
-                <li>
-                  <div>每天免费学课程</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>W3C标准技术</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>快捷易懂的学习方式</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>在线实例测试工具</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>自律的学习方式</div>
-                  <div class="item-list-r"></div>
-                </li>
-              </ul>
-            </div>
-            <!--1个月会员-->
-            <div class="item-normal item-normal-one">
-              <div class='item-title'>
-                <div class="item-title-img"><img src="../assets/image/member/member02.png" alt=""></div>
-                <div class="item-title-title">1个月会员</div>
-              </div>
-              <div class="item-desc">学习能力，不断成长中</div>
-              <div class="item-price item-price-one">
-                <div class="item-price-fuhao">￥</div>
-                <div class="item-price-num">199</div>
-                <div class="item-price-time">元/月</div>
-              </div>
-              <div class="item-start-box">
-                <button class="item-start-btn btn-animate item-start-btn-one">立即开通</button>
-              </div>
-              <ul class="item-list item-list-one">
-                <li>
-                  <div>每天免费学课程</div>
-                  <div class="item-list-r list-r-one"></div>
-                </li>
-                <li>
-                  <div>W3C标准技术</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>快捷易懂的学习方式</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>在线实例测试工具</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>自律的学习方式</div>
-                  <div class="item-list-r"></div>
-                </li>
-              </ul>
-            </div>
-            <!--3个月会员-->
-            <div class="item-normal item-normal-three">
-              <div class='item-title'>
-                <div class="item-title-img"><img src="../assets/image/member/member03.png" alt=""></div>
-                <div class="item-title-title title-title-three">3个月会员</div>
-                <div class="title-tuijian">
+                <div class="item-title-img"><img :src="item.vipIcon" alt=""></div>
+                <div class="item-title-title" :style="'color:' + item.vipNameColor">{{item.vipName}}</div>
+                <div class="title-tuijian" v-if="item.isRecommend === 1">
                   <img src="../assets/image/member/tuijian.png" alt="">
                 </div>
               </div>
-              <div class="item-desc item-desc-three">学习成就更优秀的自己</div>
-              <div class="item-price item-price-three">
+              <div class="item-desc">{{item.vipDesc}}</div>
+              <div class="item-price" :style="'color:' + item.fontColor">
                 <div class="item-price-fuhao">￥</div>
-                <div class="item-price-num">499</div>
-                <div class="item-price-time">元/5天</div>
+                <div class="item-price-num">{{ item.price }}</div>
+                <div class="item-price-time">元/{{  item.termNumber }}{{ item.termType }}</div>
               </div>
               <div class="item-start-box">
-                <button class="item-start-btn btn-animate item-start-btn-three">立即开通</button>
+                <button class="item-start-btn btn-animate" @click="setMask(item.id)" :style="'background:' + item.btnBgColor"><span :style="'color:' + item.btnFontColor"> 立即开通</span></button>
               </div>
-              <ul class="item-list item-list-three">
-                <li>
-                  <div>每天免费学课程</div>
-                  <div class="item-list-r list-r-three"></div>
-                </li>
-                <li>
-                  <div>W3C标准技术</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>快捷易懂的学习方式</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>在线实例测试工具</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>自律的学习方式</div>
-                  <div class="item-list-r"></div>
-                </li>
-              </ul>
-            </div>
-            <!--12个月会员-->
-            <div class="item-normal item-normal-one">
-              <div class='item-title'>
-                <div class="item-title-img"><img src="../assets/image/member/member04.png" alt=""></div>
-                <div class="item-title-title">12个月会员</div>
-              </div>
-              <div class="item-desc">学习能力，不断成长中</div>
-              <div class="item-price item-price-one">
-                <div class="item-price-fuhao">￥</div>
-                <div class="item-price-num">1024</div>
-                <div class="item-price-time">元/5天</div>
-              </div>
-              <div class="item-start-box">
-                <button class="item-start-btn btn-animate item-start-btn-one">立即开通</button>
-              </div>
-              <ul class="item-list item-list-one">
-                <li>
-                  <div>每天免费学课程</div>
-                  <div class="item-list-r list-r-one"></div>
-                </li>
-                <li>
-                  <div>W3C标准技术</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>快捷易懂的学习方式</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>在线实例测试工具</div>
-                  <div class="item-list-r"></div>
-                </li>
-                <li>
-                  <div>自律的学习方式</div>
-                  <div class="item-list-r"></div>
+              <ul class="item-list" >
+                <li v-for="(x,y) in item.interests" :key="y">
+                  <div>{{ x.label }}</div>
+                  <div ><i :class="x.icon === 1 ? 'el-icon-success' : 'el-icon-error'"></i></div>
                 </li>
               </ul>
             </div>
@@ -171,12 +41,9 @@
       <!-- 公共底部 -->
       <MyFooter :webconfig="webconfig"></MyFooter>
       <!--点击开通，弹出蒙层-->
-<!--    <div class="member-mask" v-if="showMask === true" @click="showMask = true">-->
-      <div class="member-mask">
+      <div class="member-mask" ref="memberMask">
         <div class="mask-box">
-<!--          <div class="mask-close" @click="showMask = false">-->
-
-          <div class="mask-close">
+          <div class="mask-close" @click="closeMask">
             <img src="../assets/image/member/close.png" alt="">
           </div>
           <div class="mask-content">
@@ -189,22 +56,21 @@
             </div>
             <div class="content-main">
               <div class="main-title">
-                <p>开通<span class="vipDegree">初级VIP</span></p>
+                <p>开通<span class="vipDegree">{{ payName }}</span></p>
               </div>
               <div class="vipCards" >
-                <div class="vipCard" v-for="i in 4" >
-                  <p class="vipName">初级</p>
-                  <p class="vipPirce"><span class="vipNumber">399</span>元</p>
-                  <p class="vipTime">1个月</p>
-                  <p class="vipDesc">会员课0.9折 </p>
+                <div class="vipCard" v-for="(i,k) in vipArr" :key="k" >
+                  <p class="vipName">{{i.vipName}}</p>
+                  <p class="vipPirce"><span class="vipNumber">{{i.price}}</span>元</p>
+                  <p class="vipTime">{{i.termNumber}}个{{i.termType}}</p>
+                  <p class="vipDesc">{{ i.vipDesc }} </p>
                   <div class="vipStyle" >
                     <img src="/image/bigVip.png"/>
                   </div>
-
                 </div>
               </div>
               <div class="payPrice">
-                <p class="text">应付金额 <span class="num">388元</span></p>
+                <p class="text">应付金额 <span class="num">{{goPayPrice}}元</span></p>
                 <p class="alert">支付即同意成为VIP</p>
               </div>
               <div class="code">
@@ -236,12 +102,20 @@
 import MyHeader from '../components/index/header.vue'
 import MyFooter from '../components/foot/foot.vue'
 import {webConfig} from '@/common/api/webConfig.js'
+import {getAllVips,settlement,wxpay,zfbpay,doExchange} from '@/common/api/vip.js'
+import {createToken} from '@/common/api/token.js'
+
 export default {
   data(){
     return{
       showMask:false,
       isactive:true,
-      webconfig:{}
+      webconfig:{},
+      vipArr:[],
+      tokens:'',
+      goPayPrice:'',
+      payName:''
+
     }
   },
   metaInfo() {
@@ -255,12 +129,70 @@ export default {
   },
   created() {
     this.__init()
+    this.getAllVips()
   },
   methods: {
+    //获取所有的会员等级
+    getAllVips(){
+      getAllVips().then(res => {
+        res.data.list.forEach(item => {
+          item["fontColor"] = "#DC985E";
+          item["btnBgColor"] = "#DC985E";
+          item["bgColor"] = "#ffffff";
+          item["btnFontColor"] = "#ffffff";
+          item["vipNameColor"] = "#333333";
+          if(item.isRepeat === 0){
+            item["fontColor"] = "#999999";
+            item["btnBgColor"] = "#DDDDDD";
+            item["bgColor"] = "#F7F8FA";
+            item["btnFontColor"] = "#666666";
+            item["vipNameColor"] = "#333333";
+          }
+          if(item.isRecommend === 1){
+            item["fontColor"] = "#FFFFFF";
+            item["btnBgColor"] = "linear-gradient(#FCC994, #F6A967);";
+            item["bgColor"] = "#0D0D0D";
+            item["btnFontColor"] = "#ffffff";
+            item["vipNameColor"] = "#E0E0E0";
+          }
+          item.interests = JSON.parse(item.interests)
+          switch (item.termType){
+            case 1:
+              item.termType = '日'
+              break
+            case 2:
+              item.termType = '月'
+              break
+            case 3:
+              item.termType = '年'
+              break
+          }
+        })
+        this.vipArr = res.data.list
+      })
+    },
     async __init(){
       let res = await webConfig()
       this.webconfig = res.data.data
-    }
+    },
+    setMask(vipId){
+      createToken().then(res => {
+        this.tokens = res.data.token
+        settlement({id:vipId,token:this.tokens}).then(res => {
+          this.goPayPrice = res.data.totalPrice
+          this.payName = res.data.vipInfo.vipName
+          console.log(res,'qqqqqqqqqq');
+        })
+        //结算接口
+        wxpay().then(res => {
+
+        })
+      })
+      this.$refs.memberMask.style.display = 'block'
+    },
+    closeMask(){
+      this.$refs.memberMask.style.display = 'none'
+    },
   },
   components:{
     MyHeader,
@@ -485,6 +417,7 @@ export default {
   }
   /*遮罩层样式*/
   .member-mask{
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -507,6 +440,7 @@ export default {
     right: 0;
     width: 40px;
     height: 40px;
+    cursor: pointer;
     /*background-color: cyan;*/
   }
   .mask-close img{
