@@ -418,13 +418,13 @@ export default {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,.5);
-    z-index: 999;
+    z-index: 99999;
   }
   .mask-box{
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*transform: translate(-50%,-50%);*/
     width: 1200px;
     height: 725px;
   }

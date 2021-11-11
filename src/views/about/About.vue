@@ -210,7 +210,7 @@ export default {
 </script>
 
 <style scoped>
-//蒙层
+/*蒙层*/
 .mask{
   display: flex;
   top: 0;
