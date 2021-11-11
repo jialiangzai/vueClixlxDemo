@@ -56,7 +56,7 @@ export function doExchange({exchangeCode,token}){
   return request({
     url: '/api/exchange/doExchange',
     method: 'GET',
-    data:{exchangeCode},
+    params:{exchangeCode},
     headers: {
       'Authorization':Decrypt(localStorage.getItem('token')),
       'token': token

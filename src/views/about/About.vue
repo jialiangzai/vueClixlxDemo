@@ -94,12 +94,11 @@
                   <img src="/image/duihuanma.png" alt="">
                 </div>
                 <div class="inputs">
-                  <input class="input" type="text" placeholder="请输入正确兑换码"></input>
+                  <input ref="inputCode" class="input" type="text" placeholder="请输入正确兑换码"></input>
                 </div>
                 <div class="confirm">
                   <img src="/image/confirm.png">
-                  <div class="noConfirm">立即确认</div>
-
+                  <div class="noConfirm" @click="confirmExchange">立即确认</div>
                 </div>
             </div>
           </div>
@@ -115,12 +114,14 @@ import Header from "@/components/index/header.vue";
 import {mapState} from "vuex";
 import foot from '@/components/foot/foot.vue';
 import {webConfig} from '@/common/api/webConfig.js'
-import IScroll from "iscroll";
+import {doExchange} from '@/common/api/vip.js'
+import {createToken} from '@/common/api/token.js'
 
 export default {
   name: "About",
   data() {
     return {
+      tokens:'',
       dialogVisible:false,
       clientHeight: 0,
       avatar: '/image/common/avator.png',
@@ -189,6 +190,26 @@ export default {
   },
 
   methods: {
+    //调用兑换码
+    confirmExchange(){
+      createToken().then(res => {
+        this.tokens = res.data.token
+        doExchange({exchangeCode:this.$refs.inputCode.value,token:this.tokens}).then(res => {
+          if(res.meta.code === '200'){
+            this.$message({
+              type:'success',
+              message:'恭喜您，兑换成功'
+            })
+          }else if(res.meta.code === '500'){
+            this.$message({
+              type:'error',
+              message:res.meta.msg
+            })
+          }
+          this.dialogVisible = false
+        })
+      })
+    },
     //兑换码状态
     changeDialog(){
       this.dialogVisible = true
