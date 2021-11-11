@@ -49,9 +49,9 @@
           <div class="mask-content">
             <div class="content-top">
               <div class="top-main">
-                <img src="../assets/image/member/maskuser.png" alt="">
-                <p>不一样的我</p>
-                <p>切换账号</p>
+                <img :src="userAvat?userAvat:'/image/common/avator.png'" alt="">
+                <p>{{userName}}</p>
+                <p @click="changeUser" style="cursor: pointer">切换账号</p>
               </div>
             </div>
             <div class="content-main">
@@ -59,14 +59,14 @@
                 <p>开通<span class="vipDegree">{{ payName }}</span></p>
               </div>
               <div class="vipCards" >
-                <div class="vipCard" v-for="(i,k) in vipArr" :key="k" >
+                <div @click="selectedVip(i)" v-for="(i,k) in vipArr" :key="k" :class="['vipCard',[selectedId === i.id?'vipCardsBg':'']]">
                   <p class="vipName">{{i.vipName}}</p>
                   <p class="vipPirce"><span class="vipNumber">{{i.price}}</span>元</p>
                   <p class="vipTime">{{i.termNumber}}个{{i.termType}}</p>
                   <p class="vipDesc">{{ i.vipDesc }} </p>
-                  <div class="vipStyle" >
+                  <p class="vipStyle" >
                     <img src="/image/bigVip.png"/>
-                  </div>
+                  </p>
                 </div>
               </div>
               <div class="payPrice">
@@ -75,14 +75,14 @@
               </div>
               <div class="code">
                 <div class="sameCode ">
-                  <img class="wxCode" src="/image/guanfangwx.jpg">
+                  <img class="wxCode" :src="wxInfo.payurl">
                   <div class="someAlert">
                     <img class="wxDesc" src="/image/wx.png">
                     <span class="alert">使用微信扫码付款</span>
                   </div>
                 </div>
                 <div class="sameCode ">
-                  <img class="zfbCode" src="/image/guanfangwx.jpg">
+                  <img class="zfbCode":src="zfbInfo.payurl">
                   <div class="someAlert">
                     <img class="zfbDesc" src="/image/zfb.png">
                     <span class="alert">使用支付宝扫码付款</span>
@@ -104,18 +104,28 @@ import MyFooter from '../components/foot/foot.vue'
 import {webConfig} from '@/common/api/webConfig.js'
 import {getAllVips,settlement,wxpay,zfbpay,doExchange} from '@/common/api/vip.js'
 import {createToken} from '@/common/api/token.js'
+import { mapState, mapActions,mapMutations } from "vuex";
 
 export default {
   data(){
     return{
+      styleObject:{
+        width: '250px',
+        height: '180px',
+        backgroundImage:"url( '/image/checkedVip.png' )"
+      },
       showMask:false,
       isactive:true,
       webconfig:{},
       vipArr:[],
       tokens:'',
       goPayPrice:'',
-      payName:''
-
+      payName:'',
+      wxInfo:{},
+      zfbInfo:{},
+      selectedId:'',
+      userAvat:'',
+      userName:''
     }
   },
   metaInfo() {
@@ -127,13 +137,35 @@ export default {
       }]
     }
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+      isLogin: (state) => state.user.isLogin,
+    }),
+  },
   created() {
     this.__init()
     this.getAllVips()
   },
   methods: {
+    //切换账号
+    changeUser(){
+
+      console.log(this.userInfo,'jjjjjj');
+
+    },
+    //选中的会员等级
+    selectedVip(item){
+      this.goPayPrice=item.price
+      this.payName=item.vipName
+      this.selectedId = item.id
+      console.log(item);
+    },
     //获取所有的会员等级
     getAllVips(){
+      console.log(this.userInfo,'ggggggggggggg');
+      this.userAvat = this.userInfo.avatar
+      this.userName = this.userInfo.nickName
       getAllVips().then(res => {
         res.data.list.forEach(item => {
           item["fontColor"] = "#DC985E";
@@ -176,6 +208,7 @@ export default {
       this.webconfig = res.data.data
     },
     setMask(vipId){
+      this.selectedId = vipId
       createToken().then(res => {
         this.tokens = res.data.token
         settlement({id:vipId,token:this.tokens}).then(res => {
@@ -183,9 +216,13 @@ export default {
           this.payName = res.data.vipInfo.vipName
           console.log(res,'qqqqqqqqqq');
         })
-        //结算接口
-        wxpay().then(res => {
-
+        //微信结算接口
+        wxpay({vipId:vipId,payModes:'wxpayment',token:this.tokens}).then(res => {
+          this.wxInfo = res.data
+        })
+        //支付宝结算接口
+        zfbpay({vipId:vipId,payModes:'alipayment',token:this.tokens}).then(res => {
+          this.zfbInfo = res.data
         })
       })
       this.$refs.memberMask.style.display = 'block'
@@ -241,7 +278,6 @@ export default {
     }
   }
   .buy-item{
-    /* position: relative; */
     width: 1300px;
     display: flex;
     justify-content: space-around;
@@ -261,12 +297,6 @@ export default {
     box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
   }
-  .item-normal-one{
-    background: #FFFFFF;
-  }
-  .buy-item .item-normal.item-normal-three{
-    background-color: #0D0D0D;
-  }
   /* 会员卡片内部样式 */
   /*标题*/
   .item-title{
@@ -275,7 +305,6 @@ export default {
     width: 100%;
     height: 28px;
     position: relative;
-    /*background: #cccccc;*/
   }
   .title-tuijian{
     position: absolute;
@@ -301,43 +330,31 @@ export default {
     font-size: 22px;
     font-weight: bold;
   }
-  .title-title-three{
-    color: #e0e0e0;
-  }
   /*描述*/
   .item-desc{
     width: 100%;
     height: 18px;
     margin-top: 15px;
-    /*background: #00ac06;*/
     font-size: 14px;
     color: #999999;
   }
-  .item-desc-three{
-    color: #efefef;
-  }
+
   /*价格*/
   .item-price{
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
-    /*width: 135px;*/
     height: 59px;
     margin-top: 25px;
-    /*background: #2c80ff;*/
     color: #999999;
   }
-  .item-price-one{
-    color: #DC985E;
-  }
+
   .item-price-num{
     font-size: 38px;
     font-weight: 700;
     line-height: 34px;
   }
-  .item-price-three{
-    color: white;
-  }
+
   /*按钮*/
   .item-start-box{
     display: flex;
@@ -357,20 +374,10 @@ export default {
     border-radius: 4px;
     cursor: pointer;
   }
-  .item-start-btn-one{
-    background: #DC985E;
-    color: white;
-  }
-  .item-start-btn-three{
-    background: linear-gradient(180deg, #FCC994 0%, #F6A967 100%);
-    color: #FFFFFF;
-  }
+
   .item-start-btn:hover{
     box-shadow:3px 2px 5px #cccccc;
   }
-  /*.item-start-btn-one:hover{*/
-  /*  box-shadow:3px 5px 5px #cccccc;*/
-  /*}*/
 
   /*列表*/
   .item-list{
@@ -396,25 +403,12 @@ export default {
     font-weight: bold;
     color: #DC985E;
   }
-  .item-list-r{
-    width: 14px;
-    height: 14px;
-    border: 1px solid #666666;
-    border-radius: 8px;
-  }
-  .list-r-one{
-    border-color: #DC985E;
-  }
-  .item-list-three{
-    color: #eeeeee;
-  }
+
   .item-list-three li:first-child{
     font-weight: bold;
     color: #DC985E;
   }
-  .list-r-three{
-    border-color: #DC985E;
-  }
+
   /*遮罩层样式*/
   .member-mask{
     display: none;
@@ -433,7 +427,6 @@ export default {
     transform: translate(-50%,-50%);
     width: 1200px;
     height: 725px;
-    /*background-color: #cccccc;*/
   }
   .mask-close{
     position: absolute;
@@ -441,7 +434,6 @@ export default {
     width: 40px;
     height: 40px;
     cursor: pointer;
-    /*background-color: cyan;*/
   }
   .mask-close img{
     width: 100%;
@@ -457,7 +449,6 @@ export default {
   .content-top{
     width: 100%;
     height: 170px;
-    /*background-color: red;*/
     background: url("../assets/image/member/maskbg.png");
     background-size: 100% 100%;
   }
@@ -465,9 +456,7 @@ export default {
     position: absolute;
     top: 61px;
     left: 40px;
-    /*width: 200px;*/
     height: 45px;
-    /*background-color: #F6A967;*/
     display: flex;
   }
   .top-main img{
@@ -505,9 +494,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-33%);
-    width: 160px;
     height: 45px;
-    /*background-color: yellow;*/
     font-size: 24px;
     text-align: center;
     line-height: 45px;
@@ -519,21 +506,27 @@ export default {
     display: flex;
     justify-content: space-around;
   }
-  selectedVipCard{
+  .vipCardsBg{
+    background: url("/image/checkedVip.png") no-repeat;
+    background-size: 250px 200px;
+    background-position: 0px 0px;
+  }
+
+  selectedStyle{
     width: 250px;
     height: 200px;
     text-align: center;
     border-radius: 8px;
-    background: url("/iamge/checkedVip.png") no-repeat;
+    background: red;
     z-index: 10;
   }
   .vipCard{
     width: 250px;
-    height: 200px;
+    height: 180px;
     text-align: center;
     border: 1px solid #BFBFBF;;
-    background: url("/iamge/checkedVip.png") no-repeat;
-
+    /*background: url("/image/checkedVip.png") no-repeat;*/
+    cursor: pointer;
     border-radius: 8px;
     z-index: 10;
   }
@@ -556,9 +549,9 @@ export default {
     font-size: 12px;
   }
   .vipDesc{
-    margin-top: 40px;
     color: #8C8C8C;
     font-size: 14px;
+    margin-top: 20px;
   }
   .vipStyle{
     width: 33px;
