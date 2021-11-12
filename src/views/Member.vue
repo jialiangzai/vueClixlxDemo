@@ -113,7 +113,8 @@ export default {
       isactive:true,
       webconfig:{},
       vipArr:[],
-      tokens:'',
+      tokens:'',//重复提交
+      token:'',//是否登录
       goPayPrice:'',
       payName:'',
       payurl:'',
@@ -142,6 +143,8 @@ export default {
   created() {
     this.__init()
     this.getAllVips()
+    this.token = localStorage.getItem('token')
+
   },
   methods: {
     queryOrderWithAli(){
@@ -171,7 +174,6 @@ export default {
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
         })
-
       }else if(value === 2){
         this.payWay = '支付宝'
         this.$refs.sameCodeHave.style.display = 'block'
@@ -182,7 +184,6 @@ export default {
           this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
         })
       }
-      console.log(value)
     },
     //切换账号
     changeUser(){
@@ -239,6 +240,14 @@ export default {
     },
     //设置蒙层
     setMask(vipId){
+      if(!this.token){
+        this.$message({
+          message: '请先登录才能加入购物车哦',
+          type: 'error'
+        });
+        this.$store.commit('saveLoginDialog', true)
+        return
+      }
       this.userAvat = this.userInfo.avatar
       this.userName = this.userInfo.nickName
       this.selectedId = vipId
@@ -324,7 +333,7 @@ export default {
     flex-direction: column;
     position: relative;
     /*box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.12);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
   }
   .item-normal-one{
@@ -419,7 +428,7 @@ export default {
   }
 
   .item-start-btn:hover{
-    box-shadow:3px 2px 5px #cccccc;
+    box-shadow:0px 0px 3px #999999;
   }
   /*.item-start-btn-one:hover{*/
   /*  box-shadow:3px 5px 5px #cccccc;*/

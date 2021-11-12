@@ -31,6 +31,7 @@ export default {
   },
   created() {
     this.__init()
+    this.token = localStorage.getItem('token')
   },
   methods: {
     async __init(){
@@ -47,5 +48,5 @@ export default {
 </script>
 
 <style scoped>
-    
+
 </style>

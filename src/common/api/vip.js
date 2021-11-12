@@ -5,10 +5,7 @@ export function getAllVips(params){
   return request({
     url: '/api/vip/getAllVips',
     method: 'POST',
-    data: params,
-    headers: {
-      'Authorization': Decrypt(localStorage.getItem('token'))
-    }
+    data: params
   })
 }
 
