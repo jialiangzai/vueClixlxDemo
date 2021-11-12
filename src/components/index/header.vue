@@ -322,7 +322,7 @@
         <div class="start-study" @click="goStudy">去登录</div>
       </div>
     </el-dialog>
-<!--    行为验证-->
+    <!--行为验证-->
     <Verify
         ref="verify"
         :captcha-type="'blockPuzzle'"
@@ -330,7 +330,8 @@
         @success="success"
         @error="error"
     />
-
+    <!--会员到期弹出框-->
+    <el-button type="text" @click="open">点击打开 Message Box</el-button>
   </div>
 </template>
 
@@ -495,6 +496,7 @@ export default {
 				// 获取购车数据
 		this.getCarNum();
 		this.getUserInfo()
+      this.open('false')
 		}
 
 		// 获取搜索框数据
@@ -1099,6 +1101,14 @@ export default {
 		deleteColor() {
 			this.courseColor = -1
 		},
+    open(a) {
+      if( a == 'false' ){
+        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
+          dangerouslyUseHTMLString: true
+        });
+      }
+
+    }
 	},
 	watch: {
 		$route: {
