@@ -300,7 +300,7 @@
               <i class="fa fa-qq" aria-hidden="true"></i>
             </div>
             <div class="login-weibo">
-              <i class="fa fa-weibo" aria-hidden="true"></i>
+              <i class="fa fa-weibo" aria-hidden="true" @click="goWeibo"></i>
             </div>
           </div>
           <div class="container">登录即同意进入小鹿线官网</div>
@@ -328,10 +328,7 @@
         :captcha-type="'blockPuzzle'"
         :img-size="{width:'400px',height:'200px'}"
         @success="success"
-        @error="error"
-    />
-    <!--会员到期弹出框-->
-    <el-button type="text" @click="open">点击打开 Message Box</el-button>
+        @error="error"/>
   </div>
 </template>
 
@@ -496,7 +493,6 @@ export default {
 				// 获取购车数据
 		this.getCarNum();
 		this.getUserInfo()
-      this.open('false')
 		}
 
 		// 获取搜索框数据
@@ -520,6 +516,11 @@ export default {
 				'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
 
 		},
+    // 微博登录
+    goWeibo(){
+      window.location.href =
+          'https://www.xuexiluxian.cn/api/oauth/login/weibo'
+    },
 		// 行为验证码
 		success(e) {
 			switch (this.crtType) {

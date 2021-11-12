@@ -4,7 +4,6 @@
     <indexHeader></indexHeader>
     <navSwiper></navSwiper>
     <newGoodCourse></newGoodCourse>
-    <foot class="coursefoot"></foot>
   </div>
 </template>
 
@@ -16,9 +15,9 @@ import foot from '@/components/foot/foot.vue';
 import {webConfig} from '@/common/api/webConfig.js'
 
 export default {
-  data(){
-    return{
-      webconfig:{}
+  data() {
+    return {
+      webconfig: {},
     }
   },
   metaInfo() {
@@ -34,7 +33,7 @@ export default {
     this.__init()
   },
   methods: {
-    async __init(){
+    async __init() {
       let res = await webConfig()
       // console.log(res)
       this.webconfig = res.data.data
@@ -50,5 +49,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
