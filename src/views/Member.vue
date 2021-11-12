@@ -77,7 +77,7 @@
               <p class="alert">支付即同意成为VIP</p>
             </div>
             <div class="choosePayWay">
-              <h3>支付方式 <span class="pay" >{{payWay}}</span></h3>
+              <h3>支付方式 <span class="pay" >{{payWay === 'wxpayment' ? '微信支付' : '支付宝支付'}}</span></h3>
               <el-radio-group v-model="radio" class="radioStyle"  @change="getWay">
                 <el-radio :label="1">微信</el-radio>
                 <el-radio :label="2">支付宝</el-radio>
@@ -144,9 +144,9 @@ export default {
     this.__init()
     this.getAllVips()
     this.token = localStorage.getItem('token')
-
   },
   methods: {
+    //支付宝查询订单
     queryOrderWithAli(){
       queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
         if(res.meta.code === "200"){
@@ -155,6 +155,7 @@ export default {
         }
       })
     },
+    //微信查询订单
     queryOrderWithWX(){
       queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
         if(res.meta.code === "200"){
@@ -163,26 +164,52 @@ export default {
         }
       })
     },
-    //得到支付方式
-    getWay(value){
-      if(value === 1){
-        this.payWay = '微信'
-        this.$refs.sameCodeHave.style.display = 'block'
-        //微信结算接口
-        wxpay({vipId:this.selectedId,payModes:'wxpayment',token:this.tokens}).then(res => {
+    //微信结算接口
+    wxpay(){
+      wxpay({vipId:this.selectedId,payModes:'wxpayment',token:this.tokens}).then(res => {
+        if(res.meta.code === '200'){
           this.orderNumber = res.data.orderNumber
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
-        })
-      }else if(value === 2){
-        this.payWay = '支付宝'
-        this.$refs.sameCodeHave.style.display = 'block'
-        //支付宝结算接口
-        zfbpay({vipId:this.selectedId,payModes:'alipayment',token:this.tokens}).then(res => {
+        }else{
+          this.$message({
+            type:'warning',
+            message:res.meta.msg
+          })
+          this.$refs.memberMask.style.display = 'none'
+          this.$refs.memberMaskBox.style.display = 'none'
+        }
+      })
+    },
+    //支付宝结算接口
+    zfbpay(){
+      zfbpay({vipId:this.selectedId,payModes:'alipayment',token:this.tokens}).then(res => {
+        if(res.meta.code === '200'){
           this.orderNumber = res.data.orderNumber
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
-        })
+        }else{
+          this.$message({
+            type:'warning',
+            message:res.meta.msg
+          })
+          this.$refs.memberMask.style.display = 'none'
+          this.$refs.memberMaskBox.style.display = 'none'
+        }
+      })
+    },
+    //得到支付方式
+    getWay(value){
+      if(value === 1){
+        clearInterval(this.timeInterVal)
+        this.payWay = 'wxpayment'
+        this.$refs.sameCodeHave.style.display = 'block'
+        this.wxpay()
+      }else if(value === 2){
+        clearInterval(this.timeInterVal)
+        this.payWay = 'alipayment'
+        this.$refs.sameCodeHave.style.display = 'block'
+        this.zfbpay()
       }
     },
     //切换账号
@@ -194,6 +221,11 @@ export default {
       this.goPayPrice=item.price
       this.payName=item.vipName
       this.selectedId = item.id
+      if( this.payWay = 'wxpayment'){
+        this.wxpay()
+      }else if(this.payWay = 'alipayment'){
+        this.zfbpay()
+      }
     },
     //获取所有的会员等级
     getAllVips(){
@@ -248,6 +280,7 @@ export default {
         this.$store.commit('saveLoginDialog', true)
         return
       }
+      this.payWay = ''
       this.userAvat = this.userInfo.avatar
       this.userName = this.userInfo.nickName
       this.selectedId = vipId
@@ -257,14 +290,14 @@ export default {
           this.goPayPrice = res.data.totalPrice
           this.payName = res.data.vipInfo.vipName
         })
-
       })
       this.$refs.memberMask.style.display = 'block'
       this.$refs.memberMaskBox.style.display = 'block'
-
     },
+    //关闭蒙层
     closeMask(){
       clearInterval(this.timeInterVal)
+      console.log(55555);
       this.$refs.memberMask.style.display = 'none'
       this.$refs.memberMaskBox.style.display = 'none'
     },
