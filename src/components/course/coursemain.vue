@@ -121,9 +121,6 @@
                 class="el-icon-caret-bottom"
                 :style="priceSortBy === '1' ? 'color:#2C80FF' : ''"
               ></i>
-              <!-- 
-                            <img class="up" src="/image/up-arrow8.png" @click="handleUpPrice" />
-                            <img class="down" src="/image/up-arrow8.png" @click="handleDownPrice" /> -->
             </span>
           </li>
         </ul>
@@ -176,7 +173,7 @@
                       <span class="courseMember">会员免费</span>
                       <img src="../../assets/image/member/kings.png" alt="">
                   </div>
-                  
+
                   <div class="price" v-else>¥ {{ item.discountPrice }}</div>
 
                   <div class="addCart" @click="addCart(item)">
@@ -396,7 +393,7 @@ export default{
                 this.priceSortBy = '1'
             }
         },
-        
+
         //点击综合
         handleZonghe(){
             this.active = !this.active
@@ -641,11 +638,11 @@ export default{
 }
 .arrow i:first-child {
   position: absolute;
-  top: -5px;
+  top: -1px;
 }
 .arrow i:last-child {
   position: absolute;
-  top: 4px;
+  top: 7px;
 }
 .check {
   width: 15px;

@@ -255,6 +255,7 @@ export default {
 
     },
     closeMask(){
+      clearInterval(this.timeInterVal)
       this.$refs.memberMask.style.display = 'none'
       this.$refs.memberMaskBox.style.display = 'none'
     },

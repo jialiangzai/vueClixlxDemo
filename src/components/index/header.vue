@@ -101,12 +101,13 @@
                   {{ userInfo.nickName ? userInfo.nickName : nickname}}
                 </p>
               </div>
-              <div class="vip">
+              <div class="vip" v-if="vipInfos">
                 <div class="vipImg">
-                  <img src="/image/vip.png">
+                  <img :src="vipInfos.vipIcon" :class="vipEndtime < 0 ? 'gray':''">
                 </div>
-                <div class="vipName">铂金会员</div>
-                <div class="endTime">300天到期</div>
+                <div class="vipName">{{vipInfos.vipName}}</div>
+                <div class="endTime" v-if="vipEndtime > 0">{{vipEndtime}}天到期</div>
+                <div class="endTime" v-else>已过期</div>
               </div>
             </div>
             <div class="u-i-i-bottom">
@@ -334,7 +335,7 @@
 </template>
 
 <script>
-import Verify from '../verifition/Verify'
+  import Verify from '../verifition/Verify'
 import { sendRegisterOrLoginCaptcha } from '@/common/api/sms'
 import {
 	loginByJson,
@@ -477,6 +478,8 @@ export default {
 			registerTiemr: null,
 			Phonecaptcha: '短信验证码',
 			phoneSend: false,
+      vipInfos:{},
+      vipEndtime:''
 		}
 	},
 	computed: {
@@ -969,6 +972,18 @@ export default {
 					.then((res) => {
 						// this.saveUserInfoActions()
 						if (res.meta.code === '200') {
+              // console.log( res ,'头部划过头像' )
+              this.vipInfos = res.data.data.vipInfo
+              console.log( this.vipInfos )
+              if( this.vipInfos ){
+                var now = new Date().getTime()
+                var num = this.vipInfos.endTime - now
+                this.vipEndtime = Math.floor(num / 1000 / 60 / 60 / 24)
+              }/*else if(this.vipEndtime < 0){
+                Cookies.set('vipEndtime', Math.abs(this.vipEndtime), {
+                  expires: 1,
+                });
+              }*/
 							// localStorage.setItem('userInfo',Encrypt(JSON.stringify(res.data.data)))
 							this.saveUserInfoAction(res.data.data)
 							// this.$router.go(0)
@@ -1626,5 +1641,14 @@ export default {
 	height: 2px;
 	background-color: #3689ff;
 	border-radius: 5px !important;
+}
+.gray{
+  /*grayscale(val):val值越大灰度就越深*/
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: gray;
 }
 </style>
