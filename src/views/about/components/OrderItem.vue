@@ -12,11 +12,13 @@
               />
               <p class="order-num">订单编号：{{ item.orderNumber }}</p>
               <p class="order-time">{{ dateFormat('YYYY-mm-dd HH:MM',item.createTime) }}</p>
+              <p class="changeCode" v-if="item.orderType === 1 && item.isUsedExchangeCode === 1">兑换码：{{item.exchangeCode}}</p>
             </div>
             <div
               class="item-bottom"
               v-for="course in item.historyOrderCourseVos"
               :key="course.courseId"
+              v-if="item.orderType === 1"
             >
               <div class="i-b-left">
                 <div class="i-b-l-left" @click="goStu(course.courseId)">
@@ -62,6 +64,14 @@
                   已失效
                 </div>
               </div>
+            </div>
+            <div  v-if="item.orderType === 2" class="vipOrder">
+              <p class="getVipWay">
+                获取会员方式：
+                <span v-if="item.isUsedExchangeCode === 1"> 兑换会员</span>
+                <span v-else>购买会员</span>
+              </p>
+              <p class="changeCode" v-if="item.exchangeCode">兑换码：{{item.exchangeCode}}</p>
             </div>
           </div>
         </div>
@@ -119,6 +129,17 @@ export default {
 </script>
 
 <style scoped>
+/*会员订单*/
+.vipOrder{
+  display: flex;
+  justify-content: space-between;
+}
+
+.getVipWay,.changeCode{
+  font-size: 16px;
+  color: #333;
+  padding:5px 0;
+}
 .order-container {
   margin: 10px 0;
   width: 940px;
@@ -127,7 +148,7 @@ export default {
 }
 .order-item {
   width: 100%;
-  height: 240px;
+  /*height: 240px;*/
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.07);
   border-radius: 8px;
@@ -145,6 +166,12 @@ export default {
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #333333;
+}
+.item-top .changeCode{
+  font-size: 12px;
+  color: #333333;
+  margin: 0 0 0 260px;
+  /*margin-right: 0;*/
 }
 .order-img {
   width: 15px;

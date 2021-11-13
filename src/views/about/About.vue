@@ -206,6 +206,7 @@ export default {
               message:res.meta.msg
             })
           }
+          this.$router.go(0)
           this.dialogVisible = false
         })
       })
@@ -213,7 +214,6 @@ export default {
     //兑换码状态
     changeDialog(){
       this.dialogVisible = true
-      console.log(555555);
     },
     async __init() {
       let res = await webConfig()
@@ -262,8 +262,8 @@ export default {
 .inputs{
   position: absolute;
   top: 181px;
-  left: 78px;
-  width: 321px;
+  left: 85px;
+  width: 310px;
   height: 109px;
 }
 .input{

@@ -633,6 +633,7 @@ export default{
 .right .right-items {
   margin-right: 0px;
 }
+
 .arrow {
   position: relative;
 }

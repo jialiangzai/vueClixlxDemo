@@ -29,12 +29,13 @@ Vue.use(Router);
 const routes = [
   { path: '/',component: Home},
   { path: '/home', component: Home ,name:'home'},
-  { path:'*',component:Home},
   { path: '/course', component: Course ,name:'course'},
   { path:'/course-info/:courseId',component:CourseInfo,name:'course-info'},
   {path: '/loading',component: Loading,name: 'loading'},
   { path:'/course-play/:courseId/:chapterId',component:CoursePlay,name:'course-play',meta:{ requiresAuth : false }},
   { path: '/member', component: Member ,name:'member'},
+  { path:'*',component:Home},
+
   {
     path: '/about', component: About, name: 'about',
     redirect: '/about/my-course',

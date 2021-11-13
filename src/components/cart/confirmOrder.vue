@@ -227,10 +227,11 @@ export default{
               item.selected = false;
             })
           payment.selected = true;
-            this.payment = payment
+          this.payment = payment
         },
         order(){
             let selectedArr = localStorage.getItem("selectedArr");
+          console.log(selectedArr,'aaaaaaaaabbbbbbbbb')
             if(!selectedArr){
                 this.$message({
                     message: '系统错误',
@@ -241,6 +242,7 @@ export default{
             }
             this.setArr = JSON.parse(selectedArr);
             settlement(this.setArr).then(res => {
+              console.log(res.data.payModes,'kkkkkkkkkmmmmmmmmmmmmm')
                 this.payMethod = res.data.payModes
                 this.courseInfo = res.data.courses
                 this.totalPrice = res.data.totalPrice
@@ -439,21 +441,20 @@ export default{
     color: #222222;
     font-weight: bold;
 }
-.alipayment{
-    border: #01a8eb solid 1px;
-    color: #01a8eb;
-    box-shadow: 0px 1px 2px 1px #01a8eb;
-}
+
 .payStyle{
   background: url("/image/checkedVip.png") no-repeat;
   background-size: 220px 111px;
   background-position: -67px -59px;
+  border: #ff470a solid 1px !important;
+}
+.alipayment{
+  border: #bfbfbf solid 1px;
+  color: #01a8eb;
 }
 .wxpayment{
-    border: #01af37 solid 1px;
-    color: #01af37;
-    box-shadow: 0px 1px 2px 1px #01af37;
-
+  border: #bfbfbf solid 1px;
+  color: #01af37;
 }
 
 /* 支付结束 */

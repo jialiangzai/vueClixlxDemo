@@ -266,10 +266,10 @@
               </el-form-item>
               <el-form-item prop="captcha" class="captcha identify">
                 <el-input
-                  v-model="identifyForm.captcha"
-                  style="width: 150px"
-                  placeholder="请输入短信验证码"
-                  @keyup.enter.native="submitIdentifyForm('identifyForm')"
+                    class="el-input-box"
+                    v-model="identifyForm.captcha"
+                    placeholder="请输入短信验证码"
+                    @keyup.enter.native="submitIdentifyForm('identifyForm')"
                 ></el-input>
                 <div
                   class="sendcaptcha"
@@ -300,7 +300,7 @@
               <i class="fa fa-qq" aria-hidden="true"></i>
             </div>
             <div class="login-weibo">
-              <i class="fa fa-weibo" aria-hidden="true" @click="goWeibo"></i>
+              <i class="fa fa-weibo" aria-hidden="true"></i>
             </div>
           </div>
           <div class="container">登录即同意进入小鹿线官网</div>
@@ -517,10 +517,10 @@ export default {
 
 		},
     // 微博登录
-    goWeibo(){
-      window.location.href =
-          'https://www.xuexiluxian.cn/api/oauth/login/weibo'
-    },
+    // goWeibo(){
+    //   window.location.href =
+    //       'https://www.xuexiluxian.cn/api/oauth/login/weibo'
+    // },
 		// 行为验证码
 		success(e) {
 			switch (this.crtType) {
@@ -1115,6 +1115,7 @@ export default {
 		$route: {
 			immediate: true,
 			handler(to, from) {
+        console.log(to.fullPath)
 				let newUrl = to.fullPath
 				to.fullPath.replace(/(.*)\?/, function(a, b) {
 					newUrl = b
@@ -1134,6 +1135,13 @@ export default {
 </script>
 
 <style scoped>
+.el-input-box{
+  border: 1px solid #DCDFE6;
+}
+::v-deep .el-input-box input{
+  border:none!important;
+  width: 150px;
+}
 /*vip开始*/
 .vip{
   display: flex;

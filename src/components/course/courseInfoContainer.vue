@@ -90,20 +90,24 @@
             </div>
         </div>
     </div>
-    <div class="down" v-else  v-for="(x,y) in downsource" :key="y">
-        <div v-if="downsource.length === 0">
-            <el-empty
-                image="/image/about/course-empt.png"
-                description="该课程暂无资料"
-            ></el-empty>
+    <div v-else>
+      <div v-if="downsource && downsource.length > 0">
+        <div class="down"   v-for="(x,y) in downsource" :key="y">
+            <div class="source"  >
+              <span class="downloadCourse">{{x.attachmentName}}</span>
+              <button class="downloadbtn" @click="downloadSource(x)">下载资料</button>
+            </div>
         </div>
-        <div class="source" v-else >
-            <span class="downloadCourse">{{x.attachmentName}}</span>
-            <button class="downloadbtn" @click="downloadSource(x)">下载资料</button>
-        </div>
+      </div>
+      <div v-else>
+        <el-empty
+            image="/image/about/course-empt.png"
+            description="该课程暂无资料"
+        ></el-empty>
+      </div>
     </div>
   </div>
-  
+
 </template>
 
 

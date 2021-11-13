@@ -41,8 +41,8 @@
       <!-- 公共底部 -->
       <MyFooter :webconfig="webconfig"></MyFooter>
       <!--点击开通，弹出蒙层-->
-      <div class="member-mask" ref="memberMask"></div>
-      <div class="mask-box" ref="memberMaskBox">
+      <div class="member-mask" v-if="showDialog"></div>
+      <div class="mask-box" v-if="showDialog">
         <div class="mask-close" @click="closeMask">
           <img src="../assets/image/member/close.png" alt="">
         </div>
@@ -73,19 +73,23 @@
               </div>
             </div>
             <div class="payPrice">
-              <p class="text">应付金额 <span class="num">{{goPayPrice}}元</span></p>
-              <p class="alert">支付即同意成为VIP</p>
+              <h3>支付方式 <span class="pay" v-if="payment">{{payment.description}}</span></h3>
+
+              <p class="text">应付金额 <span class="num">{{goPayPrice}}元</span> <span class="alert">支付即同意成为VIP</span></p>
             </div>
             <div class="choosePayWay">
-              <h3>支付方式 <span class="pay" >{{payWay === 'wxpayment' ? '微信支付' : '支付宝支付'}}</span></h3>
-              <el-radio-group v-model="radio" class="radioStyle"  @change="getWay">
-                <el-radio :label="1">微信</el-radio>
-                <el-radio :label="2">支付宝</el-radio>
-              </el-radio-group>
+              <div  class="choosebg">
+                <div v-for="(item) in payModes" :key="item.code"  @mouseup="mouseup(item)" :class="renderClass(item) + (item.selected ? ' payStyle' : '')" >
+                  <i class="icon iconfont icon-zhifubaozhifu"  v-if="item.code === 'alipayment'"  ></i>
+                  <span  v-if="item.code === 'alipayment'" >支付宝</span>
+                  <i class="icon iconfont icon-weixin" v-if="item.code === 'wxpayment'"></i>
+                  <span  v-if="item.code === 'wxpayment'">微信</span>
+                </div>
+              </div>
             </div>
             <div class="code">
-              <div class="sameCode " ref="sameCodeHave">
-                <img class="wxCode" :src="payurl">
+              <div class="sameCode">
+                <img class="wxCode" :src="payurl" v-if="payurl">
               </div>
             </div>
           </div>
@@ -107,9 +111,9 @@ import {queryOrderWithAli,queryOrderWithWX} from '@/common/api/payment.js'
 export default {
   data(){
     return{
-      payWay:'',
       radio:'',
       showMask:false,
+      showDialog: false,
       isactive:true,
       webconfig:{},
       vipArr:[],
@@ -123,6 +127,8 @@ export default {
       userAvat:'',
       userName:'',
       timeInterVal: "",
+      payModes:[],
+      payment: {},
     }
   },
   metaInfo() {
@@ -146,6 +152,31 @@ export default {
     this.token = localStorage.getItem('token')
   },
   methods: {
+
+    //更变样式
+    renderClass(item){
+      if(!item.selected){
+        item["selected"] = false;
+      }
+      return "payment " + item.code;
+    },
+    //鼠标弹起时触发
+    mouseup(payment){
+      this.payModes.forEach(item => {
+        item.selected = false;
+      })
+      payment.selected = true;
+      this.payment = payment
+      if(payment.code === 'wxpayment'){
+        clearInterval(this.timeInterVal)
+        this.wxpay()
+        this.showDialog = true;
+      }else if(payment.code === 'alipayment'){
+        clearInterval(this.timeInterVal)
+        this.zfbpay()
+        this.showDialog = true;
+      }
+    },
     //支付宝查询订单
     queryOrderWithAli(){
       queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
@@ -172,12 +203,12 @@ export default {
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
         }else{
+          console.log(res.meta.msg,555555)
           this.$message({
             type:'warning',
             message:res.meta.msg
           })
-          this.$refs.memberMask.style.display = 'none'
-          this.$refs.memberMaskBox.style.display = 'none'
+          this.showDialog = false;
         }
       })
     },
@@ -189,28 +220,14 @@ export default {
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
         }else{
+          console.log(res.meta.msg,22222222)
           this.$message({
             type:'warning',
             message:res.meta.msg
           })
-          this.$refs.memberMask.style.display = 'none'
-          this.$refs.memberMaskBox.style.display = 'none'
+          this.showDialog = false;
         }
       })
-    },
-    //得到支付方式
-    getWay(value){
-      if(value === 1){
-        clearInterval(this.timeInterVal)
-        this.payWay = 'wxpayment'
-        this.$refs.sameCodeHave.style.display = 'block'
-        this.wxpay()
-      }else if(value === 2){
-        clearInterval(this.timeInterVal)
-        this.payWay = 'alipayment'
-        this.$refs.sameCodeHave.style.display = 'block'
-        this.zfbpay()
-      }
     },
     //切换账号
     changeUser(){
@@ -221,9 +238,9 @@ export default {
       this.goPayPrice=item.price
       this.payName=item.vipName
       this.selectedId = item.id
-      if( this.payWay = 'wxpayment'){
+      if( this.payment.code = 'wxpayment'){
         this.wxpay()
-      }else if(this.payWay = 'alipayment'){
+      }else if(this.payment.code= 'alipayment'){
         this.zfbpay()
       }
     },
@@ -272,6 +289,9 @@ export default {
     },
     //设置蒙层
     setMask(vipId){
+      this.payurl = ""
+      this.payment = ''
+      this.payModes = []
       if(!this.token){
         this.$message({
           message: '请先登录才能加入购物车哦',
@@ -280,26 +300,24 @@ export default {
         this.$store.commit('saveLoginDialog', true)
         return
       }
-      this.payWay = ''
       this.userAvat = this.userInfo.avatar
       this.userName = this.userInfo.nickName
       this.selectedId = vipId
       createToken().then(res => {
         this.tokens = res.data.token
         settlement({id:vipId,token:this.tokens}).then(res => {
+          this.payModes = res.data.payModes
           this.goPayPrice = res.data.totalPrice
           this.payName = res.data.vipInfo.vipName
         })
       })
-      this.$refs.memberMask.style.display = 'block'
-      this.$refs.memberMaskBox.style.display = 'block'
+      this.showDialog = true;
     },
     //关闭蒙层
     closeMask(){
       clearInterval(this.timeInterVal)
       console.log(55555);
-      this.$refs.memberMask.style.display = 'none'
-      this.$refs.memberMaskBox.style.display = 'none'
+      this.showDialog = false
     },
   },
   components:{
@@ -310,6 +328,47 @@ export default {
 </script>
 
 <style scoped>
+.payStyle{
+  background: url("/image/checkedVip.png") no-repeat;
+  background-size: 220px 111px;
+  background-position: -67px -59px;
+  border: #ff470a solid 1px !important;
+}
+.payment i {
+  font-size: 35px;
+  margin-right: 10px;
+}
+.payment span {
+  line-height: 50px;
+  color: #222222;
+  font-weight: bold;
+}
+.payment{
+  width: 130px;
+  height: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+  line-height: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0 10px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.choosebg{
+  display: flex;
+}
+.alipayment{
+  border: #bfbfbf solid 1px;
+  color: #01a8eb;
+}
+.wxpayment{
+  border: #bfbfbf solid 1px;
+  color: #01af37;
+}
   .member-content{
     width: 100%;
     margin: 0 auto;
@@ -499,7 +558,6 @@ export default {
 
   /*遮罩层样式*/
   .member-mask{
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -509,7 +567,6 @@ export default {
     z-index: 888;
   }
   .mask-box{
-    display: none;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -529,10 +586,11 @@ export default {
   }
   .mask-content{
     width: 1200px;
-    height: 600px;
+    min-height: 600px;
     margin-top: 55px;
     background-color: #F5F5F5;
     border-radius: 7px;
+    position: relative;
   }
   .content-top{
     width: 100%;
@@ -542,12 +600,11 @@ export default {
     background-size: 100% 100%;
   }
   .top-main{
-    position: absolute;
-    top: 61px;
-    left: 40px;
     /*width: 200px;*/
     height: 45px;
     /*background-color: #F6A967;*/
+    margin: 0 40px;
+    align-items: center;
     display: flex;
   }
   .top-main img{
@@ -557,7 +614,6 @@ export default {
   }
   .top-main p{
     margin-left: 10px;
-    margin-top: -7px;
     line-height: 45px;
     font-size: 12px;
   }
@@ -568,13 +624,12 @@ export default {
   }
   .content-main{
     width: 1120px;
-    height: 555px;
     background-color: #FFF;
     border-radius: 7px;
     position: absolute;
-    top: 98%;
-    left: 50%;
-    transform: translate(-50%,-98%);
+    margin: 0 40px;
+    top: 50px;
+    left: 0;
   }
   .main-title{
     width: 100%;
@@ -625,7 +680,7 @@ export default {
     z-index: 10;
   }
   .vipName{
-    margin-top: 20px;
+    margin-top: 15px;
     font-size: 14px;
     color: #595959;
   }
@@ -666,9 +721,11 @@ export default {
 
   }
   .payPrice{
-    margin-top: 5px;
-    text-align: center;
-    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    margin-right: 12px;
+    text-align: right;
   }
   .text{
     color: #595959;
@@ -679,22 +736,45 @@ export default {
     font-size: 30px;
   }
   .alert{
-    margin-top: 5px;
     font-size: 12px;
     color: #B2B2B2;
+    padding-left: 10px;
   }
   .code{
     display: flex;
     justify-content: space-around;
   }
   .sameCode{
-    display: none;
-    width: 220px;
-    height: 220px;
+    width: 180px;
+    height: 180px;
+    border: #cccccc dashed 1px;
+    position: relative;
   }
-  .sameCode .wxCode,.sameCode .zfbCode{
+  .sameCode:before{
+    content: "选择支付方式";
+    color: #2c80ff;
+    text-align: center;
+    position: absolute;
+    z-index: 2;
+    line-height: 30px;
+    width: 100px;
+    margin: 75px 40px;
+    background: rgba(255,255,255,.5);
+  }
+  .sameCode:after{
+    content: " ";
+    width: 180px;
+    height: 180px;
+    display: block;
+    background: url("/image/pay-bg.jpg") no-repeat;
+    position: absolute;
+    z-index: 1;
+  }
+  .sameCode img{
     width: 100%;
     height: 100%;
+    position: absolute;
+    z-index: 9998;
   }
   .someAlert{
     display: flex;
@@ -711,15 +791,17 @@ export default {
   }
   .choosePayWay{
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
+    margin-bottom:5px;
   }
-  .choosePayWay h3{
+  .payPrice h3{
+    margin-left: 15px;
     font-size: 16px;
     color: #8C8C8C;
   }
-  .choosePayWay .pay{
-    color: 18px;
+  .payPrice .pay{
+    font-size: 18px;
     color: #FF4E2C;
   }
   .radioStyle{
