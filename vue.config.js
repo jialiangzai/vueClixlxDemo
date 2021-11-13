@@ -25,7 +25,6 @@ module.exports = {
         staticDir: path.join(__dirname, 'dist'),
         routes: [
             '/',
-            '/home',
             '/member',
             '/course',
             '/loading'
