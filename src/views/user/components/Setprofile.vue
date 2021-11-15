@@ -239,7 +239,7 @@ export default {
           getInfo({
             token: mes.data.token,
           }).then((mess) => {
-            //console.log(ress)
+            //
             // this.form = ress.data.data
             // sessionStorage.setItem("userInfo", JSON.stringify(mess.data.data));
             this.saveUserInfoAction(mess.data.data);
@@ -267,9 +267,9 @@ export default {
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      // console.log(this.basisForm)
+      //
       createToken().then((res) => {
-        // console.log(res.data.res)
+        //
         if (res.meta.code === "200") {
           updateUserInfo({
             token: res.data.token,
@@ -315,7 +315,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
       createToken().then((res) => {
-        // console.log(res.data.res)
+        //
         if (res.meta.code === "200") {
           updateUserInfo({
             token: res.data.token,
@@ -346,7 +346,7 @@ export default {
           });
         }
       });
-      // console.log(this.form);
+      //
     },
     // 验证特殊字符
     filterStr(str) {

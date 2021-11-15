@@ -203,7 +203,7 @@ export default {
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
         }else{
-          console.log(res.meta.msg,555555)
+
           this.$message({
             type:'warning',
             message:res.meta.msg
@@ -220,7 +220,7 @@ export default {
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
         }else{
-          console.log(res.meta.msg,22222222)
+
           this.$message({
             type:'warning',
             message:res.meta.msg
@@ -294,7 +294,7 @@ export default {
       this.payModes = []
       if(!this.token){
         this.$message({
-          message: '请先登录才能加入购物车哦',
+          message: '请先登录才能加入购买会员哦',
           type: 'error'
         });
         this.$store.commit('saveLoginDialog', true)
@@ -316,7 +316,7 @@ export default {
     //关闭蒙层
     closeMask(){
       clearInterval(this.timeInterVal)
-      console.log(55555);
+
       this.showDialog = false
     },
   },

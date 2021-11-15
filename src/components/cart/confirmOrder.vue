@@ -231,7 +231,7 @@ export default{
         },
         order(){
             let selectedArr = localStorage.getItem("selectedArr");
-          console.log(selectedArr,'aaaaaaaaabbbbbbbbb')
+
             if(!selectedArr){
                 this.$message({
                     message: '系统错误',
@@ -242,7 +242,7 @@ export default{
             }
             this.setArr = JSON.parse(selectedArr);
             settlement(this.setArr).then(res => {
-              console.log(res.data.payModes,'kkkkkkkkkmmmmmmmmmmmmm')
+
                 this.payMethod = res.data.payModes
                 this.courseInfo = res.data.courses
                 this.totalPrice = res.data.totalPrice

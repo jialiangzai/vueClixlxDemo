@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     getPath(){
-    //   console.log(this.$route.path);
+    //
     }
   }
 };

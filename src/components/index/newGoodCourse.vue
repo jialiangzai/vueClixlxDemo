@@ -177,7 +177,7 @@ export default {
         ...mapMutations(["saveLoginDialog"]),
         getImageByCode(){
             getImageByCode({imageCode:imgCode.global_commendcourse}).then(res => {
-                // console.log(res)
+                //
                 this.imgUrl = res.data.data.imageUrl;
             })
         },

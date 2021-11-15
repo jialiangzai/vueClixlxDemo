@@ -53,7 +53,7 @@ export default {
     };
   },
   onLoad() {
-    // console.log(this.messList);
+    //
   },
   methods: {
     showDelete(index){

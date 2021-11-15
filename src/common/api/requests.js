@@ -6,7 +6,7 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 const service = axios.create()
 
 service.interceptors.request.use(req=>{
-    //console.log(req)
+    //
     return req
 },error => {
     Promise.reject(error)
@@ -15,7 +15,7 @@ service.interceptors.request.use(req=>{
 // 响应拦截器
 service.interceptors.response.use(res => {
     // 未设置状态码则默认成功状态
-    // console.log(res)
+    // 
     const code = res.data.meta.code
     // 获取错误信息
     if (code === '50002') {

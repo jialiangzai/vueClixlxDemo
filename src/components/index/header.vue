@@ -975,9 +975,9 @@ export default {
 					.then((res) => {
 						// this.saveUserInfoActions()
 						if (res.meta.code === '200') {
-              // console.log( res ,'头部划过头像' )
+              //
               this.vipInfos = res.data.data.vipInfo
-              console.log( this.vipInfos )
+
               if( this.vipInfos ){
                 var now = new Date().getTime()
                 var num = this.vipInfos.endTime - now
@@ -1042,7 +1042,7 @@ export default {
 				this.crtType = 'usernamePasswordLogin'
 			}
 			// this.registerForm = {};
-			// console.log(this.$refs.registerForm);
+			//
 			this.loginCurrent = index
 		},
 		// 退出登录
@@ -1108,21 +1108,21 @@ export default {
           dangerouslyUseHTMLString: true
         });
       }
-
     }
+
 	},
 	watch: {
 		$route: {
 			immediate: true,
 			handler(to, from) {
-        console.log(to.fullPath)
+
 				let newUrl = to.fullPath
 				to.fullPath.replace(/(.*)\?/, function(a, b) {
 					newUrl = b
 				})
 				if (newUrl === '/home') {
 					this.actives = '1'
-				} else if (newUrl === '/course') {
+				} else if (newUrl === '/course' || newUrl.startsWith('/course-info') ) {
 					this.actives = '2'
 				} else if (newUrl === '/member') {
 					this.actives = '3'

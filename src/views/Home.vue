@@ -4,6 +4,7 @@
     <indexHeader></indexHeader>
     <navSwiper></navSwiper>
     <newGoodCourse></newGoodCourse>
+    <foot></foot>
   </div>
 </template>
 
@@ -35,7 +36,7 @@ export default {
   methods: {
     async __init() {
       let res = await webConfig()
-      // console.log(res)
+      //
       this.webconfig = res.data.data
     }
   },
