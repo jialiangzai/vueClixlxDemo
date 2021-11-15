@@ -4,10 +4,10 @@
     "reportVersion": 1,
     "event": "Allocation failed - JavaScript heap out of memory",
     "trigger": "FatalError",
-    "filename": "report.20211110.161740.12264.0.001.json",
-    "dumpEventTime": "2021-11-10T16:17:40Z",
-    "dumpEventTimeStamp": "1636532260443",
-    "processId": 12264,
+    "filename": "report.20211115.165401.13632.0.001.json",
+    "dumpEventTime": "2021-11-15T16:54:01Z",
+    "dumpEventTimeStamp": "1636966441062",
+    "processId": 13632,
     "cwd": "C:\\Users\\ASUS\\Desktop\\pc",
     "commandLine": [
       "node",
@@ -50,74 +50,74 @@
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1296718,
+        "user": 1228703,
         "nice": 0,
-        "sys": 714906,
-        "idle": 12706781,
-        "irq": 232171
+        "sys": 1126765,
+        "idle": 22992937,
+        "irq": 386359
       },
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1150000,
+        "user": 800937,
         "nice": 0,
-        "sys": 305265,
-        "idle": 13262609,
-        "irq": 7093
+        "sys": 420890,
+        "idle": 24126046,
+        "irq": 7484
       },
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1475359,
+        "user": 1338937,
         "nice": 0,
-        "sys": 368593,
-        "idle": 12873921,
-        "irq": 4953
+        "sys": 565265,
+        "idle": 23443671,
+        "irq": 5468
       },
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1446343,
+        "user": 930312,
         "nice": 0,
-        "sys": 298296,
-        "idle": 12973234,
-        "irq": 4546
+        "sys": 403531,
+        "idle": 24014031,
+        "irq": 3078
       },
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1325046,
+        "user": 1138906,
         "nice": 0,
-        "sys": 412484,
-        "idle": 12980328,
-        "irq": 7656
+        "sys": 608328,
+        "idle": 23600625,
+        "irq": 5531
       },
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1135906,
+        "user": 749953,
         "nice": 0,
-        "sys": 309750,
-        "idle": 13272203,
-        "irq": 6187
+        "sys": 467859,
+        "idle": 24130046,
+        "irq": 4171
       },
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1342406,
+        "user": 1354031,
         "nice": 0,
-        "sys": 332421,
-        "idle": 13043031,
-        "irq": 6265
+        "sys": 542140,
+        "idle": 23451687,
+        "irq": 6375
       },
       {
         "model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
         "speed": 1992,
-        "user": 1304843,
+        "user": 981546,
         "nice": 0,
-        "sys": 299375,
-        "idle": 13113640,
-        "irq": 6000
+        "sys": 483500,
+        "idle": 23882812,
+        "irq": 4000
       }
     ],
     "networkInterfaces": [
@@ -134,7 +134,7 @@
         "name": "WLAN",
         "internal": false,
         "mac": "70:c9:4e:16:e1:73",
-        "address": "192.168.2.12",
+        "address": "192.168.2.8",
         "netmask": "255.255.255.0",
         "family": "IPv4"
       },
@@ -166,95 +166,243 @@
   },
   "nativeStack": [
     {
-      "pc": "0x00007ff72f451369",
+      "pc": "0x00007ff6fed51369",
       "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+10873"
     },
     {
-      "pc": "0x00007ff72f4556fc",
+      "pc": "0x00007ff6fed556fc",
       "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+28172"
     },
     {
-      "pc": "0x00007ff72f4546a8",
+      "pc": "0x00007ff6fed546a8",
       "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+23992"
     },
     {
-      "pc": "0x00007ff72f54314b",
+      "pc": "0x00007ff6fee4314b",
       "symbol": "v8::base::CPU::has_sse+37723"
     },
     {
-      "pc": "0x00007ff72fd46d3e",
+      "pc": "0x00007ff6ff646d3e",
       "symbol": "v8::Isolate::ReportExternalAllocationLimitReached+94"
     },
     {
-      "pc": "0x00007ff72fd2ed81",
+      "pc": "0x00007ff6ff62ed81",
       "symbol": "v8::SharedArrayBuffer::Externalize+833"
     },
     {
-      "pc": "0x00007ff72fbfc64c",
+      "pc": "0x00007ff6ff4fc64c",
       "symbol": "v8::internal::Heap::EphemeronKeyWriteBarrierFromCode+1436"
     },
     {
-      "pc": "0x00007ff72fc079f0",
+      "pc": "0x00007ff6ff5079f0",
       "symbol": "v8::internal::Heap::ProtectUnprotectedMemoryChunks+1312"
     },
     {
-      "pc": "0x00007ff72fc04524",
+      "pc": "0x00007ff6ff504524",
       "symbol": "v8::internal::Heap::PageFlagsAreConsistent+3204"
     },
     {
-      "pc": "0x00007ff72fbf9db3",
+      "pc": "0x00007ff6ff4f9db3",
       "symbol": "v8::internal::Heap::CollectGarbage+1283"
     },
     {
-      "pc": "0x00007ff72fbf8584",
+      "pc": "0x00007ff6ff4f8584",
       "symbol": "v8::internal::Heap::AddRetainedMap+2356"
     },
     {
-      "pc": "0x00007ff72fc19855",
+      "pc": "0x00007ff6ff519855",
       "symbol": "v8::internal::Factory::NewFillerObject+53"
     },
     {
-      "pc": "0x00007ff72f986029",
+      "pc": "0x00007ff6ff286029",
       "symbol": "v8::internal::interpreter::JumpTableTargetOffsets::iterator::operator=+4057"
     },
     {
-      "pc": "0x00007ff730172a5d",
+      "pc": "0x00007ff6ffa72a5d",
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+567949"
     },
     {
-      "pc": "0x00007ff7301d98d8",
-      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+989448"
+      "pc": "0x00007ff6ffad7b3c",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+981868"
     },
     {
-      "pc": "0x00007ff7300f25ec",
+      "pc": "0x00007ff6ff9f25ec",
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
     },
     {
-      "pc": "0x00007ff7300eb99c",
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9eb99c",
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+14796"
     },
     {
-      "pc": "0x00007ff7300f25ec",
+      "pc": "0x00007ff6ff9f25ec",
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
     },
     {
-      "pc": "0x00007ff7300f25ec",
+      "pc": "0x00007ff6ff9f25ec",
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
     },
     {
-      "pc": "0x00007ff7300f25ec",
+      "pc": "0x00007ff6ff9f25ec",
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
     },
     {
-      "pc": "0x000002b65a805cba",
-      "symbol": ""
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9eb99c",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+14796"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9eb99c",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+14796"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9eb99c",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+14796"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9f25ec",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+42524"
+    },
+    {
+      "pc": "0x00007ff6ff9eb99c",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+14796"
+    },
+    {
+      "pc": "0x00007ff6ff9efba1",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+31697"
+    },
+    {
+      "pc": "0x00007ff6ff9ef78c",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+30652"
+    },
+    {
+      "pc": "0x00007ff6ff554d33",
+      "symbol": "v8::internal::Execution::CallWasm+1395"
+    },
+    {
+      "pc": "0x00007ff6ff5546b6",
+      "symbol": "v8::internal::Execution::Call+182"
+    },
+    {
+      "pc": "0x00007ff6ff62592b",
+      "symbol": "v8::Function::Call+603"
+    },
+    {
+      "pc": "0x00007ff6feebc835",
+      "symbol": "node::CallbackScope::~CallbackScope+1429"
+    },
+    {
+      "pc": "0x00007ff6feeb5e03",
+      "symbol": "v8::internal::interpreter::BytecodeNode::operand_scale+179"
+    },
+    {
+      "pc": "0x00007ff6fee3f9d3",
+      "symbol": "v8::base::CPU::has_sse+23523"
+    },
+    {
+      "pc": "0x00007ff6fee34e01",
+      "symbol": "EVP_CIPHER_CTX_buf_noconst+200673"
+    },
+    {
+      "pc": "0x00007ff6feeecdb7",
+      "symbol": "uv_timer_stop+775"
+    },
+    {
+      "pc": "0x00007ff6feee989b",
+      "symbol": "uv_async_send+331"
+    },
+    {
+      "pc": "0x00007ff6feee903c",
+      "symbol": "uv_loop_init+1212"
+    },
+    {
+      "pc": "0x00007ff6feee9204",
+      "symbol": "uv_run+244"
+    },
+    {
+      "pc": "0x00007ff6fee0b6b2",
+      "symbol": "EVP_CIPHER_CTX_buf_noconst+30866"
+    },
+    {
+      "pc": "0x00007ff6fee69083",
+      "symbol": "node::Start+275"
+    },
+    {
+      "pc": "0x00007ff6fed2664c",
+      "symbol": "RC4_options+339276"
+    },
+    {
+      "pc": "0x00007ff6ffb25b48",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+1301368"
+    },
+    {
+      "pc": "0x00007ff88aa47034",
+      "symbol": "BaseThreadInitThunk+20"
+    },
+    {
+      "pc": "0x00007ff88bb22651",
+      "symbol": "RtlUserThreadStart+33"
     }
   ],
   "javascriptHeap": {
-    "totalMemory": 2150379520,
-    "totalCommittedMemory": 2150379520,
-    "usedMemory": 2136727464,
-    "availableMemory": 49765384,
+    "totalMemory": 2155085824,
+    "totalCommittedMemory": 2155085824,
+    "usedMemory": 2134752112,
+    "availableMemory": 52680832,
     "memoryLimit": 2197815296,
     "heapSpaces": {
       "read_only_space": {
@@ -265,38 +413,38 @@
         "available": 229576
       },
       "new_space": {
-        "memorySize": 2097152,
-        "committedMemory": 2097152,
-        "capacity": 1047488,
-        "used": 39856,
-        "available": 1007632
+        "memorySize": 9437184,
+        "committedMemory": 9437184,
+        "capacity": 4713696,
+        "used": 184424,
+        "available": 4529272
       },
       "old_space": {
-        "memorySize": 463056896,
-        "committedMemory": 463056896,
-        "capacity": 458372536,
-        "used": 458327624,
-        "available": 44912
+        "memorySize": 468299776,
+        "committedMemory": 468299776,
+        "capacity": 464003880,
+        "used": 463525064,
+        "available": 478816
       },
       "code_space": {
-        "memorySize": 3309568,
-        "committedMemory": 3309568,
-        "capacity": 2712224,
-        "used": 2712224,
+        "memorySize": 3047424,
+        "committedMemory": 3047424,
+        "capacity": 2573760,
+        "used": 2573760,
         "available": 0
       },
       "map_space": {
-        "memorySize": 8392704,
-        "committedMemory": 8392704,
-        "capacity": 2768640,
-        "used": 2768640,
+        "memorySize": 7868416,
+        "committedMemory": 7868416,
+        "capacity": 2708800,
+        "used": 2708800,
         "available": 0
       },
       "large_object_space": {
-        "memorySize": 1672638464,
-        "committedMemory": 1672638464,
-        "capacity": 1672296424,
-        "used": 1672296424,
+        "memorySize": 1665548288,
+        "committedMemory": 1665548288,
+        "capacity": 1665177368,
+        "used": 1665177368,
         "available": 0
       },
       "code_large_object_space": {
@@ -309,24 +457,24 @@
       "new_large_object_space": {
         "memorySize": 0,
         "committedMemory": 0,
-        "capacity": 1047488,
+        "capacity": 4713696,
         "used": 0,
-        "available": 1047488
+        "available": 4713696
       }
     }
   },
   "resourceUsage": {
-    "userCpuSeconds": 320.656,
-    "kernelCpuSeconds": 28.781,
-    "cpuConsumptionPercent": 5.85224,
-    "maxRss": 2131095552,
+    "userCpuSeconds": 111.406,
+    "kernelCpuSeconds": 8.437,
+    "cpuConsumptionPercent": 13.3604,
+    "maxRss": 2261663744,
     "pageFaults": {
-      "IORequired": 3036828,
+      "IORequired": 1427420,
       "IONotRequired": 0
     },
     "fsActivity": {
-      "reads": 94233,
-      "writes": 354
+      "reads": 7548,
+      "writes": 332
     }
   },
   "libuv": [
@@ -349,6 +497,7 @@
     "HOME": "C:\\Users\\ASUS",
     "HOMEDRIVE": "C:",
     "HOMEPATH": "\\Users\\ASUS",
+    "IDEA_INITIAL_DIRECTORY": "C:\\Users\\ASUS\\Desktop",
     "INIT_CWD": "C:\\Users\\ASUS\\Desktop\\pc",
     "JAVA_HOME": "E:\\java\\jdk8",
     "LOCALAPPDATA": "C:\\Users\\ASUS\\AppData\\Local",
@@ -521,7 +670,7 @@
     "npm_package_devDependencies__vue_cli_service": "^3.0.0-beta.15",
     "npm_package_devDependencies__vue_eslint_config_airbnb": "^3.0.0-rc.3",
     "npm_package_devDependencies__vue_test_utils": "^1.0.0-beta.16",
-    "npm_package_gitHead": "f23266d79a301bdfa5a55a2d10107e30944ec0cb",
+    "npm_package_gitHead": "2c2896021a0a58decf55702148f3a07c781f760f",
     "npm_package_name": "vue-cli-prerender",
     "npm_package_private": "true",
     "npm_package_scripts_build": "vue-cli-service build",
@@ -536,8 +685,8 @@
     "NVM_SYMLINK": "E:\\Nvm\\nodejs",
     "OneDrive": "C:\\Users\\ASUS\\OneDrive",
     "OS": "Windows_NT",
-    "Path": "E:\\Nvm\\nvm\\nvm\\v12.12.0\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\ASUS\\Desktop\\pc\\node_modules\\.bin;C:\\Program Files\\Microsoft SQL Server\\110\\Tools\\Binn\\;E:\\Nvm\\nvm\\nvm;E:\\Nvm\\nodejs;E:\\Nvm\\nodejs;E:\\Nvm\\node_global;E:\\VSCode\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;E:\\Chrome\\Application\\chrome.exe;C:\\Users\\ASUS\\AppData\\Local\\Microsoft\\WindowsApps;E:\\java\\jdk8\\bin;\"E:\\Nvm\\nvm\\nvm;E:\\Nvm\\nodejs\";E:\\Nvm\\nodejs;E:\\MYSQL\\mysql-8.0.20-winx64\\bin;E:\\PhpStorm\\PhpStorm 2020.3\\bin;;E:\\Nvm\\node_global;E:\\VS\\bin;",
-    "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JSE;.WSF;.WSH;.MSC",
+    "Path": "E:\\Nvm\\nvm\\nvm\\v12.12.0\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\ASUS\\Desktop\\pc\\node_modules\\.bin;C:\\Users\\ASUS\\Desktop\\pc\\node_modules\\.bin;C:\\Program Files\\Microsoft SQL Server\\110\\Tools\\Binn\\;E:\\Nvm\\nvm\\nvm;E:\\Nvm\\nodejs;E:\\Nvm\\nodejs;E:\\Nvm\\node_global;E:\\VSCode\\Git\\cmd;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;E:\\Chrome\\Application\\chrome.exe;C:\\Users\\ASUS\\AppData\\Local\\Microsoft\\WindowsApps;E:\\java\\jdk8\\bin;\"E:\\Nvm\\nvm\\nvm;E:\\Nvm\\nodejs\";E:\\Nvm\\nodejs;E:\\MYSQL\\mysql-8.0.20-winx64\\bin;E:\\PhpStorm\\PhpStorm 2020.3\\bin;;E:\\Nvm\\node_global;E:\\VS\\bin;",
+    "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JSE;.WSF;.WSH;.MSC;.CPL",
     "PhpStorm": "E:\\PhpStorm\\PhpStorm 2020.3\\bin;",
     "PROCESSOR_ARCHITECTURE": "AMD64",
     "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 142 Stepping 10, GenuineIntel",
@@ -548,12 +697,14 @@
     "ProgramFiles(x86)": "C:\\Program Files (x86)",
     "ProgramW6432": "C:\\Program Files",
     "PROMPT": "$P$G",
-    "PSModulePath": "C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules",
+    "PSModulePath": "C:\\Users\\ASUS\\Documents\\WindowsPowerShell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules",
     "PUBLIC": "C:\\Users\\Public",
     "SESSIONNAME": "Console",
     "SystemDrive": "C:",
     "SystemRoot": "C:\\WINDOWS",
     "TEMP": "C:\\Users\\ASUS\\AppData\\Local\\Temp",
+    "TERMINAL_EMULATOR": "JetBrains-JediTerm",
+    "TERM_SESSION_ID": "88179911-6776-4c91-a9eb-33ff3bc411e4",
     "TMP": "C:\\Users\\ASUS\\AppData\\Local\\Temp",
     "USERDOMAIN": "LAPTOP-8C3O3CMJ",
     "USERDOMAIN_ROAMINGPROFILE": "LAPTOP-8C3O3CMJ",
@@ -561,7 +712,8 @@
     "USERPROFILE": "C:\\Users\\ASUS",
     "VS120COMNTOOLS": "E:\\VS2013\\安装\\Common7\\Tools\\",
     "windir": "C:\\WINDOWS",
-    "_prog": "node"
+    "_prog": "node",
+    "__INTELLIJ_COMMAND_HISTFILE__": "C:\\Users\\ASUS\\AppData\\Local\\JetBrains\\WebStorm2021.2\\terminal\\history\\pc-history"
   },
   "sharedObjects": [
     "E:\\Nvm\\nodejs\\node.exe",
@@ -583,9 +735,9 @@
     "C:\\WINDOWS\\System32\\PSAPI.DLL",
     "C:\\WINDOWS\\System32\\CRYPT32.dll",
     "C:\\WINDOWS\\System32\\bcrypt.dll",
-    "C:\\WINDOWS\\SYSTEM32\\USERENV.dll",
     "C:\\WINDOWS\\SYSTEM32\\IPHLPAPI.DLL",
     "C:\\WINDOWS\\SYSTEM32\\WINMM.dll",
+    "C:\\WINDOWS\\SYSTEM32\\USERENV.dll",
     "C:\\WINDOWS\\System32\\IMM32.DLL",
     "C:\\WINDOWS\\SYSTEM32\\powrprof.dll",
     "C:\\WINDOWS\\SYSTEM32\\UMPDC.dll",

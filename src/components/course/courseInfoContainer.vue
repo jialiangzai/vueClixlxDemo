@@ -3,9 +3,11 @@
     <div class="courseInfoTop">
       <div class="info-container">
         <ul class="route">
-          <li class="route-item">课程</li>
+          <li class="route-item" style="cursor: pointer">
+            <router-link to="/course" style="color: #FFF">课程</router-link>
+          </li>
           <li class="route-item"><i class="el-icon-arrow-right"></i></li>
-          <li class="route-item">{{courseInfoArr.isMember === 0 ? '免费课' : '会员课程'}}</li>
+          <li class="route-item" style="cursor: pointer" @click="goCourseSearch(courseInfoArr.isMember,courseInfoArr.isFree)">{{courseInfoArr.isMember === 0 ? '免费课' : '会员课程'}}</li>
           <li class="route-item"><i class="el-icon-arrow-right"></i></li>
           <li class="route-item">{{courseInfoArr.courseName}}</li>
         </ul>
@@ -61,7 +63,6 @@
                     <button class="btn-item"  @click="addCart()">加入购物车</button>
                 </div>
             </div>
-
             <div class="video" v-for="(item,index) in courseChapters" :key="index">
                 <div class="chapterName">{{item.chapterName}}</div>
                 <div class="chapterDesc">{{item.description}}</div>
@@ -155,6 +156,15 @@ export default {
 	methods: {
 		...mapActions(['saveCartNumAction']),
 		...mapMutations(['saveLoginDialog']),
+        //点击免费课或者会员课程进行搜索
+        goCourseSearch(member,free){
+          console.log(member,'hhhhh',free);
+          if(member === 1){
+            this.$router.push('/course')
+          }else if( free === 1){
+            this.$router.push('/course')
+          }
+        },
         //改变章节和资料的状态
         change1(){
             this.activeChange = 1
@@ -556,13 +566,14 @@ export default {
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.09);
 }
 .down {
-	margin: 10px auto;
+	margin: 10px auto !important;
 	width: 1200px;
 	height: 100%;
 	padding: 5px;
 	background: #ffffff;
 	box-sizing: border-box;
 	border-radius: 8px;
+  min-height: 500px;
 }
 .down:first-child{
     margin: 40px 0 5px 0;

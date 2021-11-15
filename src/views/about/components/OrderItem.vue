@@ -39,7 +39,8 @@
                 <div class="i-b-c-price">
                   <p class="i-b-c-p-single">价格 ￥{{ course.discountPrice }}</p>
                   <p class="i-b-c-p-total">合计 ￥{{ item.payPrice }}</p>
-                  <p class="i-b-c-p-pay">实付 ￥<span>{{ item.payPrice }}</span></p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 1">实付 ￥<span>{{ item.payPrice }}</span></p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 2">实付 ￥<span style="text-decoration:line-through">{{ item.payPrice }}</span></p>
                 </div>
               </div>
               <div class="i-b-right">

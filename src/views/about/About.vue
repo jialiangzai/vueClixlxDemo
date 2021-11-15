@@ -179,7 +179,6 @@ export default {
     $route: {
       immediate: true,
       handler(to, from) {
-
         let curpath = to.path
         let curIndex = this.aboutList.findIndex(item => {
           return item.link === curpath
