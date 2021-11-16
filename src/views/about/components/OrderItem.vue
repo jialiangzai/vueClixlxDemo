@@ -73,6 +73,7 @@
                 </div>
                 <div class="i-b-l-right" style="width: 400px">
                   <p class="i-b-l-r-title" v-if="item.isUsedExchangeCode === 1">兑换会员</p>
+                  <p class="i-b-l-r-title" v-else-if="item.memberVipVo">{{item.memberVipVo.vipName}}</p>
                   <p class="i-b-l-r-title" v-else>购买会员</p>
                   <br>
                   <p class="i-b-l-r-price">

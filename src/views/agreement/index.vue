@@ -22,7 +22,6 @@ export default {
       webconfig:{},
       code:this.$route.query.code,
       datas:{}
-
     }
   },
   metaInfo() {
@@ -57,6 +56,16 @@ export default {
     indexHeader,
     foot
   },
+  watch: {
+    $route: {
+      immediate: true,
+      handler(to, from) {
+        let query = to.query;
+        this.code = query.code;
+        this.getAgreementByCode();
+      },
+    }
+  }
 };
 </script>
 
@@ -71,10 +80,15 @@ export default {
   font-size: 24px;
   width: 100%;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 .container .content{
   font-size: 14px;
   letter-spacing: 2px;
+  border: #f2f2f2 solid 1px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #cccccc;
+  padding: 10px;
+  line-height: 25px;
 }
 </style>

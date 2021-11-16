@@ -347,7 +347,7 @@ export default{
     padding: 5px 0px 20px 0px;
     background: #F3F5F7;
     border-radius: 10px;
-    box-shadow: 0px 5px 15px 3px #888888;
+  box-shadow: 0px 2px 5px #888888;
 }
 .info-main{
     margin: 10px 20px;

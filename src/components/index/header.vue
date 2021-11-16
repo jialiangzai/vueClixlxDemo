@@ -107,7 +107,7 @@
                 </div>
                 <div class="vipName">{{vipInfos.vipName}}</div>
                 <div class="endTime" v-if="vipEndtime > 0">{{vipEndtime}}天到期</div>
-                <div class="endTime" v-else>已过期{{abs(vipEndtime)}}</div>
+                <div class="endTime" v-else>已过期{{vipEndtime}}天</div>
               </div>
             </div>
             <div class="u-i-i-bottom">
@@ -298,7 +298,7 @@
               <i class="fa fa-qq" aria-hidden="true"></i>
             </div>
             <div class="login-weibo">
-              <i class="fa fa-weibo" aria-hidden="true"></i>
+              <i class="fa fa-weibo" aria-hidden="true" @click="goWeibo"></i>
             </div>
           </div>
           <div class="container">登录即同意进入小鹿线官网</div>
@@ -524,10 +524,10 @@ export default {
 
 		},
     // 微博登录
-    // goWeibo(){
-    //   window.location.href =
-    //       'https://www.xuexiluxian.cn/api/oauth/login/weibo'
-    // },
+    goWeibo(){
+      window.location.href =
+          'https://www.xuexiluxian.cn/api/oauth/login/weibo'
+    },
 		// 行为验证码
 		success(e) {
 			switch (this.crtType) {

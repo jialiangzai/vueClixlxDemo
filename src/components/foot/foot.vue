@@ -21,8 +21,8 @@
                   <span class="">{{webconfig.copyright ? webconfig.copyright : ""}}</span>
                   <a class="go" href="https://beian.miit.gov.cn/" target="_blank">{{webconfig.icp ? webconfig.icp : ""}}</a>
                   <p style="text-align: center;margin-top: 5px">
-                    <a href="javascript:;" style="color: #FFF" @click="goAgreement('6GFL2QGQ')">《隐私政策》</a>
-                    <a href="javascript:;" style="color: #FFF" @click="goAgreement('6HG6326I')">《用户服务协议》</a>
+                    <a href="javascript:;" style="color: #FFF" @click="goAgreement(userServiceAgreement.code)">《{{userServiceAgreement.title}}》</a>
+                    <a href="javascript:;" style="color: #FFF" @click="goAgreement(privateAgreement.code)">《{{privateAgreement.title}}》</a>
                   </p>
 
                 </div>
@@ -48,6 +48,7 @@
 import {getImageByCode} from '@/common/api/picture.js'
 import imgCode from '@/common/globalImages.js'
 import {webConfig} from '@/common/api/webConfig.js'
+import {getAgreementByCode} from '@/common/api/agreement'
 
 export default{
     data(){
@@ -65,6 +66,18 @@ export default{
             website: "",//网址
             description: ""//网站描述
           },
+          userServiceAgreement: {
+            id: "",
+            title: "",
+            content: "",
+            code: ""
+          },
+          privateAgreement:{
+            id: "",
+            title: "",
+            content: "",
+            code: ""
+          },
           guanfangwx:{
               imageName:'',
               imgUrl:''
@@ -79,11 +92,29 @@ export default{
       this.__init()
       this.getImageByCodeGuanfangwx()
       this.getImageByCodeTeacherwx()
+      this.getServiceAgreement("6HG6326I");//
+      this.getPrivateAgreement("6GFL2QGQ");//
     },
     methods:{
       async __init(){
         let res = await webConfig()
         this.webconfig = res.data.data
+      },
+      //获取隐私协议
+      getServiceAgreement(code){
+        getAgreementByCode(code).then(res => {
+          if(res.meta.code === '200'){
+            this.userServiceAgreement = res.data.data
+          }
+        })
+      },
+      //获取隐私协议
+      getPrivateAgreement(code){
+        getAgreementByCode(code).then(res => {
+          if(res.meta.code === '200'){
+            this.privateAgreement = res.data.data
+          }
+        })
       },
       //跳转到隐私页面
       goAgreement(code){

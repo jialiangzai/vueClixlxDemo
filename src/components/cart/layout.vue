@@ -236,12 +236,11 @@ export default{
   margin: -100px auto 50px auto;
   background: #EBEDF2;
   border-radius: 12px;
-  box-shadow: 2px 2px 5px  #888888;
+  box-shadow: 0px 2px 5px #888888;
 }
 .main{
   padding:20px;
   border-radius: 5px;
-
 }
 .main-shop{
   position: relative;

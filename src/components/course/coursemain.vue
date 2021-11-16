@@ -6,7 +6,7 @@
           <div class="title-name">课程方向：</div>
           <div class="all-items">
             <el-tag
-                class="category-poniter"
+                :class="indexObj.indexWhere === undefined ? 'category-poniter' : 'category-poniter category-poniter-item'"
                 effect="plain"
                 type="info"
                 @click="buildingCondition('fcategory', null)"
@@ -14,88 +14,34 @@
               全部
             </el-tag>
             <el-tag
-                class="category-poniter category-poniter-item"
+                :class="indexObj.indexWhere === index ? 'category-poniter' : 'category-poniter category-poniter-item' "
                 v-for="(item, index) in firstArr"
                 :key="index"
-                @click="buildingCondition('fcategory', item)"
+                @click="buildingCondition('fcategory', item,index)"
                 effect="plain"
                 type="info"
-            >{{ item.categoryName }}
+            >  {{ item.categoryName }}
             </el-tag>
           </div>
         </div>
-        <div class="search-item" style="top: 45px;">
+        <div class="search-item search-item-transition" style="top: 45px;">
           <div class="title-name">课程分类：</div>
           <div class="all-items">
             <el-tag
-                class="category-poniter"
                 effect="plain"
                 type="info"
-                @click="buildingCondition('fcategory', null)"
+                @click="buildingCondition('scategory', null)"
+                :class="indexObj.indexType === undefined ? 'category-poniter' : 'category-poniter category-poniter-item'"
             >
               全部
             </el-tag>
             <el-tag
-                class="category-poniter category-poniter-item"
                 v-for="(item, index) in secondArr"
                 :key="index"
-                @click="buildingCondition('fcategory', item)"
+                @click="buildingCondition('scategory', item,index)"
                 effect="plain"
                 type="info"
-            >{{ item.categoryName }}
-            </el-tag>
-            <el-tag
-                class="category-poniter category-poniter-item"
-                v-for="(item, index) in secondArr"
-                :key="index"
-                @click="buildingCondition('fcategory', item)"
-                effect="plain"
-                type="info"
-            >{{ item.categoryName }}
-            </el-tag>
-            <el-tag
-                class="category-poniter category-poniter-item"
-                v-for="(item, index) in secondArr"
-                :key="index"
-                @click="buildingCondition('fcategory', item)"
-                effect="plain"
-                type="info"
-            >{{ item.categoryName }}
-            </el-tag>
-            <el-tag
-                class="category-poniter category-poniter-item"
-                v-for="(item, index) in secondArr"
-                :key="index"
-                @click="buildingCondition('fcategory', item)"
-                effect="plain"
-                type="info"
-            >{{ item.categoryName }}
-            </el-tag>
-            <el-tag
-                class="category-poniter category-poniter-item"
-                v-for="(item, index) in secondArr"
-                :key="index"
-                @click="buildingCondition('fcategory', item)"
-                effect="plain"
-                type="info"
-            >{{ item.categoryName }}
-            </el-tag>
-            <el-tag
-                class="category-poniter category-poniter-item"
-                v-for="(item, index) in secondArr"
-                :key="index"
-                @click="buildingCondition('fcategory', item)"
-                effect="plain"
-                type="info"
-            >{{ item.categoryName }}
-            </el-tag>
-            <el-tag
-                class="category-poniter category-poniter-item"
-                v-for="(item, index) in secondArr"
-                :key="index"
-                @click="buildingCondition('fcategory', item)"
-                effect="plain"
-                type="info"
+                :class="indexObj.indexType === index ? 'category-poniter' : 'category-poniter category-poniter-item' "
             >{{ item.categoryName }}
             </el-tag>
           </div>
@@ -104,43 +50,43 @@
           <div class="title-name">课程难度：</div>
           <div class="all-items">
             <el-tag
-                class="category-poniter"
+                :class="indexObj.indexEasy === undefined ? 'category-poniter' : 'category-poniter category-poniter-item'"
                 effect="plain"
                 type="info"
-                @click="buildingCondition('fcategory', null)"
+                @click="buildingCondition('clevel', null)"
             >
               全部
             </el-tag>
             <el-tag
-                class="category-poniter category-poniter-item"
+                :class="indexObj.indexEasy === index ? 'category-poniter' : 'category-poniter category-poniter-item' "
                 effect="plain"
                 type="info"
-                @click="buildingCondition('clevel', item)"
-                v-for="item in courseLevel"
+                @click="buildingCondition('clevel', item,index)"
+                v-for="(item,index) in courseLevel"
                 :key="item.code"
             >{{ item.text }}
             </el-tag>
 
           </div>
         </div>
-        <div
-            class="search-item "
-            v-if="selectedConditions && selectedConditions.length > 0"
-            style="top: 135px;"
-        >
-          <li class="title-name">已选择:</li>
-          <el-tag
-              class="category-poniter"
-              type="success"
-              effect="dark"
-              :closable="true"
-              v-for="(item, index) in selectedConditions"
-              :key="index"
-              @close="closeSelectedCondition(item.type, item, index)"
-          >
-            {{ item.text }}
-          </el-tag>
-        </div>
+<!--        <div-->
+<!--            class="search-item "-->
+<!--            v-if="selectedConditions && selectedConditions.length > 0"-->
+<!--            style="top: 135px;"-->
+<!--        >-->
+<!--          <li class="title-name">已选择:</li>-->
+<!--          <el-tag-->
+<!--              class="category-poniter"-->
+<!--              type="success"-->
+<!--              effect="dark"-->
+<!--              :closable="true"-->
+<!--              v-for="(item, index) in selectedConditions"-->
+<!--              :key="index"-->
+<!--              @close="closeSelectedCondition(item.type, item, index)"-->
+<!--          >-->
+<!--            {{ item.text }}-->
+<!--          </el-tag>-->
+<!--        </div>-->
       </section>
     </div>
     <div class="main-container">
@@ -275,6 +221,11 @@ import { Decrypt } from '@/utils/aes';
 export default {
   data() {
     return {
+      indexObj:{
+        indexWhere:undefined,
+        indexType:undefined,
+        indexEasy:undefined
+      },
       categorysDetail: [],
       priceSortBy: '',
       isFreeOrIsMember: '',
@@ -323,7 +274,6 @@ export default {
     this.tokens = localStorage.getItem('token');
     let courseType = localStorage.getItem('serarch:course:type')
     if(courseType){
-      console.log(typeof courseType);
       if(courseType === "1"){
         this.queryParams.entity.isFree  = 1
         this.isFreeOrIsMember = '1';
@@ -365,19 +315,25 @@ export default {
       this.selectedConditions.push(item);
     },
     // 构建搜索条件并搜索
-    buildingCondition(type, object) {
-      console.log(type,object,'ggggg');
+    buildingCondition(type, object,index) {
       if (type === 'fcategory') {
-        this.getSecondCategorys(object.id)
-        this.queryParams.entity.firstCategory = (object && object.id) ? object.id : '';
-        if (object && object.id) {
-          this.buildingSelectedCondition({
-            text: object.categoryName,
-            code: object.id,
-            type: 'fcategory'
-          });
-        }
+          object = object != null ? object : -1;
+          this.getSecondCategorys(object.id)
+          this.indexObj.indexWhere = index
+          this.indexObj.indexType = undefined
+          this.indexObj.indexEasy = undefined
+          this.queryParams.entity.firstCategory = (object && object.id) ? object.id : '';
+          this.queryParams.entity.secondCategory = '';
+          this.queryParams.entity.courseLevel = '';
+          if (object && object.id) {
+            this.buildingSelectedCondition({
+              text: object.categoryName,
+              code: object.id,
+              type: 'fcategory'
+            });
+          }
       } else if (type === 'scategory') {
+        this.indexObj.indexType = index
         this.queryParams.entity.secondCategory = (object && object.id) ? object.id : '';
         if (object && object.id) {
           this.buildingSelectedCondition({
@@ -387,6 +343,7 @@ export default {
           });
         }
       } else if (type === 'clevel') {
+        this.indexObj.indexEasy = index
         this.queryParams.entity.courseLevel = (object && object.code) ? object.code : '';
         if (object && object.code) {
           this.buildingSelectedCondition({
@@ -600,24 +557,13 @@ export default {
         this.queryParams.entity.tags = query.searchKnowledge;
         this.queryCourse(this.queryParams);
       },
-    },
-
-    /*'$route': function (to, from) {
-      console.log(555555555555);
-      console.log(to,from,'jjjjjjjjjj');
-      this.watchUrl();
-      let query = to.query;
-      this.queryParams.entity.courseName = query.keywords;
-      this.queryParams.entity.tags = query.searchKnowledge;
-      this.queryCourse(this.queryParams);
-    }*/
+    }
   }
 };
 </script>
 
 
 <style scoped>
-
 .all .active,
 .all .active2,
 .all .active3 {
@@ -631,7 +577,7 @@ export default {
 .course-main {
   padding: 20px 0;
   width: 100%;
-  height: 160px;
+  height: 130px;
   background: #f3f5f9;
 }
 .search-container{
@@ -646,16 +592,14 @@ export default {
   cursor: pointer;
   position: absolute;
   height: 45px;
-  transition: height 0.5s;
+  transition: all 0.5s;
 }
-.search-item:hover{
-  border-radius: 5px;
-  background: #ffffff;
-  z-index: 9999;
-  width: 100%;
-  height: unset;
-  overflow: unset;
-  box-shadow: #dddddd 0px 2px 2px;
+.search-item-transition:hover{
+  z-index: 777;
+  height: auto;
+  box-shadow: rgb(95 101 105 / 10%) 0px 12px 20px 0px;
+  border-radius: 8px;
+  background: rgba(255,255,255);
 }
 .search-item .title-name {
   width: 100px;
