@@ -107,7 +107,7 @@
                 </div>
                 <div class="vipName">{{vipInfos.vipName}}</div>
                 <div class="endTime" v-if="vipEndtime > 0">{{vipEndtime}}天到期</div>
-                <div class="endTime" v-else>已过期</div>
+                <div class="endTime" v-else>已过期{{abs(vipEndtime)}}</div>
               </div>
             </div>
             <div class="u-i-i-bottom">
