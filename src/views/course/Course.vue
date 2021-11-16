@@ -1,5 +1,5 @@
 <template>
-    <div class="course">
+    <div class="agreement">
         <indexHeader></indexHeader>
         <!-- <courseDirection></courseDirection> -->
         <coursemain></coursemain>

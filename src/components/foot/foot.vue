@@ -20,6 +20,11 @@
                 <div class="copy-bottom">
                   <span class="">{{webconfig.copyright ? webconfig.copyright : ""}}</span>
                   <a class="go" href="https://beian.miit.gov.cn/" target="_blank">{{webconfig.icp ? webconfig.icp : ""}}</a>
+                  <p style="text-align: center;margin-top: 5px">
+                    <a href="javascript:;" style="color: #FFF" @click="goAgreement('6GFL2QGQ')">《隐私政策》</a>
+                    <a href="javascript:;" style="color: #FFF" @click="goAgreement('6HG6326I')">《用户服务协议》</a>
+                  </p>
+
                 </div>
             </div>
             <div class="wx">
@@ -79,6 +84,15 @@ export default{
       async __init(){
         let res = await webConfig()
         this.webconfig = res.data.data
+      },
+      //跳转到隐私页面
+      goAgreement(code){
+        this.$router.push({
+          path: '/agreement',
+          query: {
+            code: code,
+          }
+        })
       },
       getImageByCodeGuanfangwx(){
           getImageByCode({imageCode:imgCode.global_guanfangcode}).then(res => {
@@ -171,7 +185,7 @@ export default{
     height: 100%;
 }
 .wx-dsc{
-    margin:15px;
+  text-align: center;
 }
 .go{
     color: #FFFFFF;

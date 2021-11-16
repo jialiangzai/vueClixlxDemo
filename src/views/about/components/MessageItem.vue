@@ -187,6 +187,7 @@ export default {
 <style scoped>
 .active{
   background-color: rgba(0,0,0,.1);
+
 }
 .my-course-content {
   width: 100%;
@@ -205,7 +206,8 @@ export default {
   height: 50px;
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  padding-top: 10px;
+  line-height: 19px;
   position: relative;
   cursor: pointer;
   border-bottom: 1px solid rgba(112, 112, 112, 0.3);
@@ -250,7 +252,7 @@ export default {
   width: 20px;
   height: 21px;
   position: absolute;
-  right: 50px;
+  right: 0px;
   top: 10px;
 }
 .delete img {

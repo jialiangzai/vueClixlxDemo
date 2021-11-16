@@ -14,33 +14,33 @@ service.interceptors.request.use(req => {
 
 // 响应拦截器
 service.interceptors.response.use(res => {
-    // 未设置状态码则默认成功状态
-    //
-    const code = res.data.meta.code;
-    // 获取错误信息
-    if (code === '50002') {
-      MessageBox.confirm('登录状态已过期，请重新登录', '系统提示', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('isLogin');
-          window.location.href = '/home';
-
-        })
-        .catch(() => {
-        });
-      return Promise.reject('error');
-    } else {
-      return res.data;
-    }
-  },
-  error => {
-    return Promise.reject(error);
+  // 未设置状态码则默认成功状态
+  //
+  if(res.request.responseType === "blob"){
+    return res.data;
   }
-);
+  const code = res.data.meta.code;
+  // 获取错误信息
+  if (code === '50002') {
+    MessageBox.confirm('登录状态已过期，请重新登录', '系统提示', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    ).then(() => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('isLogin');
+      window.location.href = '/home';
+
+    }).catch((err) => {
+      console.log(err);
+    });
+    return Promise.reject('error');
+  } else {
+    return res.data;
+  }
+},error => {
+  return Promise.reject(error);
+});
 
 export default service;

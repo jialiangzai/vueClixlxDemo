@@ -44,6 +44,60 @@
                 type="info"
             >{{ item.categoryName }}
             </el-tag>
+            <el-tag
+                class="category-poniter category-poniter-item"
+                v-for="(item, index) in secondArr"
+                :key="index"
+                @click="buildingCondition('fcategory', item)"
+                effect="plain"
+                type="info"
+            >{{ item.categoryName }}
+            </el-tag>
+            <el-tag
+                class="category-poniter category-poniter-item"
+                v-for="(item, index) in secondArr"
+                :key="index"
+                @click="buildingCondition('fcategory', item)"
+                effect="plain"
+                type="info"
+            >{{ item.categoryName }}
+            </el-tag>
+            <el-tag
+                class="category-poniter category-poniter-item"
+                v-for="(item, index) in secondArr"
+                :key="index"
+                @click="buildingCondition('fcategory', item)"
+                effect="plain"
+                type="info"
+            >{{ item.categoryName }}
+            </el-tag>
+            <el-tag
+                class="category-poniter category-poniter-item"
+                v-for="(item, index) in secondArr"
+                :key="index"
+                @click="buildingCondition('fcategory', item)"
+                effect="plain"
+                type="info"
+            >{{ item.categoryName }}
+            </el-tag>
+            <el-tag
+                class="category-poniter category-poniter-item"
+                v-for="(item, index) in secondArr"
+                :key="index"
+                @click="buildingCondition('fcategory', item)"
+                effect="plain"
+                type="info"
+            >{{ item.categoryName }}
+            </el-tag>
+            <el-tag
+                class="category-poniter category-poniter-item"
+                v-for="(item, index) in secondArr"
+                :key="index"
+                @click="buildingCondition('fcategory', item)"
+                effect="plain"
+                type="info"
+            >{{ item.categoryName }}
+            </el-tag>
           </div>
         </div>
         <div class="search-item" style="top: 90px;">
@@ -140,8 +194,6 @@
               <el-radio label="2">会员课程</el-radio>
             </el-radio-group>
           </li>
-          <!--  <li class="right-item"  @click="memberCourse">
-                    </li> -->
         </ul>
       </div>
       <div class="container-body" v-if="arrcourse && arrcourse.length > 0">
@@ -269,6 +321,18 @@ export default {
   created() {
     this.watchUrl();
     this.tokens = localStorage.getItem('token');
+    let courseType = localStorage.getItem('serarch:course:type')
+    if(courseType){
+      console.log(typeof courseType);
+      if(courseType === "1"){
+        this.queryParams.entity.isFree  = 1
+        this.isFreeOrIsMember = '1';
+      }else {
+        this.queryParams.entity.isMember  = 1
+        this.isFreeOrIsMember = '2';
+      }
+      localStorage.removeItem('serarch:course:type')
+    }
     let keywords = this.$route.query.keywords;
     if (keywords) {
       this.queryParams.entity.courseName = keywords;
@@ -302,7 +366,9 @@ export default {
     },
     // 构建搜索条件并搜索
     buildingCondition(type, object) {
+      console.log(type,object,'ggggg');
       if (type === 'fcategory') {
+        this.getSecondCategorys(object.id)
         this.queryParams.entity.firstCategory = (object && object.id) ? object.id : '';
         if (object && object.id) {
           this.buildingSelectedCondition({
@@ -525,16 +591,26 @@ export default {
     }
   },
   watch: {
-    '$route': function (to, from) {
-      console.log(from,'jjjhjhjhjh',to);
+    $route: {
+      immediate: true,
+      handler(to, from) {
+        this.watchUrl();
+        let query = to.query;
+        this.queryParams.entity.courseName = query.keywords;
+        this.queryParams.entity.tags = query.searchKnowledge;
+        this.queryCourse(this.queryParams);
+      },
+    },
 
+    /*'$route': function (to, from) {
+      console.log(555555555555);
+      console.log(to,from,'jjjjjjjjjj');
       this.watchUrl();
       let query = to.query;
       this.queryParams.entity.courseName = query.keywords;
       this.queryParams.entity.tags = query.searchKnowledge;
       this.queryCourse(this.queryParams);
-
-    }
+    }*/
   }
 };
 </script>

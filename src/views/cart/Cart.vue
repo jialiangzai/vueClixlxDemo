@@ -2,7 +2,7 @@
     <div class="course">
         <indexHeader></indexHeader>
         <Layout></Layout>
-<!--        <foot :webconfig="webconfig"></foot>-->
+        <foot :webconfig="webconfig"></foot>
     </div>
 </template>
 
@@ -10,7 +10,7 @@
 <script>
 import indexHeader from '@/components/index/header.vue';
 import Layout from '@/components/cart/layout.vue';
-// import foot from '@/components/foot/foot.vue';
+ import foot from '@/components/foot/foot.vue';
 // import {webConfig} from '@/common/api/webConfig.js'
 
 export default {
@@ -41,7 +41,7 @@ export default {
   components: {
     indexHeader,
     Layout,
-    // foot
+     foot
   },
 };
 </script>

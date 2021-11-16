@@ -12,7 +12,7 @@
               />
               <p class="order-num">订单编号：{{ item.orderNumber }}</p>
               <p class="order-time">{{ dateFormat('YYYY-mm-dd HH:MM',item.createTime) }}</p>
-              <p class="changeCode" v-if="item.orderType === 1 && item.isUsedExchangeCode === 1">兑换码：{{item.exchangeCode}}</p>
+              <p class="changeCode" v-if="item.isUsedExchangeCode === 1">兑换码：{{item.exchangeCode}}</p>
             </div>
             <div
               class="item-bottom"
@@ -66,13 +66,49 @@
                 </div>
               </div>
             </div>
-            <div  v-if="item.orderType === 2" class="vipOrder">
-              <p class="getVipWay">
-                获取会员方式：
-                <span v-if="item.isUsedExchangeCode === 1"> 兑换会员</span>
-                <span v-else>购买会员</span>
-              </p>
-              <p class="changeCode" v-if="item.exchangeCode">兑换码：{{item.exchangeCode}}</p>
+            <div   v-if="item.orderType === 2" class="item-bottom">
+              <div class="i-b-left">
+                <div class="i-b-l-left">
+                  <img src="/image/vipBg.png" />
+                </div>
+                <div class="i-b-l-right" style="width: 400px">
+                  <p class="i-b-l-r-title" v-if="item.isUsedExchangeCode === 1">兑换会员</p>
+                  <p class="i-b-l-r-title" v-else>购买会员</p>
+                  <br>
+                  <p class="i-b-l-r-price">
+                    价格 <span>￥{{ item.payPrice }}</span>
+                  </p>
+                </div>
+              </div>
+              <div class="i-b-center">
+                <div class="i-b-c-price">
+                  <p class="i-b-c-p-total">价格 ￥{{ item.payPrice }}</p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 1">实付 ￥<span>{{ item.payPrice }}</span></p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 2">实付 ￥<span style="text-decoration:line-through">{{ item.payPrice }}</span></p>
+                </div>
+              </div>
+              <div class="i-b-right">
+                <div
+                    v-if="item.isPay === 1 && item.status === 1"
+                    class="i-b-r-btn success"
+                >
+                  已完成
+                </div>
+                <div
+                    v-if="
+                    item.isPay === 2 && (item.status === 1 || item.status === 4)
+                  "
+                    class="i-b-r-btn error"
+                >
+                  未完成
+                </div>
+                <div
+                    v-if="item.isPay === 2 && item.status === 3"
+                    class="i-b-r-btn info"
+                >
+                  已失效
+                </div>
+              </div>
             </div>
           </div>
         </div>

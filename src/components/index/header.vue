@@ -198,12 +198,10 @@
               </div>
             </el-form-item>
             <el-form-item>
-              <el-checkbox v-model="checked" class="privacy"
-                >同意<a href="javascript:;">《小鹿线官网》</a>&<a
-                  href="javascript:;"
-                  >《隐私政策》</a
-                ></el-checkbox
-              >
+              <el-checkbox v-model="checked" class="privacy">同意
+                <a href="javascript:;" @click="goAgreement('6GFL2QGQ')">《隐私政策》</a>&
+                <a href="javascript:;" @click="goAgreement('6HG6326I')">《用户服务协议》</a>
+              </el-checkbox>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -508,6 +506,15 @@ export default {
 			'saveCartNumAction',
 		]),
 		...mapMutations(['saveLoginDialog']),
+    //跳转到隐私页面
+    goAgreement(code){
+      this.$router.push({
+        path: '/agreement',
+        query: {
+          code: code,
+        }
+      })
+    },
 		// 微信登录
 		goWeixin() {
             //'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'

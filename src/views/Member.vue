@@ -51,7 +51,6 @@
             <div class="top-main">
               <img :src="userAvat?userAvat:'/image/common/avator.png'" alt="">
               <p>{{userName}}</p>
-              <p class="changeuser" @click="changeUser" style="cursor: pointer">切换账号</p>
             </div>
           </div>
           <div class="content-main">
@@ -228,10 +227,6 @@ export default {
           this.showDialog = false;
         }
       })
-    },
-    //切换账号
-    changeUser(){
-      this.$store.commit('saveLoginDialog',true)
     },
     //选中的会员等级
     selectedVip(item){
@@ -579,6 +574,7 @@ export default {
     top: 15px;
     width: 35px;
     height: 35px;
+    cursor: pointer;
   }
   .mask-close img{
     width: 100%;
@@ -749,6 +745,7 @@ export default {
     height: 180px;
     border: #cccccc dashed 1px;
     position: relative;
+    margin-bottom: 20px;
   }
   .sameCode:before{
     content: "选择支付方式";

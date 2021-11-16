@@ -194,7 +194,7 @@ export default {
                         if(res.meta.code === '200'){
                             this.$message({
                                 message: '取消收藏该课程',
-                                type: 'success',
+                                type: 'error',
                             })
                         }
                     })

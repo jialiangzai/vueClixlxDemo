@@ -203,7 +203,7 @@ export default{
 
 <style scoped>
 .fixed{
-  position: relative;
+  /*position: relative;*/
   width: 100%;
   height: 100%;
   background: #FFFFFF;
@@ -228,15 +228,15 @@ export default{
   }
 }
 .container{
-  position: absolute;
+/*  position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%,0);
+  top: 50%;*/
+  /*transform: translate(0,-15%);*/
   width: 1200px;
-  margin: 0 auto;
+  margin: -100px auto 50px auto;
   background: #EBEDF2;
   border-radius: 12px;
-  box-shadow: 0px 5px 15px 3px #888888;
+  box-shadow: 2px 2px 5px  #888888;
 }
 .main{
   padding:20px;

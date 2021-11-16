@@ -7,7 +7,7 @@
             <router-link to="/course" style="color: #FFF">课程</router-link>
           </li>
           <li class="route-item"><i class="el-icon-arrow-right"></i></li>
-          <li class="route-item" style="cursor: pointer" @click="goCourseSearch(courseInfoArr.isMember,courseInfoArr.isFree)">{{courseInfoArr.isMember === 0 ? '免费课' : '会员课程'}}</li>
+          <li class="route-item" style="cursor: pointer" @click="goCourseSearch(courseInfoArr.discountPrice === 0 ? 1 : 2)">{{courseInfoArr.discountPrice === 0 ? '免费课' : '会员课程'}}</li>
           <li class="route-item"><i class="el-icon-arrow-right"></i></li>
           <li class="route-item">{{courseInfoArr.courseName}}</li>
         </ul>
@@ -92,7 +92,7 @@
         </div>
     </div>
     <div v-else>
-      <div v-if="downsource && downsource.length > 0">
+      <div v-if="downsource && downsource.length > 0" style="min-height: 500px">
         <div class="down"   v-for="(x,y) in downsource" :key="y">
             <div class="source"  >
               <span class="downloadCourse">{{x.attachmentName}}</span>
@@ -157,13 +157,9 @@ export default {
 		...mapActions(['saveCartNumAction']),
 		...mapMutations(['saveLoginDialog']),
         //点击免费课或者会员课程进行搜索
-        goCourseSearch(member,free){
-          console.log(member,'hhhhh',free);
-          if(member === 1){
+        goCourseSearch(type){
+            localStorage.setItem('serarch:course:type',type)
             this.$router.push('/course')
-          }else if( free === 1){
-            this.$router.push('/course')
-          }
         },
         //改变章节和资料的状态
         change1(){
@@ -197,36 +193,34 @@ export default {
 				this.$store.commit('saveLoginDialog', true)
 				return
 			} else {
-                checkAuth(item.courseId).then((res) => {
-                    let hasAuth = res.data.data.hasAuth;
-                    if (!hasAuth) {
-                        this.$message({
-                            message: '购买该课程后才能下载资料哦',
-                            type: 'error',
-                        })
-                        return;
-                    } else{
-                        checkAuth(item.courseId).then((res) => {
-                            downloadAttachment(item.courseId, item.id).then((res) => {
-                                const blob = new Blob([res])
-                                let fileName = item.attachmentName
-                                let fileUrl = item.attachmentUrl
-                                const extName = fileUrl.substring(
-                                    fileUrl.lastIndexOf('.')
-                                )
-                                fileName = fileName + extName
-                                const link = document.createElement('a')
-                                link.download = fileName
-                                link.style.display = 'none'
-                                link.href = URL.createObjectURL(blob)
-                                document.body.appendChild(link)
-                                link.click()
-                                URL.revokeObjectURL(link.href)
-                                document.body.removeChild(link)
-                            })
-                        })
-                    }
+        checkAuth(item.courseId).then((res) => {
+            let hasAuth = res.data.data.hasAuth;
+            if (!hasAuth) {
+                this.$message({
+                    message: '购买该课程后才能下载资料哦',
+                    type: 'error',
                 })
+                return;
+            } else{
+              downloadAttachment(item.courseId, item.id).then((res) => {
+                  const blob = new Blob([res])
+                  let fileName = item.attachmentName
+                  let fileUrl = item.attachmentUrl
+                  const extName = fileUrl.substring(
+                      fileUrl.lastIndexOf('.')
+                  )
+                  fileName = fileName + extName
+                  const link = document.createElement('a')
+                  link.download = fileName
+                  link.style.display = 'none'
+                  link.href = URL.createObjectURL(blob)
+                  document.body.appendChild(link)
+                  link.click()
+                  URL.revokeObjectURL(link.href)
+                  document.body.removeChild(link)
+              })
+            }
+        })
 			}
 		},
 		//加入购物车
@@ -573,7 +567,6 @@ export default {
 	background: #ffffff;
 	box-sizing: border-box;
 	border-radius: 8px;
-  min-height: 500px;
 }
 .down:first-child{
     margin: 40px 0 5px 0;

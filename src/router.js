@@ -21,8 +21,7 @@ import  Loading from '@/views/loading/index.vue'
 import PaySuccess from '@/views/paySuccess/index.vue'
 import PayFail from '@/views/payFail/index.vue'
 import VipSuccess from '@/views/vipSuccess/index.vue'
-
-
+import Agreement from '@/views/agreement/index.vue'
 
 Vue.use(Router);
 
@@ -35,7 +34,7 @@ const routes = [
   { path:'/course-play/:courseId/:chapterId',component:CoursePlay,name:'course-play',meta:{ requiresAuth : false }},
   { path: '/member', component: Member ,name:'member'},
   { path:'*',component:Home},
-
+  { path: '/agreement', component: Agreement ,name:'agreement'},
   {
     path: '/about', component: About, name: 'about',
     redirect: '/about/my-course',

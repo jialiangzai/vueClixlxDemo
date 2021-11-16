@@ -2,6 +2,8 @@
     <div class="course">
         <indexHeader></indexHeader>
         <confirmOrder></confirmOrder>
+        <foot :webconfig="webconfig"></foot>
+
     </div>
 
 </template>

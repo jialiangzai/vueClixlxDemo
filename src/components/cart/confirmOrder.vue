@@ -299,7 +299,7 @@ export default{
 }
 .confirmOrder{
     width: 100%;
-    height: 1000px;
+    min-height: 900px;
 }
 .bgColor{
   width: 100%;
@@ -500,7 +500,7 @@ export default{
     box-shadow: 0px 3px 5px 2px #ff727f;
 }
 .pay{
-    font-size: 24px;
+    font-size: 18px;
     padding-left: 10px;
     color:#F01414 ;
 }
