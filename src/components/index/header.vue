@@ -107,7 +107,7 @@
                 </div>
                 <div class="vipName">{{vipInfos.vipName}}</div>
                 <div class="endTime" v-if="vipEndtime > 0">{{vipEndtime}}天到期</div>
-                <div class="endTime" v-else>已过期{{vipEndtime}}天</div>
+                <div class="endTime" v-else>已过期{{Math.abs(vipEndtime)}}天</div>
               </div>
             </div>
             <div class="u-i-i-bottom">
@@ -198,10 +198,11 @@
               </div>
             </el-form-item>
             <el-form-item>
-              <el-checkbox v-model="checked" class="privacy">同意
-                <a href="javascript:;" @click="goAgreement('6GFL2QGQ')">《隐私政策》</a>&
-                <a href="javascript:;" @click="goAgreement('6HG6326I')">《用户服务协议》</a>
+              <el-checkbox v-model="checked" class="privacy">
+                已阅读并同意相关服务条款和隐私政策
               </el-checkbox>
+              <p style="color: #3481ff;line-height: 15px;margin-left: 20px;font-size: 12px;" @click="goAgreement(userServiceAgreement.code)">《{{userServiceAgreement.title}}》</p>
+              <p style="color: #3481ff;line-height: 15px;margin-left: 20px;font-size: 12px;" @click="goAgreement(privateAgreement.code)">《{{privateAgreement.title}}》</p>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -348,6 +349,7 @@ import { Encrypt, Decrypt } from '@/utils/aes.js'
 // cookie
 import Cookies from "js-cookie";
 import { mapState, mapActions, mapMutations } from 'vuex'
+  import {getAgreementByCode} from '@/common/api/agreement'
 export default {
 	data() {
 		return {
@@ -475,7 +477,19 @@ export default {
 			Phonecaptcha: '短信验证码',
 			phoneSend: false,
       vipInfos:{},
-      vipEndtime:''
+      vipEndtime:'',
+      userServiceAgreement: {
+        id: "",
+        title: "",
+        content: "",
+        code: ""
+      },
+      privateAgreement:{
+        id: "",
+        title: "",
+        content: "",
+        code: ""
+      },
 		}
 	},
 	computed: {
@@ -495,6 +509,9 @@ export default {
 
 		// 获取搜索框数据
 		this.copySearch();
+    //隐私政策和服务协议
+    this.getServiceAgreement("6HG6326I");//
+    this.getPrivateAgreement("6GFL2QGQ");//
 	},
 	components: {
 		Verify,
@@ -506,6 +523,22 @@ export default {
 			'saveCartNumAction',
 		]),
 		...mapMutations(['saveLoginDialog']),
+    //获取服务协议
+    getServiceAgreement(code){
+      getAgreementByCode(code).then(res => {
+        if(res.meta.code === '200'){
+          this.userServiceAgreement = res.data.data
+        }
+      })
+    },
+    //获取隐私协议
+    getPrivateAgreement(code){
+      getAgreementByCode(code).then(res => {
+        if(res.meta.code === '200'){
+          this.privateAgreement = res.data.data
+        }
+      })
+    },
     //跳转到隐私页面
     goAgreement(code){
       this.$router.push({
@@ -989,6 +1022,7 @@ export default {
                 var now = new Date().getTime()
                 var num = this.vipInfos.endTime - now
                 this.vipEndtime = Math.floor(num / 1000 / 60 / 60 / 24)
+                // this.vipEndtime = -100
               }/*else if(this.vipEndtime < 0){
                 Cookies.set('vipEndtime', Math.abs(this.vipEndtime), {
                   expires: 1,
@@ -1142,6 +1176,10 @@ export default {
 </script>
 
 <style scoped>
+.el-form-item__content{
+  line-height: 24px !important;
+}
+
 .el-input-box{
   border: 1px solid #DCDFE6;
 }
@@ -1153,6 +1191,7 @@ export default {
 .vip{
   display: flex;
   flex-direction: row;
+  /*flex-wrap: wrap;*/
   width: 100%;
   height: 30px;
   margin-left: -105px;
@@ -1175,6 +1214,10 @@ export default {
 .endTime{
   padding-left: 2px;
   color:#FF0000 ;
+  position: absolute;
+  top: 45px;
+  left: 55px;
+  font-size: 12px;
 }
 
 
@@ -1275,15 +1318,15 @@ export default {
 	cursor: pointer;
 }
 .privacy {
-	font-size: 10px;
+	font-size: 12px !important;
 	font-family: Microsoft YaHei;
 	font-weight: 400;
 	color: rgba(145, 153, 161, 1);
 }
-.privacy a {
-	color: #3689ff;
-	text-decoration: none;
-}
+/*.privacy a {*/
+/*	color: #3689ff;*/
+/*	text-decoration: none;*/
+/*}*/
 .active {
 	font-weight: bold;
 	color: #3481ff;
@@ -1506,7 +1549,7 @@ export default {
 }
 .u-i-t-top {
 	display: flex;
-	height: 60px;
+	height: 80px;
 	width: 100%;
 	align-items: center;
 }

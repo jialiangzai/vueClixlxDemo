@@ -14,13 +14,13 @@
               全部
             </el-tag>
             <el-tag
-                :class="indexObj.indexWhere === index ? 'category-poniter' : 'category-poniter category-poniter-item' "
+                :class="indexObj.indexWhere === index? 'category-poniter' : 'category-poniter category-poniter-item' "
                 v-for="(item, index) in firstArr"
                 :key="index"
                 @click="buildingCondition('fcategory', item,index)"
                 effect="plain"
                 type="info"
-            >  {{ item.categoryName }}
+            >  {{ item.categoryName }}---{{indexObj.indexWhere === index}}--{{indexObj.indexWhere === item.id}}
             </el-tag>
           </div>
         </div>
@@ -41,8 +41,8 @@
                 @click="buildingCondition('scategory', item,index)"
                 effect="plain"
                 type="info"
-                :class="indexObj.indexType === index ? 'category-poniter' : 'category-poniter category-poniter-item' "
-            >{{ item.categoryName }}
+                :class="indexObj.indexType === index  ? 'category-poniter' : 'category-poniter category-poniter-item' "
+            >{{ item.categoryName }}--{{indexObj.indexType === index}}
             </el-tag>
           </div>
         </div>
@@ -315,7 +315,7 @@ export default {
       this.selectedConditions.push(item);
     },
     // 构建搜索条件并搜索
-    buildingCondition(type, object,index) {
+     buildingCondition(type, object,index) {
       if (type === 'fcategory') {
           object = object != null ? object : -1;
           this.getSecondCategorys(object.id)
@@ -334,7 +334,22 @@ export default {
           }
       } else if (type === 'scategory') {
         this.indexObj.indexType = index
+        let secondId = object.id
         this.queryParams.entity.secondCategory = (object && object.id) ? object.id : '';
+          if(this.indexObj.indexType !== undefined){
+            let cur = this.firstArr.findIndex(item=> item.id === object.parentId)
+            this.indexObj.indexWhere = cur
+            getSecondCategorys(object.parentId ? object.parentId : '-1')
+                .then(res => {
+                  if (res.meta.code = '200') {
+                    this.secondArr = res.data.list;
+                    let secondIndex = this.secondArr.findIndex(item => item.id === secondId)
+                     this.indexObj.indexType = secondIndex
+                  }
+                });
+          } else {
+            this.indexObj.indexWhere = undefined
+          }
         if (object && object.id) {
           this.buildingSelectedCondition({
             text: object.categoryName,
@@ -517,6 +532,7 @@ export default {
     queryCourse(queryParams) {
       queryCourse(queryParams)
           .then(res => {
+
             if (res.meta.code = '200') {
               this.queryParams.total = res.data.pageInfo.total;
               this.arrcourse = res.data.pageInfo.list;

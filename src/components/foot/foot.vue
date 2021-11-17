@@ -100,7 +100,7 @@ export default{
         let res = await webConfig()
         this.webconfig = res.data.data
       },
-      //获取隐私协议
+      //获取服务协议
       getServiceAgreement(code){
         getAgreementByCode(code).then(res => {
           if(res.meta.code === '200'){
