@@ -20,7 +20,7 @@
                 @click="buildingCondition('fcategory', item,index)"
                 effect="plain"
                 type="info"
-            >  {{ item.categoryName }}---{{indexObj.indexWhere === index}}--{{indexObj.indexWhere === item.id}}
+            >  {{ item.categoryName }}
             </el-tag>
           </div>
         </div>
@@ -42,7 +42,7 @@
                 effect="plain"
                 type="info"
                 :class="indexObj.indexType === index  ? 'category-poniter' : 'category-poniter category-poniter-item' "
-            >{{ item.categoryName }}--{{indexObj.indexType === index}}
+            >{{ item.categoryName }}
             </el-tag>
           </div>
         </div>
@@ -316,6 +316,7 @@ export default {
     },
     // 构建搜索条件并搜索
      buildingCondition(type, object,index) {
+       this.queryParams.entity = {}
       if (type === 'fcategory') {
           object = object != null ? object : -1;
           this.getSecondCategorys(object.id)
@@ -333,6 +334,7 @@ export default {
             });
           }
       } else if (type === 'scategory') {
+        object = object != null ? object : -1;
         this.indexObj.indexType = index
         let secondId = object.id
         this.queryParams.entity.secondCategory = (object && object.id) ? object.id : '';
@@ -417,6 +419,7 @@ export default {
     },
     //免费课程还是会员课程
     changeFreeOrMember(e) {
+      this.queryParams.entity = {}
       if (e === '1') {
         this.active = false;
         this.active2 = false;
@@ -437,6 +440,7 @@ export default {
     },
     //升降序排列
     handlePrice() {
+      this.queryParams.entity = {}
       let queryParams = {
         pageNum: 1,
         pageSize: 12,
@@ -461,6 +465,7 @@ export default {
 
     //点击综合
     handleZonghe() {
+      this.queryParams.entity = {}
       this.active = !this.active;
       this.active2 = false;
       this.active3 = false;
@@ -475,6 +480,7 @@ export default {
     },
     //点击最新课程
     handleNewCourse() {
+      this.queryParams.entity = {}
       this.active2 = !this.active2;
       this.active = false;
       this.active3 = false;
@@ -491,6 +497,7 @@ export default {
     },
     //最多购买
     mostbuy() {
+      this.queryParams.entity = {}
       this.active3 = !this.active3;
       this.active2 = false;
       this.active = false;
@@ -532,7 +539,6 @@ export default {
     queryCourse(queryParams) {
       queryCourse(queryParams)
           .then(res => {
-
             if (res.meta.code = '200') {
               this.queryParams.total = res.data.pageInfo.total;
               this.arrcourse = res.data.pageInfo.list;

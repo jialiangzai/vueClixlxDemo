@@ -9,9 +9,12 @@ import store from './store';
 import './registerServiceWorker';
 import { HappyScroll } from 'vue-happy-scroll'
 import VideoPlayer from 'vue-video-player'
+window.videojs = VideoPlayer.videojs
 require('video.js/dist/video-js.css')
 require('vue-video-player/src/custom-theme.css')
+require('video.js/dist/lang/zh-CN.js')
 import Pagination from "@/components/Pagination";
+
 Vue.use(VideoPlayer)
 Vue.use(MetaInfo);
 Vue.use(ElementUI);

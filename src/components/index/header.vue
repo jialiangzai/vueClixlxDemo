@@ -106,7 +106,7 @@
                   <img :src="vipInfos.vipIcon" :class="vipEndtime < 0 ? 'gray':''">
                 </div>
                 <div class="vipName">{{vipInfos.vipName}}</div>
-                <div class="endTime" v-if="vipEndtime > 0">{{vipEndtime}}天到期</div>
+                <div class="endTime" v-if="vipInfos.isExpired === 0 ">{{vipEndtime}}天到期</div>
                 <div class="endTime" v-else>已过期{{Math.abs(vipEndtime)}}天</div>
               </div>
             </div>
@@ -1015,9 +1015,9 @@ export default {
 					.then((res) => {
 						// this.saveUserInfoActions()
 						if (res.meta.code === '200') {
-              //
-              this.vipInfos = res.data.data.vipInfo
 
+              this.vipInfos = res.data.data.vipInfo
+              // console.log(this.vipInfos,'aaaaaaaaaaaaaaa')
               if( this.vipInfos ){
                 var now = new Date().getTime()
                 var num = this.vipInfos.endTime - now
@@ -1216,7 +1216,7 @@ export default {
   color:#FF0000 ;
   position: absolute;
   top: 45px;
-  left: 55px;
+  left: 73px;
   font-size: 12px;
 }
 
