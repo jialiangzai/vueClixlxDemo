@@ -12,11 +12,13 @@
               />
               <p class="order-num">订单编号：{{ item.orderNumber }}</p>
               <p class="order-time">{{ dateFormat('YYYY-mm-dd HH:MM',item.createTime) }}</p>
+              <p class="changeCode" v-if="item.isUsedExchangeCode === 1">兑换码：{{item.exchangeCode}}</p>
             </div>
             <div
               class="item-bottom"
               v-for="course in item.historyOrderCourseVos"
               :key="course.courseId"
+              v-if="item.orderType === 1"
             >
               <div class="i-b-left">
                 <div class="i-b-l-left" @click="goStu(course.courseId)">
@@ -37,7 +39,8 @@
                 <div class="i-b-c-price">
                   <p class="i-b-c-p-single">价格 ￥{{ course.discountPrice }}</p>
                   <p class="i-b-c-p-total">合计 ￥{{ item.payPrice }}</p>
-                  <p class="i-b-c-p-pay">实付 ￥<span>{{ item.payPrice }}</span></p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 1">实付 ￥<span>{{ item.payPrice }}</span></p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 2">实付 ￥<span style="text-decoration:line-through">{{ item.payPrice }}</span></p>
                 </div>
               </div>
               <div class="i-b-right">
@@ -58,6 +61,51 @@
                 <div
                   v-if="item.isPay === 2 && item.status === 3"
                   class="i-b-r-btn info"
+                >
+                  已失效
+                </div>
+              </div>
+            </div>
+            <div   v-if="item.orderType === 2" class="item-bottom">
+              <div class="i-b-left">
+                <div class="i-b-l-left">
+                  <img src="/image/vipBg.png" />
+                </div>
+                <div class="i-b-l-right" style="width: 400px">
+                  <p class="i-b-l-r-title" v-if="item.isUsedExchangeCode === 1">兑换会员</p>
+                  <p class="i-b-l-r-title" v-else-if="item.memberVipVo">{{item.memberVipVo.vipName}}</p>
+                  <p class="i-b-l-r-title" v-else>购买会员</p>
+                  <br>
+                  <p class="i-b-l-r-price">
+                    价格 <span>￥{{ item.payPrice }}</span>
+                  </p>
+                </div>
+              </div>
+              <div class="i-b-center">
+                <div class="i-b-c-price">
+                  <p class="i-b-c-p-total">价格 ￥{{ item.payPrice }}</p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 1">实付 ￥<span>{{ item.payPrice }}</span></p>
+                  <p class="i-b-c-p-pay" v-if="item.isPay === 2">实付 ￥<span style="text-decoration:line-through">{{ item.payPrice }}</span></p>
+                </div>
+              </div>
+              <div class="i-b-right">
+                <div
+                    v-if="item.isPay === 1 && item.status === 1"
+                    class="i-b-r-btn success"
+                >
+                  已完成
+                </div>
+                <div
+                    v-if="
+                    item.isPay === 2 && (item.status === 1 || item.status === 4)
+                  "
+                    class="i-b-r-btn error"
+                >
+                  未完成
+                </div>
+                <div
+                    v-if="item.isPay === 2 && item.status === 3"
+                    class="i-b-r-btn info"
                 >
                   已失效
                 </div>
@@ -119,6 +167,17 @@ export default {
 </script>
 
 <style scoped>
+/*会员订单*/
+.vipOrder{
+  display: flex;
+  justify-content: space-between;
+}
+
+.getVipWay,.changeCode{
+  font-size: 16px;
+  color: #333;
+  padding:5px 0;
+}
 .order-container {
   margin: 10px 0;
   width: 940px;
@@ -127,7 +186,7 @@ export default {
 }
 .order-item {
   width: 100%;
-  height: 240px;
+  /*height: 240px;*/
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.07);
   border-radius: 8px;
@@ -145,6 +204,12 @@ export default {
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #333333;
+}
+.item-top .changeCode{
+  font-size: 12px;
+  color: #333333;
+  margin: 0 0 0 260px;
+  /*margin-right: 0;*/
 }
 .order-img {
   width: 15px;

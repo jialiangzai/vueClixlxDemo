@@ -46,7 +46,7 @@ export default {
                 this.$store.commit("saveLoginDialog", false);
                 let accessToken = res.data.accessToken;
                 // 存储到access中
-                // console.log(accessToken)
+                //
                 localStorage.setItem("token", Encrypt(accessToken));
                 localStorage.setItem("isLogin", JSON.stringify(true));
                  window.location.href = '/home'
@@ -63,10 +63,10 @@ export default {
               }
             })
           }catch (e) {
-            console.log(e)
+
           }
         }else{
-          console.log('微信登录失败')
+
         }
     },
   }

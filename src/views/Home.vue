@@ -4,7 +4,7 @@
     <indexHeader></indexHeader>
     <navSwiper></navSwiper>
     <newGoodCourse></newGoodCourse>
-    <foot class="coursefoot"></foot>
+    <foot></foot>
   </div>
 </template>
 
@@ -16,17 +16,17 @@ import foot from '@/components/foot/foot.vue';
 import {webConfig} from '@/common/api/webConfig.js'
 
 export default {
-  data(){
-    return{
-      webconfig:{}
+  data() {
+    return {
+      webconfig: {},
     }
   },
   metaInfo() {
     return {
-      title: this.webconfig.title, // set a title
+      title: 'WEB前端_前端课程_小鹿线', // set a title
       meta: [{ // set meta
-        name: this.webconfig.keywords,
-        content: this.webconfig.description
+        name: '前端,前端课程,免费课程,WEB前端,前端工具,前端框架,html,css,javascript,js,html5,css3,nodejs,vuejs,reactjs,typescript,webpack,git,小鹿线',
+        content: '小鹿线注重于web前端开发，专注前端开发，关注用户体验，提供全面详细的前沿前端教程及前端课程，精心雕琢每一门前端课程，是将要从事前端和正在致力于前端的开发者好的选择。小鹿线注重于web前端开发，专注前端开发，关注用户体验，提供全面详细的前沿前端教程及前端课程，精心雕琢每一门前端课程，是将要从事前端和正在致力于前端的开发者好的选择。'
       }]
     }
   },
@@ -34,9 +34,9 @@ export default {
     this.__init()
   },
   methods: {
-    async __init(){
+    async __init() {
       let res = await webConfig()
-      // console.log(res)
+      //
       this.webconfig = res.data.data
     }
   },
@@ -50,5 +50,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

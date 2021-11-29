@@ -167,14 +167,14 @@ export default {
     // 上传图片
     uploadImg() {
       this.$refs.cropper.getCropBlob((data) => {
-        //console.log(data);
-        //console.log(this.files);
+        //
+        //
         let formData = new FormData();
-        // console.log(data);
-        // console.log(" data:image/jpeg;base64,+" + data);
+        //
+        //
         formData.append("file", data);
         // formData.append("id", this.userInfo.id);
-        // console.log(formData)
+        //
         var basisiloading = Loading.service({
           lock: true,
           text: "Loading",
@@ -182,11 +182,11 @@ export default {
           background: "rgba(0, 0, 0, 0.7)",
         });
         uploadFileWithBlob(formData).then((res) => {
-          // console.log(res)
+          //
           this.imgUrl = res.data.url;
           createToken()
             .then((res) => {
-              //console.log(res);
+              //
               const token = res.data.token;
               updateUserInfo({
                 avatar: this.imgUrl,

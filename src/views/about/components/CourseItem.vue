@@ -105,6 +105,7 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 20px;
+  border-bottom: 1px solid #ccc;
 }
 .item-left {
   width: 250px;
@@ -142,7 +143,6 @@ export default {
   align-items: center;
   margin-top: 20px;
   box-sizing: border-box;
-  border-bottom: 1px solid #ccc;
 }
 .i-r-left {
   width: 450px;

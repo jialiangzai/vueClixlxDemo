@@ -260,7 +260,7 @@ export default {
         const y = Math.round(155 * p.y / parseInt(imgSize.imgHeight))
         return { x, y }
       })
-      // console.log(newPointArr,"newPointArr");
+      //
       return newPointArr
     }
   },

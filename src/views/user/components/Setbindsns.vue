@@ -325,7 +325,7 @@ export default {
 					if (valid) {
 						this.$refs.verify.show()
 					} else {
-						console.log('识别')
+
 					}
 				})
 			}

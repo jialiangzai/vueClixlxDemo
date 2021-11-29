@@ -24,11 +24,11 @@
                     <el-divider></el-divider>
                     <h3>支付方式 <span class="pay" v-if="payment">{{payment.description}}</span></h3>
                     <div class="choosebg">
-                        <div :class="'payment ' + item.code" @mouseup="mouseup(item)" v-for="(item) in payMethod" :key="item.code">
-                            <i class="icon iconfont icon-zhifubaozhifu" v-if="item.code === 'alipayment'"></i>
-                            <span v-if="item.code === 'alipayment'">支付宝</span>
-                            <i class="icon iconfont icon-weixin" v-if="item.code === 'wxpayment'"></i>
-                            <span v-if="item.code === 'wxpayment'">微信</span>
+                        <div @mouseup="mouseup(item)" v-for="(item) in payMethod" :key="item.code" :class="renderClass(item) + (item.selected ? ' payStyle' : '')" >
+                          <i class="icon iconfont icon-zhifubaozhifu" v-if="item.code === 'alipayment'"></i>
+                          <span v-if="item.code === 'alipayment'">支付宝</span>
+                          <i class="icon iconfont icon-weixin" v-if="item.code === 'wxpayment'"></i>
+                          <span v-if="item.code === 'wxpayment'">微信</span>
                         </div>
                     </div>
                 </div>
@@ -48,6 +48,10 @@
                 <img :src="qrCode" alt="">
             </div>
             <div class="alert">请您及时付款，已便订单尽快处理！</div>
+            <div class="finish">
+                <div class="error" @click="payFail">支付遇到问题</div>
+                <div class="success" @click="paySuccess">我已支付</div>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -56,6 +60,7 @@
 import {settlement,zfbpay,queryOrderWithAli,wxpay,queryOrderWithWX} from '@/common/api/payment.js'
 import {deleteShopCars} from '@/common/api/shopcar.js'
 import {createToken} from '@/common/api/token.js'
+
 export default{
     data(){
         return{
@@ -73,21 +78,54 @@ export default{
             token:'',
             codeVisible: false,
             title:"",
+            isWx:false,
+            isZfb:false
         }
     },
     created(){
         this.order()
     },
-
     methods:{
-        queryOrderWithAli(){
-            if(this.isFinished){
-                return;
+      renderClass(item){
+        if(!item.selected){
+          item["selected"] = false;
+        }
+        return "payment " + item.code;
+      },
+      //支付成功
+      paySuccess(){
+        if(this.payment.code === 'alipayment'){
+          queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
+            if(res.meta.code === "200"){
+              clearInterval(this.timeInterVal)
+              this.$router.push('/paySuccess')
+            }else{
+               this.$router.push('/payFail')
             }
+          })
+        }else if(this.payment.code === 'wxpayment'){
+          queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
+            if(res.meta.code === "200"){
+              clearInterval(this.timeInterVal)
+              this.$router.push('/paySuccess')
+            }else{
+              this.$router.push('/payFail')
+            }
+          })
+        }
+      },
+      payFail(){
+        clearInterval(this.timeInterVal)
+        this.$router.push('/payFail')
+      },
+        queryOrderWithAli(){
+            // if(this.isFinished){
+            //     return;
+            // }
             queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
-                    clearInterval(this.timeInterVal)
-                    this.$router.push('/paySuccess')
+                  clearInterval(this.timeInterVal)
+                  this.$router.push('/paySuccess')
                     /* this.$confirm('订单支付成功！', '提示信息', {
                         confirmButtonText: '个人中心',
                         cancelButtonText: '返回首页',
@@ -100,19 +138,17 @@ export default{
                     this.isFinished = true
                     localStorage.removeItem("selectedArr");
                     this.removeShopCartCourses() */
-                }else{
-                     this.$router.push('/payFail')
                 }
             })
         },
         queryOrderWithWX(){
-            if(this.isFinished){
-                return;
-            }
+            // if(this.isFinished){
+            //     return;
+            // }
             queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
-                    clearInterval(this.timeInterVal)
-                    this.$router.push('/paySuccess')
+                  clearInterval(this.timeInterVal)
+                  this.$router.push('/paySuccess')
                     /* this.$confirm('订单支付成功！', '提示信息', {
                         confirmButtonText: '个人中心',
                         cancelButtonText: '返回首页',
@@ -125,8 +161,6 @@ export default{
                     this.isFinished = true
                     localStorage.removeItem("selectedArr");
                     this.removeShopCartCourses() */
-                }else{
-                     this.$router.push('/payFail')
                 }
             })
         },
@@ -148,19 +182,19 @@ export default{
             }else{
                 if(this.payment.code === 'alipayment'){
                     this.title = '支付宝扫码支付'
-                    this.codeVisible  = true
                     let data = {courses: this.setArr, payModes: this.payment.code}
                     zfbpay(data).then(res => {
                         this.qrCode = res.data.payurl
+                        this.codeVisible  = true
                         this.orderNumber = res.data.orderNumber;
                         this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
                     })
                 }else if(this.payment.code === 'wxpayment'){
                     this.title = '微信扫码支付'
-                    this.codeVisible  = true
                     let data = {courses: this.setArr, payModes: this.payment.code}
                     wxpay(data).then(res => {
                         this.qrCode = res.data.payurl
+                        this.codeVisible  = true
                         this.orderNumber = res.data.orderNumber
                         this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
                     })
@@ -181,7 +215,6 @@ export default{
                             });
                             this.isFinished = true
                             localStorage.removeItem("selectedArr");
-                            this.removeShopCartCourses()
                         }
                     })
                 }
@@ -189,10 +222,15 @@ export default{
         },
         //鼠标弹起时触发
         mouseup(payment){
-            this.payment = payment
+            this.payMethod.forEach(item => {
+              item.selected = false;
+            })
+          payment.selected = true;
+          this.payment = payment
         },
         order(){
             let selectedArr = localStorage.getItem("selectedArr");
+
             if(!selectedArr){
                 this.$message({
                     message: '系统错误',
@@ -203,6 +241,7 @@ export default{
             }
             this.setArr = JSON.parse(selectedArr);
             settlement(this.setArr).then(res => {
+
                 this.payMethod = res.data.payModes
                 this.courseInfo = res.data.courses
                 this.totalPrice = res.data.totalPrice
@@ -215,6 +254,31 @@ export default{
 
 
 <style scoped>
+.finish{
+  width: 170px;
+
+  line-height: 30px;
+  margin: 0 auto;
+  display: flex;
+}
+.success{
+  margin-left: 20px;
+  width: 70px;
+  font-size:12px ;
+  background: rgba(54, 137, 255, 0.22);
+  color: #3692ff;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.error{
+  width: 100px;
+  font-size:12px ;
+  background: linear-gradient(90deg, #fc7979 0%, #da4848 100%);
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 8px;
+
+}
 >>>.el-dialog {
     text-align: center !important;
     border-radius: 10px!important;
@@ -234,7 +298,7 @@ export default{
 }
 .confirmOrder{
     width: 100%;
-    height: 1000px;
+    min-height: 900px;
 }
 .bgColor{
   width: 100%;
@@ -282,7 +346,7 @@ export default{
     padding: 5px 0px 20px 0px;
     background: #F3F5F7;
     border-radius: 10px;
-    box-shadow: 0px 5px 15px 3px #888888;
+  box-shadow: 0px 2px 5px #888888;
 }
 .info-main{
     margin: 10px 20px;
@@ -331,7 +395,7 @@ export default{
 .coursePrice .nowprice{
     font-size: 18px;
     font-weight: 600;
-    color: 1C1F21;
+    color: #1C1F21;
 }
 .coursePrice .oldprice{
     padding-left: 10px;
@@ -376,15 +440,20 @@ export default{
     color: #222222;
     font-weight: bold;
 }
+
+.payStyle{
+  background: url("/image/checkedVip.png") no-repeat;
+  background-size: 220px 111px;
+  background-position: -67px -59px;
+  border: #ff470a solid 1px !important;
+}
 .alipayment{
-    border: #01a8eb solid 1px;
-    color: #01a8eb;
-    box-shadow: 0px 1px 2px 1px #01a8eb;
+  border: #bfbfbf solid 1px;
+  color: #01a8eb;
 }
 .wxpayment{
-    border: #01af37 solid 1px;
-    color: #01af37;
-    box-shadow: 0px 1px 2px 1px #01af37;
+  border: #bfbfbf solid 1px;
+  color: #01af37;
 }
 
 /* 支付结束 */
@@ -430,7 +499,7 @@ export default{
     box-shadow: 0px 3px 5px 2px #ff727f;
 }
 .pay{
-    font-size: 24px;
+    font-size: 18px;
     padding-left: 10px;
     color:#F01414 ;
 }

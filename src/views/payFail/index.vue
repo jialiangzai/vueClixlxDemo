@@ -21,7 +21,7 @@ export default {
 	name: 'payFail.vue',
 	data() {
 		return {
-            count: 5,
+      count: 5,
 			timer: '',
 			webconfig: {},
 		}
@@ -37,17 +37,19 @@ export default {
 		//再次支付
 		payAgain() {
 			this.$router.go(-1)
+      clearInterval(this.timer)
 		},
 		//返回购物车页面
 		goCart() {
-			this.$router.push('/cart')
+      this.$router.push('/cart')
+      clearInterval(this.timer)
 		},
 		//定时器
 		out() {
 			this.count--
 			if (this.count == 0) {
-				this.$router.push('/about/order')
-                clearInterval(this.timer)
+        this.$router.push('/about/order')
+        clearInterval(this.timer)
 			}
 		},
 	},

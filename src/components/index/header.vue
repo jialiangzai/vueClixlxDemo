@@ -85,7 +85,7 @@
           </div>
           <div class="content-login" v-else @click="goLogin">登录 / 注册</div>
         </div>
-        <!-- 划过头像显示 -->
+        <!-- 划过头像显示  -->
         <div class="user-info" v-show="isUserInfo">
           <div class="user-info-top">
             <div class="u-i-t-top">
@@ -100,6 +100,14 @@
                 <p>
                   {{ userInfo.nickName ? userInfo.nickName : nickname}}
                 </p>
+              </div>
+              <div class="vip" v-if="vipInfos">
+                <div class="vipImg">
+                  <img :src="vipInfos.vipIcon" :class="vipEndtime < 0 ? 'gray':''">
+                </div>
+                <div class="vipName">{{vipInfos.vipName}}</div>
+                <div class="endTime" v-if="vipInfos.isExpired === 0 ">{{vipEndtime}}天到期</div>
+                <div class="endTime" v-else>已过期{{Math.abs(vipEndtime)}}天</div>
               </div>
             </div>
             <div class="u-i-i-bottom">
@@ -190,12 +198,11 @@
               </div>
             </el-form-item>
             <el-form-item>
-              <el-checkbox v-model="checked" class="privacy"
-                >同意<a href="javascript:;">《小鹿线官网》</a>&<a
-                  href="javascript:;"
-                  >《隐私政策》</a
-                ></el-checkbox
-              >
+              <el-checkbox v-model="checked" class="privacy">
+                已阅读并同意相关服务条款和隐私政策
+              </el-checkbox>
+              <p style="color: #3481ff;line-height: 15px;margin-left: 20px;font-size: 12px;" @click="goAgreement(userServiceAgreement.code)">《{{userServiceAgreement.title}}》</p>
+              <p style="color: #3481ff;line-height: 15px;margin-left: 20px;font-size: 12px;" @click="goAgreement(privateAgreement.code)">《{{privateAgreement.title}}》</p>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -258,10 +265,10 @@
               </el-form-item>
               <el-form-item prop="captcha" class="captcha identify">
                 <el-input
-                  v-model="identifyForm.captcha"
-                  style="width: 150px"
-                  placeholder="请输入短信验证码"
-                  @keyup.enter.native="submitIdentifyForm('identifyForm')"
+                    class="el-input-box"
+                    v-model="identifyForm.captcha"
+                    placeholder="请输入短信验证码"
+                    @keyup.enter.native="submitIdentifyForm('identifyForm')"
                 ></el-input>
                 <div
                   class="sendcaptcha"
@@ -288,11 +295,11 @@
             <div class="login-weixin">
               <i class="fa fa-weixin" aria-hidden="true" @click="goWeixin"></i>
             </div>
-            <div class="login-qq">
-              <i class="fa fa-qq" aria-hidden="true"></i>
+            <div class="login-qq" >
+              <i class="fa fa-qq" aria-hidden="true" @click="goQq"></i>
             </div>
             <div class="login-weibo">
-              <i class="fa fa-weibo" aria-hidden="true"></i>
+              <i class="fa fa-weibo" aria-hidden="true" @click="goWeibo"></i>
             </div>
           </div>
           <div class="container">登录即同意进入小鹿线官网</div>
@@ -314,20 +321,18 @@
         <div class="start-study" @click="goStudy">去登录</div>
       </div>
     </el-dialog>
-<!--    行为验证-->
+    <!--行为验证-->
     <Verify
         ref="verify"
         :captcha-type="'blockPuzzle'"
         :img-size="{width:'400px',height:'200px'}"
         @success="success"
-        @error="error"
-    />
-
+        @error="error"/>
   </div>
 </template>
 
 <script>
-import Verify from '../verifition/Verify'
+  import Verify from '../verifition/Verify'
 import { sendRegisterOrLoginCaptcha } from '@/common/api/sms'
 import {
 	loginByJson,
@@ -344,6 +349,7 @@ import { Encrypt, Decrypt } from '@/utils/aes.js'
 // cookie
 import Cookies from "js-cookie";
 import { mapState, mapActions, mapMutations } from 'vuex'
+  import {getAgreementByCode} from '@/common/api/agreement'
 export default {
 	data() {
 		return {
@@ -470,6 +476,20 @@ export default {
 			registerTiemr: null,
 			Phonecaptcha: '短信验证码',
 			phoneSend: false,
+      vipInfos:{},
+      vipEndtime:'',
+      userServiceAgreement: {
+        id: "",
+        title: "",
+        content: "",
+        code: ""
+      },
+      privateAgreement:{
+        id: "",
+        title: "",
+        content: "",
+        code: ""
+      },
 		}
 	},
 	computed: {
@@ -489,6 +509,9 @@ export default {
 
 		// 获取搜索框数据
 		this.copySearch();
+    //隐私政策和服务协议
+    this.getServiceAgreement("6HG6326I");//
+    this.getPrivateAgreement("6GFL2QGQ");//
 	},
 	components: {
 		Verify,
@@ -500,14 +523,46 @@ export default {
 			'saveCartNumAction',
 		]),
 		...mapMutations(['saveLoginDialog']),
+    //获取服务协议
+    getServiceAgreement(code){
+      getAgreementByCode(code).then(res => {
+        if(res.meta.code === '200'){
+          this.userServiceAgreement = res.data.data
+        }
+      })
+    },
+    //获取隐私协议
+    getPrivateAgreement(code){
+      getAgreementByCode(code).then(res => {
+        if(res.meta.code === '200'){
+          this.privateAgreement = res.data.data
+        }
+      })
+    },
+    //跳转到隐私页面
+    goAgreement(code){
+      this.$router.push({
+        path: '/agreement',
+        query: {
+          code: code,
+        }
+      })
+    },
 		// 微信登录
 		goWeixin() {
             //'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
             // 'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
-			window.location.href =
-				'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
-
+			window.location.href ='https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
 		},
+        goQq() {
+            //'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
+            // 'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
+			window.location.href ='https://www.xuexiluxian.cn/api/oauth/login/qq'
+		},
+        // 微博登录
+        goWeibo(){
+            window.location.href ='https://www.xuexiluxian.cn/api/oauth/login/weibo'
+        },
 		// 行为验证码
 		success(e) {
 			switch (this.crtType) {
@@ -962,6 +1017,19 @@ export default {
 					.then((res) => {
 						// this.saveUserInfoActions()
 						if (res.meta.code === '200') {
+
+              this.vipInfos = res.data.data.vipInfo
+              // console.log(this.vipInfos,'aaaaaaaaaaaaaaa')
+              if( this.vipInfos ){
+                var now = new Date().getTime()
+                var num = this.vipInfos.endTime - now
+                this.vipEndtime = Math.floor(num / 1000 / 60 / 60 / 24)
+                // this.vipEndtime = -100
+              }/*else if(this.vipEndtime < 0){
+                Cookies.set('vipEndtime', Math.abs(this.vipEndtime), {
+                  expires: 1,
+                });
+              }*/
 							// localStorage.setItem('userInfo',Encrypt(JSON.stringify(res.data.data)))
 							this.saveUserInfoAction(res.data.data)
 							// this.$router.go(0)
@@ -1017,7 +1085,7 @@ export default {
 				this.crtType = 'usernamePasswordLogin'
 			}
 			// this.registerForm = {};
-			// console.log(this.$refs.registerForm);
+			//
 			this.loginCurrent = index
 		},
 		// 退出登录
@@ -1077,18 +1145,27 @@ export default {
 		deleteColor() {
 			this.courseColor = -1
 		},
+    open(a) {
+      if( a == 'false' ){
+        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
+          dangerouslyUseHTMLString: true
+        });
+      }
+    }
+
 	},
 	watch: {
 		$route: {
 			immediate: true,
 			handler(to, from) {
+
 				let newUrl = to.fullPath
 				to.fullPath.replace(/(.*)\?/, function(a, b) {
 					newUrl = b
 				})
 				if (newUrl === '/home') {
 					this.actives = '1'
-				} else if (newUrl === '/course') {
+				} else if (newUrl === '/course' || newUrl.startsWith('/course-info') ) {
 					this.actives = '2'
 				} else if (newUrl === '/member') {
 					this.actives = '3'
@@ -1101,6 +1178,53 @@ export default {
 </script>
 
 <style scoped>
+.el-form-item__content{
+  line-height: 24px !important;
+}
+
+.el-input-box{
+  border: 1px solid #DCDFE6;
+}
+::v-deep .el-input-box input{
+  border:none!important;
+  width: 150px;
+}
+/*vip开始*/
+.vip{
+  display: flex;
+  flex-direction: row;
+  /*flex-wrap: wrap;*/
+  width: 100%;
+  height: 30px;
+  margin-left: -105px;
+  margin-top: 18px;
+  font-size: 12px;
+  line-height:30px;
+}
+.vipImg{
+  width: 15px;
+  height: 15px;
+  margin-right: 12px;
+}
+.vipImg img{
+  width: 100% !important;
+  height: 100% !important;
+}
+.vipName{
+  color: #93999F;
+}
+.endTime{
+  padding-left: 2px;
+  color:#FF0000 ;
+  position: absolute;
+  top: 45px;
+  left: 73px;
+  font-size: 12px;
+}
+
+
+
+/*vip结束*/
 .remember {
 	margin-bottom: 10px !important;
 }
@@ -1196,15 +1320,15 @@ export default {
 	cursor: pointer;
 }
 .privacy {
-	font-size: 10px;
+	font-size: 12px !important;
 	font-family: Microsoft YaHei;
 	font-weight: 400;
 	color: rgba(145, 153, 161, 1);
 }
-.privacy a {
-	color: #3689ff;
-	text-decoration: none;
-}
+/*.privacy a {*/
+/*	color: #3689ff;*/
+/*	text-decoration: none;*/
+/*}*/
 .active {
 	font-weight: bold;
 	color: #3481ff;
@@ -1427,7 +1551,7 @@ export default {
 }
 .u-i-t-top {
 	display: flex;
-	height: 60px;
+	height: 80px;
 	width: 100%;
 	align-items: center;
 }
@@ -1588,5 +1712,14 @@ export default {
 	height: 2px;
 	background-color: #3689ff;
 	border-radius: 5px !important;
+}
+.gray{
+  /*grayscale(val):val值越大灰度就越深*/
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: gray;
 }
 </style>

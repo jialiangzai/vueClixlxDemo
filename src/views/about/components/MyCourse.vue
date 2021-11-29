@@ -111,7 +111,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+
         });
     },
     getfree(){
@@ -140,9 +140,7 @@ export default {
             });
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     },
     getvip(){
       myCourses(this.vipquery)
