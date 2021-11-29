@@ -124,8 +124,8 @@ export default{
             // }
             queryOrderWithAli({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
-                    clearInterval(this.timeInterVal)
-                    this.$router.push('/paySuccess')
+                  clearInterval(this.timeInterVal)
+                  this.$router.push('/paySuccess')
                     /* this.$confirm('订单支付成功！', '提示信息', {
                         confirmButtonText: '个人中心',
                         cancelButtonText: '返回首页',
@@ -147,8 +147,8 @@ export default{
             // }
             queryOrderWithWX({orderNumber: this.orderNumber}).then(res => {
                 if(res.meta.code === "200"){
-                    clearInterval(this.timeInterVal)
-                    this.$router.push('/paySuccess')
+                  clearInterval(this.timeInterVal)
+                  this.$router.push('/paySuccess')
                     /* this.$confirm('订单支付成功！', '提示信息', {
                         confirmButtonText: '个人中心',
                         cancelButtonText: '返回首页',
@@ -215,7 +215,6 @@ export default{
                             });
                             this.isFinished = true
                             localStorage.removeItem("selectedArr");
-                            this.removeShopCartCourses()
                         }
                     })
                 }

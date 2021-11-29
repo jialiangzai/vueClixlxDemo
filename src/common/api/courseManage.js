@@ -48,6 +48,8 @@ export function playCourse(courseId,chapterId){
 
 //下载资料
 export function downloadAttachment(courseId,attachmentId){
+    let downProgress = {};
+    let uniSign = new Date().getTime() + '';
     return request({
         url:'/api/course/downloadAttachment',
         method:'GET',
@@ -55,9 +57,22 @@ export function downloadAttachment(courseId,attachmentId){
         responseType: "blob",
         headers: {
             'Authorization': Decrypt(localStorage.getItem('token'))
-        }
-    })
+        },
+        onDownloadProgress (progress) {
+            console.log(progress);
+            downProgress = Math.round(100 * progress.loaded / progress.total) // progress对象中的loaded表示已经下载的数量，total表示总数量，这里计算出百分比
+        }}).then( (res)=>{ // 文件流传输完成后，开启文件下载
+            if(data.downLoad){
+              jsFileDownload(res.data,data.downLoad+'.'+data.url.replace(/.+\./,"")); // jsFileDownLoad是用来下载文件流的，下载插件：npm i js-file-download，import引入：import jsFileDownLoad from 'js-file-download'
+            } else {
+              jsFileDownload(res.data, data.url.split('/')[data.url.split('/').length-1]);
+            }
+        }).catch((e)=>{
+          this.$message.error('该文件无法下载')
+        })
+    
 }
+
 
 //检查是否有权限
 export function checkAuth(courseId){

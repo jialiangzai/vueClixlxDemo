@@ -23,11 +23,11 @@ export function settlement({id,token}){
 }
 
 //微信结算
-export function wxpay({vipId,payModes,token}){
+export function wxpay({vipId, payModes, isRenew, token}){
   return request({
     url: '/api/vip/wxpay/createOrder',
     method: 'POST',
-    data: {vipId,payModes},
+    data: {vipId, payModes, isRenew},
     headers: {
       'Authorization':Decrypt(localStorage.getItem('token')),
       'token': token
@@ -36,11 +36,11 @@ export function wxpay({vipId,payModes,token}){
 }
 
 //支付宝结算
-export function zfbpay({vipId,payModes,token}){
+export function zfbpay({vipId, payModes, isRenew, token}){
   return request({
     url: '/api/vip/alipay/createOrder',
     method: 'POST',
-    data: {vipId,payModes},
+    data: {vipId, payModes, isRenew},
     headers: {
       'Authorization': Decrypt(localStorage.getItem('token')),
       'token': token

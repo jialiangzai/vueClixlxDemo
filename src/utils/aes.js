@@ -18,3 +18,8 @@ export function Encrypt(word) {
     let encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
     return encrypted.ciphertext.toString().toUpperCase();
 }
+
+// MD5 加密
+export function EncryptMd5(word) {
+    return CryptoJS.MD5(word).toString()
+}

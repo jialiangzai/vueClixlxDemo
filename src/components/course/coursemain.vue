@@ -116,8 +116,8 @@
             最多购买
           </li>
           <li class="item split">|</li>
-          <li class="item item-price" @click="handlePrice">
-            价格
+          <li class="item-price" @click="handlePrice">
+            <span>价格</span>  
             <span class="arrow">
               <i
                   class="el-icon-caret-top"
@@ -202,6 +202,7 @@
             :total="queryParams.total"
             :page.sync="queryParams.pageNum"
             :limit.sync="queryParams.pageSize"
+            :pageSizes="[12,24,36]"
             @pagination="queryCourse(queryParams)"
         />
       </div>
@@ -267,6 +268,9 @@ export default {
       active: false,
       active2: false,
       active3: false,
+      clickFirstCategory:'',
+      clickSecondCategory:'',
+      clickCourseLevel:''
     };
   },
   created() {
@@ -316,7 +320,7 @@ export default {
     },
     // 构建搜索条件并搜索
      buildingCondition(type, object,index) {
-       this.queryParams.entity = {}
+      this.queryParams.entity = {}
       if (type === 'fcategory') {
           object = object != null ? object : -1;
           this.getSecondCategorys(object.id)
@@ -324,6 +328,11 @@ export default {
           this.indexObj.indexType = undefined
           this.indexObj.indexEasy = undefined
           this.queryParams.entity.firstCategory = (object && object.id) ? object.id : '';
+
+          sessionStorage.setItem("firstCategory", this.queryParams.entity.firstCategory);
+        this.queryParams.entity.secondCategory = sessionStorage.getItem("secondCategory");
+        this.queryParams.entity.courseLevel = sessionStorage.getItem("courseLevel");
+          this.clickFirstCategory = object.id
           this.queryParams.entity.secondCategory = '';
           this.queryParams.entity.courseLevel = '';
           if (object && object.id) {
@@ -335,10 +344,28 @@ export default {
           }
       } else if (type === 'scategory') {
         object = object != null ? object : -1;
+        if(object === -1){
+          this.indexObj.indexType = undefined
+          this.queryParams.entity.secondCategory = (object && object.id) ? object.id : '';
+          sessionStorage.setItem("secondCategory", this.queryParams.entity.secondCategory);
+          this.queryParams.entity.firstCategory = sessionStorage.getItem("firstCategory");
+          this.queryParams.entity.courseLevel = sessionStorage.getItem("courseLevel");
+          this.buildingSelectedCondition({
+            text: object.categoryName,
+            code: object.id,
+            type: 'fcategory'
+          });
+          this.queryCourse(this.queryParams);
+          return
+        }
         this.indexObj.indexType = index
         let secondId = object.id
         this.queryParams.entity.secondCategory = (object && object.id) ? object.id : '';
-          if(this.indexObj.indexType !== undefined){
+        sessionStorage.setItem("secondCategory", this.queryParams.entity.secondCategory);
+        this.queryParams.entity.firstCategory = sessionStorage.getItem("firstCategory");
+        this.queryParams.entity.courseLevel = sessionStorage.getItem("courseLevel");
+        this.clickSecondCategory = object.id
+        if(this.indexObj.indexType !== undefined){
             let cur = this.firstArr.findIndex(item=> item.id === object.parentId)
             this.indexObj.indexWhere = cur
             getSecondCategorys(object.parentId ? object.parentId : '-1')
@@ -360,8 +387,13 @@ export default {
           });
         }
       } else if (type === 'clevel') {
+        object = object != null ? object : -1;
         this.indexObj.indexEasy = index
         this.queryParams.entity.courseLevel = (object && object.code) ? object.code : '';
+        sessionStorage.setItem("courseLevel", this.queryParams.entity.courseLevel);
+        this.queryParams.entity.secondCategory = sessionStorage.getItem("secondCategory");
+        this.queryParams.entity.firstCategory = sessionStorage.getItem("firstCategory");
+        this.clickCourseLevel = object.code
         if (object && object.code) {
           this.buildingSelectedCondition({
             text: object.text,
@@ -419,12 +451,16 @@ export default {
     },
     //免费课程还是会员课程
     changeFreeOrMember(e) {
-      this.queryParams.entity = {}
+      // this.queryParams.entity = {}
       if (e === '1') {
         this.active = false;
         this.active2 = false;
         this.active3 = false;
         this.priceSortBy = '';
+        this.queryParams.entity.firstCategory=this.clickFirstCategory;
+        this.queryParams.entity.secondCategory=this.clickSecondCategory;
+        this.queryParams.entity.courseLevel=this.clickCourseLevel;
+        this.queryParams.entity.sortBy = '';
         this.queryParams.entity.isMember = '';
         this.queryParams.entity.isFree = '1';
         this.queryCourse(this.queryParams);
@@ -433,6 +469,10 @@ export default {
         this.active2 = false;
         this.active3 = false;
         this.priceSortBy = '';
+        this.queryParams.entity.firstCategory=this.clickFirstCategory;
+        this.queryParams.entity.secondCategory=this.clickSecondCategory;
+        this.queryParams.entity.courseLevel=this.clickCourseLevel;
+        this.queryParams.entity.sortBy = '';
         this.queryParams.entity.isFree = '';
         this.queryParams.entity.isMember = '1';
         this.queryCourse(this.queryParams);
@@ -440,7 +480,7 @@ export default {
     },
     //升降序排列
     handlePrice() {
-      this.queryParams.entity = {}
+      // this.queryParams.entity = {}
       let queryParams = {
         pageNum: 1,
         pageSize: 12,
@@ -450,6 +490,9 @@ export default {
         this.active = false;
         this.active2 = false;
         this.active3 = false;
+        queryParams.entity.firstCategory=this.clickFirstCategory;
+        queryParams.entity.secondCategory=this.clickSecondCategory;
+        queryParams.entity.courseLevel=this.clickCourseLevel;
         queryParams.entity.sortBy = 'price-asc';
         this.queryCourse(queryParams);
         this.priceSortBy = '2';
@@ -457,6 +500,9 @@ export default {
         this.active = false;
         this.active2 = false;
         this.active3 = false;
+        queryParams.entity.firstCategory=this.clickFirstCategory;
+        queryParams.entity.secondCategory=this.clickSecondCategory;
+        queryParams.entity.courseLevel=this.clickCourseLevel;
         queryParams.entity.sortBy = 'price-desc';
         this.queryCourse(queryParams);
         this.priceSortBy = '1';
@@ -465,14 +511,19 @@ export default {
 
     //点击综合
     handleZonghe() {
-      this.queryParams.entity = {}
+      // this.queryParams.entity = {}
       this.active = !this.active;
       this.active2 = false;
       this.active3 = false;
       let queryParams = {
         pageNum: 1,
         pageSize: 12,
-        entity: {}
+        entity: {
+          firstCategory:this.clickFirstCategory,
+          secondCategory:this.clickSecondCategory,
+          courseLevel:this.clickCourseLevel,
+          sortBy:'',
+        }
       };
       this.isFreeOrIsMember = '';
       this.priceSortBy = '';
@@ -480,7 +531,7 @@ export default {
     },
     //点击最新课程
     handleNewCourse() {
-      this.queryParams.entity = {}
+      // this.queryParams.entity = {}
       this.active2 = !this.active2;
       this.active = false;
       this.active3 = false;
@@ -488,6 +539,9 @@ export default {
         pageNum: 1,
         pageSize: 12,
         entity: {
+          firstCategory:this.clickFirstCategory,
+          secondCategory:this.clickSecondCategory,
+          courseLevel:this.clickCourseLevel,
           sortBy: 'time-desc'
         }
       };
@@ -497,7 +551,7 @@ export default {
     },
     //最多购买
     mostbuy() {
-      this.queryParams.entity = {}
+      // this.queryParams.entity = {}
       this.active3 = !this.active3;
       this.active2 = false;
       this.active = false;
@@ -505,6 +559,9 @@ export default {
         pageNum: 1,
         pageSize: 12,
         entity: {
+          firstCategory:this.clickFirstCategory,
+          secondCategory:this.clickSecondCategory,
+          courseLevel:this.clickCourseLevel,
           sortBy: 'purchase-desc'
         }
       };
@@ -586,6 +643,19 @@ export default {
 
 
 <style scoped>
+.item-price {
+    display: flex;
+    width:60px;
+    justify-content: space-around;
+    /* align-items: center; */
+    /* border:1px solid red; */
+}
+.arrow {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
 .all .active,
 .all .active2,
 .all .active3 {

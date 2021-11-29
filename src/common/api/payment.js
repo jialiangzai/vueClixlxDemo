@@ -24,8 +24,6 @@ export function wxpay(params){
       }
     })
   }
-
-
   //支付宝结算
 export function zfbpay(params){
     return request({
@@ -61,4 +59,3 @@ export function queryOrderWithWX(orderNumber){
       }
     })
 }
-  

@@ -196,13 +196,12 @@ export default {
     },
     //微信结算接口
     wxpay(){
-      wxpay({vipId:this.selectedId,payModes:'wxpayment',token:this.tokens}).then(res => {
+      wxpay({vipId:this.selectedId,isRenew:0,payModes:'wxpayment',token:this.tokens}).then(res => {
         if(res.meta.code === '200'){
           this.orderNumber = res.data.orderNumber
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithWX, 5000)
         }else{
-
           this.$message({
             type:'warning',
             message:res.meta.msg
@@ -213,13 +212,12 @@ export default {
     },
     //支付宝结算接口
     zfbpay(){
-      zfbpay({vipId:this.selectedId,payModes:'alipayment',token:this.tokens}).then(res => {
+      zfbpay({vipId:this.selectedId,isRenew:0,payModes:'alipayment',token:this.tokens}).then(res => {
         if(res.meta.code === '200'){
           this.orderNumber = res.data.orderNumber
           this.payurl = res.data.payurl
           this.timeInterVal = setInterval(this.queryOrderWithAli, 5000)
         }else{
-
           this.$message({
             type:'warning',
             message:res.meta.msg
@@ -383,7 +381,8 @@ export default {
     /*background: cyan;*/
   }
   .buy-txt{
-    width: 323px;
+    width: 1200px;
+    text-align: center;
     height: 40px;
     font-family: 'Microsoft YaHei';
     font-size: 32px;

@@ -295,8 +295,8 @@
             <div class="login-weixin">
               <i class="fa fa-weixin" aria-hidden="true" @click="goWeixin"></i>
             </div>
-            <div class="login-qq">
-              <i class="fa fa-qq" aria-hidden="true"></i>
+            <div class="login-qq" >
+              <i class="fa fa-qq" aria-hidden="true" @click="goQq"></i>
             </div>
             <div class="login-weibo">
               <i class="fa fa-weibo" aria-hidden="true" @click="goWeibo"></i>
@@ -552,15 +552,17 @@ export default {
 		goWeixin() {
             //'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
             // 'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
-			window.location.href =
-				'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
-
+			window.location.href ='https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
 		},
-    // 微博登录
-    goWeibo(){
-      window.location.href =
-          'https://www.xuexiluxian.cn/api/oauth/login/weibo'
-    },
+        goQq() {
+            //'https://4147551eu3.qicp.vip/oauth/login/WECHAT_OPEN'
+            // 'https://www.xuexiluxian.cn/api/oauth/login/WECHAT_OPEN'
+			window.location.href ='https://www.xuexiluxian.cn/api/oauth/login/qq'
+		},
+        // 微博登录
+        goWeibo(){
+            window.location.href ='https://www.xuexiluxian.cn/api/oauth/login/weibo'
+        },
 		// 行为验证码
 		success(e) {
 			switch (this.crtType) {
