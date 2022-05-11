@@ -101,42 +101,13 @@ const routes = [
 
 ];
 
-// export default new Router({
-//   routes,
-//   mode: 'hash',
-// });
+
 const router = new Router({
   mode: "history",
-  // base: process.env.BASE_URL,
   routes,
 });
 
-router.beforeEach((to,from,next)=>{
-  let userInfo = localStorage.getItem('isLogin')
-  if( to.matched.some(record => record.meta.requiresAuth) ){
-    if( !userInfo ){
-       /*  this.$confirm('未登录，请您登录', '提示信息', {
-            confirmButtonText: '登录',
-            cancelButtonText: '取消',
-            type: 'success'
-        }).then(() => {
-            this.$router.push('/home')
-        }).catch(() => {
-            this.$router.go(-1)
-        }); */
-        return
-      /* next({
-        name:'home',
-        query:{redirect:'/home'}
-      }) */
-    }else{
-      next()
-    }
-  }else{
-    next()
-  }
 
-})
 
 export default router;
 

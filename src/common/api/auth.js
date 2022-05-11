@@ -1,5 +1,19 @@
 import request from './requests';
 import {Decrypt} from '@/utils/aes'
+
+
+/**
+ *  ,
+  ,
+  ,
+  ,
+  ,
+  ,
+  ,
+  getAccessToken,
+ * @param {*} params 
+ * @returns 
+ */
 // 手机 加 密码登陆
 export function loginByJson (params){
   return request({
